@@ -45,7 +45,7 @@
                                 Dropdown link
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" onclick="obtenerVista('Usuarios', 'getPrueba', 'capaContenido')">Usuario</a></li>
+                                <li><a class="dropdown-item" onclick="obtenerVista('Usuarios', 'getVistaFiltros', 'capaContenido')">Usuario</a></li>
                                 <li><a class="dropdown-item" href="#">Another action</a></li>
                                 <li><a class="dropdown-item" href="#">Something else here</a></li>
                             </ul>
@@ -57,7 +57,9 @@
         </div>
 
         <div class="container-fluid" id="capaContenido">
-
+            <div id="cajaConTexto">
+                
+            </div>
         </div>
         <!-- Asincrona para que lo cargue cuando pueda sin obstaculizar el resto -->
         <script src="app.js" async></script>
