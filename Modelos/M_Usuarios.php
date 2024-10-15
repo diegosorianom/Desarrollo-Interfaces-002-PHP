@@ -12,7 +12,7 @@ class M_Usuarios extends Modelo {
 
     public function buscarUsuarios($filtros = array()) {
         $ftexto='';
-        $activo='';
+        $factivo='';
         extract($filtros);
 
         $SQL = "SELECT * 
@@ -22,13 +22,32 @@ class M_Usuarios extends Modelo {
         if ($ftexto!='') {
             $aPalabras = explode(' ', $ftexto);
             
-            $SQL.=" AND (nombre LIKE '%$ftexto%'
-                        OR apellido_1 LIKE '%$ftexto%'
-                        OR apellido_2 LIKE '%$ftexto%' ) ";
+            foreach($aPalabras as $palabra) {
+                $conditions[] = "(nombre LIKE '%$palabra%' OR apellido_1 LIKE '%$palabra%' OR apellido_2 LIKE '%$palabra%')";
+            }
+
+            $SQL .= " AND (" .implode(' OR ', $conditions) . ")";
+
+            // $SQL.=" AND (nombre LIKE '%$ftexto%'
+            //             OR apellido_1 LIKE '%$ftexto%'
+            //             OR apellido_2 LIKE '%$ftexto%' ) ";
         }
 
-        if ($activo!='') {
-            $SQL." AND activo='$activo' ";
+        // if ($ftexto != ''){
+        //     $aPalabras = explode(' ', $ftexto);
+        //     $SQL.= ' AND ( 1=2 ';
+        //     foreach($aPalabras as $palabra) {
+        //         $SQL = " OR nombre LIKE '%$palabra'
+        //                  OR apellido_1 LIKE '%$palabra'
+        //                  OR apellido_2 LIKE '%$palabra'
+        //                  OR mail LIKE '%$palabra'
+        //                  OR login LIKE '%$palabra' ";
+        //     }
+        //     $SQL.= ' ) ';
+        // }
+
+        if ($factivo!='') {
+            $SQL." AND activo='$factivo' ";
         }
 
         $usuarios = $this -> DAO -> consultar($SQL);
