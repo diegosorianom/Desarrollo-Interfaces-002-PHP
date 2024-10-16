@@ -18,6 +18,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <button type="button" class="btn btn-primary" onclick="buscar('Usuarios', 'getVistaListadoUsuarios', 'formularioBuscar', 'capaResultadoBusqueda')">Buscar</button>
+                <button type="button" class="btn btn-secondary" onclick="obtenerVista('Usuarios', 'getVistaNuevoEditar', 'capaEditarCrear')">Nuevo</button>
             </div>
         </div>
     </form>

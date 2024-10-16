@@ -15,6 +15,10 @@
             Vista::render('./vistas/Usuarios/V_Usuarios_Filtros.php');
         }
         
+        public function getVistaNuevoEditar($datos=array()){
+            Vista::render('./vistas/Usuarios/V_Usuarios_NuevoEditar.php');
+        }
+        
         public function getVistaListadoUsuarios($filtros=array()) {
             var_dump($filtros);
             $usuarios = $this -> modelo -> buscarUsuarios($filtros);

@@ -21,14 +21,16 @@
         // echo $fila['nombre'] . ' ' . $fila['apellido_1'] . ' ' . $fila['apellido_2'];
         // echo '<br>';
         
+        $estilo='';
         if ($fila['activo']=='N') {
             $activo='Inactivo';
+            $estilo='color:red;';
         } else {
             $activo='';
         }
 
         $html.='<tr>
-                    <td nowrap>'.$fila['apellido_1'].' '.$fila['apellido_2'].', '.$fila['nombre'].'</td>
+                    <td nowrap style="'.$estilo.'">'.$fila['apellido_1'].' '.$fila['apellido_2'].', '.$fila['nombre'].'</td>
                     <td>'. $fila['mail'].'</td>
                     <td>'. $fila['login'].'</td>
                     <td>'. $activo.'</td>

@@ -50,6 +50,8 @@ class M_Usuarios extends Modelo {
             $SQL." AND activo='$factivo' ";
         }
 
+        $SQL.=' ORDER BY apellido_1, apellido_2, nombre, login';
+
         $usuarios = $this -> DAO -> consultar($SQL);
 
         return $usuarios;
