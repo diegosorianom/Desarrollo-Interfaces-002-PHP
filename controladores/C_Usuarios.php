@@ -24,5 +24,19 @@
             $usuarios = $this -> modelo -> buscarUsuarios($filtros);
             Vista::render('./vistas/Usuarios/V_Usuarios_Listado.php', array('usuarios'=>$usuarios));
         }
+
+        public function guardarUsuario($datos = array()) {
+            $respuesta['correcto']='S';
+            $respuesta['msj']='Creador correctamente.';
+            
+            $id=$this->modelo->insertarUsuario($datos);
+            if($id>0) {
+                // nada, ok
+            } else {
+                $respuesta['correcto']='N';
+                $respuesta['msj']='Error al crear';
+            }
+            echo json_encode($respuesta);
+        }
     }
 ?>

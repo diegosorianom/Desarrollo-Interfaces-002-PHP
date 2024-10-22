@@ -1,3 +1,9 @@
+function cargarUnScript(url) {
+    let script = document.createElement('script');
+    script.src = url;
+    document.head.appendChild(script);
+}
+
 // Aqui es donde crearemos las funciones básicas
 function obtenerVista(controlador, metodo, destino) {
 
@@ -14,6 +20,7 @@ function obtenerVista(controlador, metodo, destino) {
     }) 
     .then(vista => {
         document.getElementById(destino).innerHTML = vista;
+        cargarUnScript('js/'+controlador+'.js');
     })
     .catch(err => {
         console.log("Error al pedir vista", err.message);
@@ -36,6 +43,7 @@ function buscar(controlador, metodo, formulario, destino) {
     }) 
     .then(vista => {
         document.getElementById(destino).innerHTML = vista;
+        
     })
     .catch(err => {
         console.log("Error al pedir vista", err.message);
