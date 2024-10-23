@@ -13,11 +13,16 @@ class M_Usuarios extends Modelo {
     public function buscarUsuarios($filtros = array()) {
         $ftexto='';
         $factivo='';
+        $id_Usuario='';
         extract($filtros);
 
         $SQL = "SELECT * 
                     FROM usuarios 
                     WHERE 1=1";
+
+        if ($id_Usuario != '') {
+            $SQL.=" AND id_Usuario='$id_Usuario' ";
+        }
 
         if ($ftexto!='') {
             $aPalabras = explode(' ', $ftexto);
@@ -27,29 +32,12 @@ class M_Usuarios extends Modelo {
             }
 
             $SQL .= " AND (" .implode(' OR ', $conditions) . ")";
-
-            // $SQL.=" AND (nombre LIKE '%$ftexto%'
-            //             OR apellido_1 LIKE '%$ftexto%'
-            //             OR apellido_2 LIKE '%$ftexto%' ) ";
         }
-
-        // if ($ftexto != ''){
-        //     $aPalabras = explode(' ', $ftexto);
-        //     $SQL.= ' AND ( 1=2 ';
-        //     foreach($aPalabras as $palabra) {
-        //         $SQL = " OR nombre LIKE '%$palabra'
-        //                  OR apellido_1 LIKE '%$palabra'
-        //                  OR apellido_2 LIKE '%$palabra'
-        //                  OR mail LIKE '%$palabra'
-        //                  OR login LIKE '%$palabra' ";
-        //     }
-        //     $SQL.= ' ) ';
-        // }
 
         if ($factivo!='') {
             $SQL." AND activo='$factivo' ";
         }
-
+        
         $SQL.=' ORDER BY apellido_1, apellido_2, nombre, login';
 
         $usuarios = $this -> DAO -> consultar($SQL);
@@ -57,7 +45,7 @@ class M_Usuarios extends Modelo {
         return $usuarios;
     }
 
-    public function insertarUsuario($datos=Array()) {
+    public function insertarUsuario($datos = Array()) {
         $nombre='';
         $apellido_1='';
         $apellido_2='';
@@ -86,8 +74,34 @@ class M_Usuarios extends Modelo {
         return $this -> DAO -> insertar($SQL);
         // si es de php a php --> return / si es de php a js --> echo
     }
+
+    public function editarUsuarios($datos = Array()) {
+        $nombre='';
+        $apellido_1='';
+        $apellido_2='';
+        $sexo='H';
+        $fecha_Alta=date('Y-m-d');
+        $mail='';
+        $movil='';
+        $login='asdfasdf';
+        $pass='asdfasdf';
+        $activo='S';
+        extract($datos);
+
+        $pass = MD5($pass);
+
+        $SQL = "INSERT INTO usuarios SET 
+                    nombre='$nombre',
+                    apellido_1='$apellido_1',
+                    apellido_2='$apellido_2',
+                    sexo='$sexo',
+                    fecha_Alta='$fecha_Alta',
+                    mail='$mail',
+                    movil='$movil',
+                    login='$login', 
+                    pass='$pass',
+                    activo='$activo' ";
+        return $this -> DAO -> insertar($SQL);
+    }
 }
-
-
-
 ?>

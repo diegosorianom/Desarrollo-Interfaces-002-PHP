@@ -1,3 +1,5 @@
+<?php echo json_encode($datos); ?>
+
 <div class="container-fluid" id="capaFiltrosBusqueda">
     <form id="formularioNuevoEditar" name="formulario-NuevoEditar">
         <div>

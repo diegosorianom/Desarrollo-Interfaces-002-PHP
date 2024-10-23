@@ -16,7 +16,16 @@
         }
         
         public function getVistaNuevoEditar($datos=array()){
-            Vista::render('./vistas/Usuarios/V_Usuarios_NuevoEditar.php');
+            if (!isset($datos['id']) || $datos['id']=='') {
+                // Nuevo
+                Vista::render('./vistas/Usuarios/V_Usuarios_NuevoEditar.php');
+            } else {
+                // editando
+                $filtros['id_Usuario']=$datos['id'];
+                $usuarios = $this -> modelo -> buscarUsuarios($filtros);
+                Vista::render('./vistas/Usuarios/V_Usuarios_NuevoEditar.php', array('usuario'=>$usuarios[0]));
+            }
+
         }
         
         public function getVistaListadoUsuarios($filtros=array()) {
