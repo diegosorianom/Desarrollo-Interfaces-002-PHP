@@ -49,6 +49,8 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
     })
 }
 
+
+
 // Aqui es donde crearemos las funciones básicas
 function buscar(controlador, metodo, formulario, destino) {
 

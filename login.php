@@ -1,4 +1,20 @@
-<?php session_start(); ?>
+<?php session_start();
+    $usuario='';
+    $pass='';
+    extract($_POST);
+
+    if($usuario=='' || $pass== '') {
+        $msj = 'Debes completar los campos.';
+    } else {
+        if ($usuario == 'javier' && $pass='123') {
+            $_SESSION['login'] = $usuario;
+            header('Location: index.php'); //Saltar a esta página (no puede haber pintado nada antes)
+        } else {
+            $msj='La información no es correcta';
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -19,11 +35,10 @@
                 </div>
                 <div class="col-md-2 col-sm-3 d-none d-md-block">
                     login
-                    <?php echo $_SESSION['login']; ?>
                 </div>
             </div>
         </div>
-        
+
         <div class="container-fluid" id="capaMenu">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
@@ -59,8 +74,27 @@
         </div>
 
         <div class="container-fluid" id="capaContenido">
-            <div id="cajaConTexto">
-                
+            <div class="row justify-content-center mt-5">
+                <div class="col-12 col-md-4">
+                    <div id="cajaConTexto" class="border p-4 rounded">
+                        <h3 class="text-center">Iniciar Sesión</h3>
+                        <form id="formularioLogin" method="post" action="login.php">
+                            <div class="form-group p-2">
+                                <label for="usuario">Username</label>
+                                <input name="usuario" type="text" class="form-control" id="usuario" placeholder="Ingrese su nombre de usuario" value="<?php echo $usuario ?>" required>
+                            </div>
+                            <div class="form-group p-2">
+                                <label for="password">Contraseña</label>
+                                <input name="pass" type="password" class="form-control" id="password" placeholder="Ingrese su contraseña" value="<?php echo $pass ?>" required>
+                            </div>
+                            <span id="msj" class="msj"><?php echo $msj; ?></span>
+                            <button type="submit" id="aceptar" class="btn btn-primary btn-block m-2">Iniciar Sesión</button>
+                        </form>
+                        <div class="text-center mt-3 p-2">
+                            <a href="#">¿Olvidaste tu contraseña?</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Asincrona para que lo cargue cuando pueda sin obstaculizar el resto -->
