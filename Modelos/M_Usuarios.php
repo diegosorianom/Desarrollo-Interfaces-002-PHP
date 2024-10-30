@@ -10,6 +10,30 @@ class M_Usuarios extends Modelo {
         $this->DAO = new DAO();
     }
 
+    public function login($datos=array()){
+        $usuario='fsfdfhddhh';
+        $pass='dasdfasñlj';
+        extract($datos);
+        $usuario=addslashes($usuario);
+
+        $SQL="SELECT * FROM usuarios
+                WHERE login='$usuario' && pass=MD5('$pass') ";
+                $usuarios=$this->DAO->consultar($SQL);
+                $id_Usuario='';
+
+                if(empty($usuarios)){ 
+                   // no encontrado
+                }else{ //encontrado
+                    $_SESSION['login']=$usuario;
+                    $_SESSION['usuario']=$usuarios[0]['nombre'];
+                    $_SESSION['id_Usuario']=$usuarios[0]['id_Usuario'];
+                    $id_Usuario=$usuarios[0]['id_Usuario']; 
+
+                }
+            return $id_Usuario;
+
+    }
+
     public function buscarUsuarios($filtros = array()) {
         $ftexto='';
         $factivo='';
@@ -34,8 +58,9 @@ class M_Usuarios extends Modelo {
             $SQL .= " AND (" .implode(' OR ', $conditions) . ")";
         }
 
-        if ($factivo!='') {
-            $SQL." AND activo='$factivo' ";
+
+        if ($factivo != '') {
+            $SQL .= " AND activo='$factivo' "; // Corrige esta línea
         }
         
         $SQL.=' ORDER BY apellido_1, apellido_2, nombre, login';
@@ -103,5 +128,20 @@ class M_Usuarios extends Modelo {
                     activo='$activo' ";
         return $this -> DAO -> insertar($SQL);
     }
+
+
+    //Función para validar el usuario del botón de login
+    public function validarUsuario($login, $pass) {
+        $pass = MD5($pass); // Asegúrate de cifrar la contraseña
+    
+        $SQL = "SELECT * FROM usuarios WHERE login='$login' AND pass='$pass'";
+        $result = $this->DAO->consultar($SQL);
+    
+        if (count($result) > 0) {
+            return $result[0];
+        } else {
+            return null;
+        }
+    }    
 }
 ?>

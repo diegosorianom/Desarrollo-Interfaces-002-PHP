@@ -11,6 +11,11 @@
             $this -> modelo = new M_Usuarios();
         }
 
+        public function validarUsuario($datos=array()){
+            $id_Usuario=$this->modelo->login($datos);
+            return $id_Usuario;
+        }
+
         public function getVistaFiltros($datos=array()){
             Vista::render('./vistas/Usuarios/V_Usuarios_Filtros.php');
         }
