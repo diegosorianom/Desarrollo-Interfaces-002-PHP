@@ -14,6 +14,7 @@
                     <th>Mail</th>
                     <th>Login</th>
                     <th>Estado</th>
+                    <th>Cambiar estado</th>
                 </tr>
             </thead>
             <tbody>';
@@ -23,11 +24,10 @@
         // echo '<br>';
         
         $estilo='';
-        if ($fila['activo']=='N') {
+        if ($fila['activo']=='N') { 
             $activo='Inactivo';
-            $estilo='color:red;';
         } else {
-            $activo='';
+            $activo='Activo';
         }
 
         $html.='<tr>
@@ -35,7 +35,8 @@
                     <td nowrap style="'.$estilo.'">'.$fila['apellido_1'].' '.$fila['apellido_2'].', '.$fila['nombre'].'</td>
                     <td>'. $fila['mail'].'</td>
                     <td>'. $fila['login'].'</td>
-                    <td>'. $activo.'</td>
+                    <td id="estado-' . $fila['id_Usuario'] . '">'. $activo.'</td>
+                    <td><Button class="btn btn-primary" onclick="toggleEstado(\'' . $fila['id_Usuario'] . '\')">Editar estado</Button></td>
                 </tr>';
     }
     $html.='</tbody>

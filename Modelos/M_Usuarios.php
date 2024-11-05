@@ -143,5 +143,19 @@ class M_Usuarios extends Modelo {
             return null;
         }
     }    
+
+    public function cambiarEstado($id_Usuario) {
+        $SQL = "SELECT activo FROM usuarios WHERE id_Usuario = '$id_Usuario'";
+        $resultado = $this -> DAO -> consultar($SQL);
+
+        if (!empty($resultado)) {
+            $nuevoEstado = ($resultado[0]['activo'] == 'S') ? 'N' : 'S';
+            $SQL = "UPDATE usuarios SET activo = '$nuevoEstado' WHERE id_Usuario = '$id_Usuario'";
+            $this->DAO->actualizar($SQL);
+
+            return $nuevoEstado;
+        }
+        return false;
+    }
 }
 ?>

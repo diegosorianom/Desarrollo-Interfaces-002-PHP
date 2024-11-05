@@ -52,5 +52,22 @@
             }
             echo json_encode($respuesta);
         }
+
+        public function cambiarEstado($datos = array()) {
+            header('Content-Type: application/json'); // Agregar esto para asegurar que la salida es JSON
+        
+            if (isset($datos['id_Usuario'])) {
+                $nuevoEstado = $this->modelo->cambiarEstado($datos['id_Usuario']);
+                
+                if ($nuevoEstado !== false) {
+                    echo json_encode(['success' => true, 'nuevoEstado' => $nuevoEstado]);
+                } else {
+                    echo json_encode(['success' => false, 'error' => 'Usuario no encontrado']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'error' => 'ID de usuario no especificado']);
+            }
+        }
+        
     }
 ?>
