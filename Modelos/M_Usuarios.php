@@ -100,7 +100,8 @@ class M_Usuarios extends Modelo {
         // si es de php a php --> return / si es de php a js --> echo
     }
 
-    public function editarUsuarios($datos = Array()) {
+    public function editarUsuario($datos=Array()){
+        $id_Usuario='';
         $nombre='';
         $apellido_1='';
         $apellido_2='';
@@ -108,25 +109,26 @@ class M_Usuarios extends Modelo {
         $fecha_Alta=date('Y-m-d');
         $mail='';
         $movil='';
-        $login='asdfasdf';
-        $pass='asdfasdf';
+        $login='asddsadasdsa';
+        $pass='dasdsdsadsadas';
         $activo='S';
         extract($datos);
 
-        $pass = MD5($pass);
-
-        $SQL = "INSERT INTO usuarios SET 
-                    nombre='$nombre',
-                    apellido_1='$apellido_1',
-                    apellido_2='$apellido_2',
-                    sexo='$sexo',
-                    fecha_Alta='$fecha_Alta',
-                    mail='$mail',
-                    movil='$movil',
-                    login='$login', 
-                    pass='$pass',
-                    activo='$activo' ";
-        return $this -> DAO -> insertar($SQL);
+        $pass=MD5($pass);
+        
+        $SQL="UPDATE usuarios SET
+                nombre='$nombre',
+                apellido_1='$apellido_1',
+                apellido_2='$apellido_2',
+                sexo='$sexo',
+                fecha_Alta='$fecha_Alta',
+                mail='$mail',
+                movil='$movil',
+                login='$login',
+                pass='$pass',
+                activo='$activo'
+                WHERE id_Usuario = '$id_Usuario'";
+        return $this->DAO->actualizar($SQL);
     }
 
 

@@ -41,11 +41,16 @@
 
         public function guardarUsuario($datos = array()) {
             $respuesta['correcto']='S';
-            $respuesta['msj']='Creador correctamente.';
+            $respuesta['msj']='Creado correctamente.';
             
-            $id=$this->modelo->insertarUsuario($datos);
-            if($id>0) {
-                // nada, ok
+            if ($datos['id_Usuario'] !== null && $datos['id_Usuario'] !== '' && isset($datos['id_Usuario'])) {
+                $id=$this->modelo->editarUsuario($datos);
+            } else {
+                $id=$this->modelo->insertarUsuario($datos);
+            }
+
+            if($id > 0) {
+
             } else {
                 $respuesta['correcto']='N';
                 $respuesta['msj']='Error al crear';
