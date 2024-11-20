@@ -25,6 +25,41 @@ class M_Menu extends Modelo {
         return $this -> formatMenu($menuOptions);
     }
 
+    public function buscarOpcionesMenu($filtros=array()){
+        $ftexto="";
+        // $factivo="";
+        $id="";
+        extract($filtros);
+        
+        
+        $SQL="SELECT * FROM menu WHERE 1=1";
+        
+
+        if($ftexto!=""){
+            $aPalabras=explode(' ',$ftexto);
+
+            $SQL.=" AND 1 = 2";
+
+            foreach($aPalabras as $word){
+                    $SQL.=" OR (titulo LIKE '%$word%')";
+            }
+        }
+
+        // if($factivo!=''){
+        //     $SQL.=" AND activo='$factivo' ";
+        // }
+        if($id!=''){
+            $SQL.=" AND id='$id' ";
+        }
+
+        // $SQL.=' ORDER BY id ';
+
+        $opcionesMenu = $this->DAO->consultar($SQL);
+        
+
+        return $opcionesMenu;
+    }
+
     private function formatMenu($menuOptions) {
         // Organiza las opciones en un arreglo jerarquico por niveles
         $menu = [];
