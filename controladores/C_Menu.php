@@ -19,9 +19,18 @@ class C_Menu {
     }
 
     public function getVistaListadoOpcionesMenu($filtros=array()){
-        // var_dump($filtros);
         $opcionesMenu=$this->menuModel->buscarOpcionesMenu($filtros);
         Vista::render('vistas/menu/V_Menu_Listado.php',array('opcionesMenu'=>$opcionesMenu));
     }
+
+    public function getVistaNuevoEditar ($filtros=array()) {
+        if (!isset($datos['id']) || $datos['id']=='') {
+            Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php');
+        } else {
+            
+        }
+    }
+
+    public function guardarOpcionMenu
 }
 ?>
