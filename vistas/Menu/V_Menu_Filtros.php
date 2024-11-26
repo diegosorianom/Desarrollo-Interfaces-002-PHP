@@ -1,4 +1,4 @@
-<h2>Mtto. de Menu</h2>
+<h2>Mantenimiento de Menu</h2>
 <div class="container-fluid" id="capaFiltrosBusqueda">
     <form id="formularioBuscar" name="formularioBuscar">
         <div class="form-group col-md-6 col-sm-12">

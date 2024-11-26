@@ -77,5 +77,50 @@ class M_Menu extends Modelo {
 
         return $menu;
     }
+
+    public function editarMenu($datos = array()) {
+        $id = '';
+        $label = '';
+        $url = '';
+        $parent_id = '';
+        $position = '';
+        $level = '';
+        $is_active = '';
+        $action = '';
+        extract($datos);
+
+        $SQL ="UPDATE menu SET 
+            titulo = '$label', 
+            url = '$url',
+            parent_id = '$parent_id',
+            position = '$position', 
+            level = '$level',
+            is_active = '$is_active',
+            $action = '$action'
+            WHERE id = '$id'";
+        return $this -> DAO -> actualizar($SQL);
+    }
+    
+    public function insertarMenu($datos = array()) {
+        $id = '';
+        $label = '';
+        $url = '';
+        $parent_id = '';
+        $position = '';
+        $level = '';
+        $is_active = '';
+        $action = '';
+        extract($datos);
+
+        $SQL ="INSERT INTO menu SET 
+            titulo = '$label', 
+            url = '$url',
+            parent_id = '$parent_id',
+            position = '$position', 
+            level = '$level',
+            is_active = '$is_active',
+            $action = '$action' ";
+        return $this -> DAO -> insertar($SQL);
+    }    
 }
 ?>

@@ -14,6 +14,7 @@ $html.='<thead>
                 <th>Orden</th>
                 <th>Nivel</th>
                 <th>ID padre</th>
+                <th>Editar</th>
             </tr>
         </thead>
         <tbody>';
@@ -25,6 +26,7 @@ $html.='<thead>
                 <td>'.$fila['position'].'</td>
                 <td>'.$fila['level'].'</td>
                 <td>'.$fila['parent_id'].'</td>
+                <td><Button class="btn btn-primary" onclick"obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \''. $fila['id'].'\')">Editar</Button></td>
                 ';
 }
 
