@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-11-2024 a las 11:35:20
+-- Tiempo de generación: 26-11-2024 a las 13:18:46
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -49,7 +49,7 @@ INSERT INTO `menu` (`id`, `label`, `url`, `parent_id`, `position`, `level`, `is_
 (4, 'Dropdown', '#', NULL, 4, 1, 1, NULL),
 (5, 'Usuarios', NULL, 4, 1, 2, 1, 'onclick=\"obtenerVista(\'Usuarios\', \'getVistaFiltros\', \'capaContenido\')\"'),
 (6, 'Login', 'Login.php', 4, 2, 2, 1, NULL),
-(7, 'Mantenimiento', NULL, 4, 3, 2, 1, 'onclick=\"obtenerVista(\'Menu\', \'getVistaFiltros\', \'capaContenido\')\"');
+(7, 'Mantenimiento', NULL, 4, 3, 2, 1, 'onclick=\"obtenerVista(\'Menu\', \'getVistaListadoMenu\', \'capaContenido\')\"');
 
 -- --------------------------------------------------------
 
