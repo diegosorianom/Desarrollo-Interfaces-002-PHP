@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-11-2024 a las 11:23:29
+-- Tiempo de generación: 27-11-2024 a las 11:34:11
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -16,10 +16,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-
---
--- Base de datos: `di2024`
---
 
 CREATE DATABASE IF NOT EXISTS `di2024` DEFAULT CHARACTER SET latin1 COLLATE latin1_spanish_ci;
 USE `di2024`;
@@ -52,7 +48,7 @@ INSERT INTO `menu` (`id`, `label`, `url`, `parent_id`, `position`, `level`, `is_
 (4, 'Dropdown', '#', NULL, 4, 1, 1, NULL),
 (5, 'Usuarios', NULL, 4, 1, 2, 1, 'onclick=\"obtenerVista(\'Usuarios\', \'getVistaFiltros\', \'capaContenido\')\"'),
 (6, 'Login', 'Login.php', 4, 2, 2, 1, NULL),
-(7, 'Something else here', NULL, 4, 3, 2, 1, NULL);
+(7, 'Mantenimiento', NULL, 4, 3, 2, 1, 'onclick=\"obtenerVista(\'Menu\', \'getVistaListadoMenu\', \'capaContenido\')\"');
 
 -- --------------------------------------------------------
 
@@ -218,6 +214,12 @@ INSERT INTO `usuarios` (`id_Usuario`, `nombre`, `apellido_1`, `apellido_2`, `sex
 --
 
 --
+-- Indices de la tabla `menu`
+--
+ALTER TABLE `menu`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -227,6 +229,12 @@ ALTER TABLE `usuarios`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `menu`
+--
+ALTER TABLE `menu`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

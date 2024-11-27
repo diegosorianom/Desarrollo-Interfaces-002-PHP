@@ -26,7 +26,7 @@
                     <td>'.$fila['position'].'</td>
                     <td>'.$fila['level'].'</td>
                     <td>'.($fila['is_active'] == 1 ? 'Activo' : 'Inactivo').'</td>
-                    <td>'.$fila['action'].'</td>
+                    <td><button class="btn btn-primary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \''. $fila['id'].'\')">Editar</button></td>
                 </tr>';
     }
     $html.='</tbody>
@@ -35,3 +35,5 @@
 
     echo $html;
 ?>
+
+<div class="container-fluid" id="capaEditarCrear"></div>
