@@ -78,5 +78,49 @@ class M_Menu extends Modelo {
         return $menu;
     }
 
+    public function insertarMenu($datos = array()) {
+        $label = isset($datos['label']) ? "'" . addslashes($datos['label']) . "'" : "NULL";
+        $url = isset($datos['url']) ? "'" . addslashes($datos['url']) . "'" : "NULL";
+        $parent_id = isset($datos['parent_id']) && $datos['parent_id'] !== '' ? intval($datos['parent_id']) : "NULL";
+        $position = isset($datos['position']) ? intval($datos['position']) : "NULL";
+        $level = isset($datos['level']) ? intval($datos['level']) : "NULL";
+        $is_active = isset($datos['is_active']) ? intval($datos['is_active']) : "NULL";
+        $action = isset($datos['action']) ? "'" . addslashes($datos['action']) . "'" : "NULL";
+    
+        $SQL = "INSERT INTO menu SET
+                label=$label,
+                url=$url,
+                parent_id=$parent_id,
+                position=$position,
+                level=$level,
+                is_active=$is_active,
+                action=$action";
+        return $this->DAO->insertar($SQL);
+    }
+    
+
+    public function editarMenu() {
+        $id = '';
+        $label = isset($datos['label']) ? "'" . addslashes($datos['label']) . "'" : "NULL";
+        $url = isset($datos['url']) ? "'" . addslashes($datos['url']) . "'" : "NULL";
+        $parent_id = isset($datos['parent_id']) && $datos['parent_id'] !== '' ? intval($datos['parent_id']) : "NULL";
+        $position = isset($datos['position']) ? intval($datos['position']) : "NULL";
+        $level = isset($datos['level']) ? intval($datos['level']) : "NULL";
+        $is_active = isset($datos['is_active']) ? intval($datos['is_active']) : "NULL";
+        $action = isset($datos['action']) ? "'" . addslashes($datos['action']) . "'" : "NULL";
+
+        extract($datos);
+
+        $SQL = "UPDATE menu SET
+                label='$label',
+                url='$url',
+                parent_id='$parent_id',
+                position='$position',
+                level='$level',
+                is_active='$is_active',
+                action='$action'
+                WHERE id='$id'";
+        return $this -> DAO -> actualizar($SQL);
+    }
 }
 ?>

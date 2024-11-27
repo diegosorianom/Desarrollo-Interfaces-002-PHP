@@ -33,5 +33,24 @@ class C_Menu {
             Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', array('menu' => $menus[0]));
         }
     }    
+
+    public function guardarMenu($datos = array()) {
+        $respuesta['correcto'] = 'S';
+        $respuesta['msj'] = 'Creado correctamente.';
+
+        if ($datos['id'] !== null && $datos['id'] !== '' && isset($datos['id'])) {
+            $id = $this -> menuModel -> editarMenu($datos);
+        } else {
+            $id = $this -> menuModel -> insertarMenu($datos);
+        }
+
+        if ($id > 0) {
+
+        } else {
+            $respuesta['correcto'] = 'N';
+            $respuesta['msj'] = 'Error al crear';
+        }
+        echo json_encode($respuesta);
+    }
 }
 ?>
