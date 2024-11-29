@@ -19,6 +19,7 @@ function guardarMenu() {
                 document.getElementById('msjError').innerHTML = texto; // Muestra el error
             } else {
                 document.getElementById('capaEditarCrear').innerHTML = ''; // Limpia el formulario
+                obtenerVista('Menu', 'getVistaListadoMenu', 'capaContenido');
                 document.getElementById('msjError').innerHTML = texto; // Muestra el mensaje de éxito
             }
         })
@@ -27,4 +28,3 @@ function guardarMenu() {
             document.getElementById('msjError').innerHTML = `Error inesperado: ${err.message}`;
         });
 }
-

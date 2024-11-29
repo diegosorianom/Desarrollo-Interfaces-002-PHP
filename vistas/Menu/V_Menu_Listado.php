@@ -2,7 +2,18 @@
     $menus = array();
     extract($datos);
 
+    usort($menus, function($a, $b) {
+        if ($a['parent_id'] == 0 && $b['parent_id'] != 0) {
+            return -1;
+        } elseif ($a['parent_id'] != 0 && $b['parent_id'] == 0) {
+            return 1;
+        } else {
+            return $a['position'] - $b['position'];
+        }
+    });
+
     $html='';
+    // $html.='<button type="button" class="btn btn-primary" onclick="obtenerVista(\'Menu\', \'getVistaListadoMenu\', \'capaContenido\')">Recargar</button>';
     $html.='<div class="table-responsive">
                 <table class="table table-sm table-striped">
     ';

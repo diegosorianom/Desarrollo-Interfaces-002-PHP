@@ -6,6 +6,7 @@ $label = '';
 $url = '';
 $parent_id = '';
 $level = '';
+$position = '';
 $is_active = '';
 $action = '';
 
@@ -17,7 +18,6 @@ if (isset($datos['menu'])) {
 }
 
 ?>
-
 <div class="container" id="capaEditarCrear" style="max-width: 400px; border: 1px solid #ccc; padding: 20px; border-radius: 5px;">
     <form id="formularioNuevoEditar" name="formularioNuevoEditar">
         <?php if ($editar == 'Editar'): ?>
@@ -26,7 +26,7 @@ if (isset($datos['menu'])) {
                 <input type="text" id="id" name="id" class="form-control" value="<?php echo $id; ?>">
             </div>
         <?php endif; ?>
-
+        
         <div class="mb-3">
             <label for="label" class="form-label">Label</label>
             <input type="text" class="form-control" id="label" name="label" value="<?php echo $label; ?>" required>
@@ -48,13 +48,17 @@ if (isset($datos['menu'])) {
         </div>
 
         <div class="mb-3">
+            <label for="position" class="form-label">Posición</label>
+            <input type="text" class="form-control" id="position" name="position" value="<?php echo $position; ?>">
+        </div>
+
+        <div class="mb-3">
             <label for="is_active" class="form-label">Activo</label>
             <select class="form-select" id="is_active" name="is_active">
                 <option value="1" <?php echo (isset($is_active) && $is_active == 1) ? 'selected' : ''; ?>>Si</option>
                 <option value="0" <?php echo (isset($is_active) && $is_active == 0) ? 'selected' : ''; ?>>No</option>
             </select>
         </div>
-
 
         <div class="mb-3">
             <label for="action" class="form-label">Acción</label>
