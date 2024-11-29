@@ -30,15 +30,22 @@
         </thead>
         <tbody>';
     foreach($menus as $posicion => $fila) {
-        $html.='<tr>
-                    <td>'.$fila['label'].'</td>
-                    <td>'.$fila['url'].'</td>
-                    <td>'.$fila['parent_id'].'</td>
-                    <td>'.$fila['position'].'</td>
-                    <td>'.$fila['level'].'</td>
-                    <td>'.($fila['is_active'] == 1 ? 'Activo' : 'Inactivo').'</td>
-                    <td><button class="btn btn-primary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \''. $fila['id'].'\')">Editar</button></td>
-                </tr>';
+        $html .= '<tr>
+            <td>' . $fila['label'] . '</td>
+            <td>' . $fila['url'] . '</td>
+            <td>' . $fila['parent_id'] . '</td>
+            <td>' . $fila['position'] . '</td>
+            <td>' . $fila['level'] . '</td>
+            <td>' . ($fila['is_active'] == 1 ? 'Activo' : 'Inactivo') . '</td>
+            <td>
+                <button class="btn btn-primary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $fila['id'] . '\')">
+                    Editar
+                </button>
+                <button class="btn btn-success" onclick="obtenerVista(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', {parent_id: ' . $fila['id'] . '})">
+                    Nueva Opción
+                </button>
+            </td>
+        </tr>';
     }
     $html.='</tbody>
     </table>
