@@ -99,8 +99,14 @@ class M_Menu extends Modelo {
     }
     
 
-    public function editarMenu() {
-        $id = '';
+    public function editarMenu($datos = array()) {
+        // Validar que $datos sea un arreglo y contenga el ID
+        if (!is_array($datos) || empty($datos['id'])) {
+            throw new InvalidArgumentException("Datos inválidos o faltan el ID para editar.");
+        }
+    
+        // Validación y saneamiento de los campos
+        $id = intval($datos['id']); // El ID siempre debe ser un entero
         $label = isset($datos['label']) ? "'" . addslashes($datos['label']) . "'" : "NULL";
         $url = isset($datos['url']) ? "'" . addslashes($datos['url']) . "'" : "NULL";
         $parent_id = isset($datos['parent_id']) && $datos['parent_id'] !== '' ? intval($datos['parent_id']) : "NULL";
@@ -108,19 +114,21 @@ class M_Menu extends Modelo {
         $level = isset($datos['level']) ? intval($datos['level']) : "NULL";
         $is_active = isset($datos['is_active']) ? intval($datos['is_active']) : "NULL";
         $action = isset($datos['action']) ? "'" . addslashes($datos['action']) . "'" : "NULL";
-
-        extract($datos);
-
+    
+        // Crear la consulta SQL
         $SQL = "UPDATE menu SET
-                label='$label',
-                url='$url',
-                parent_id='$parent_id',
-                position='$position',
-                level='$level',
-                is_active='$is_active',
-                action='$action'
-                WHERE id='$id'";
-        return $this -> DAO -> actualizar($SQL);
+                    label=$label,
+                    url=$url,
+                    parent_id=$parent_id,
+                    position=$position,
+                    level=$level,
+                    is_active=$is_active,
+                    action=$action
+                WHERE id=$id";
+    
+        // Ejecutar la consulta y devolver el resultado
+        return $this->DAO->actualizar($SQL);
     }
+    
 }
 ?>

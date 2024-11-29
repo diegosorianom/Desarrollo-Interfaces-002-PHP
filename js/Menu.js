@@ -1,25 +1,30 @@
 function guardarMenu() {
-    console.log('guardando');
+    console.log('Guardando...');
 
-    let opciones = {method: "GET",};
+    const formData = new FormData(document.getElementById('formularioNuevoEditar'));
+    if (!formData.get('label')) {
+        document.getElementById('msjError').innerHTML = 'El campo Label es obligatorio.';
+        return;
+    }
+
+    let opciones = { method: "GET" };
     let parametros = "controlador=Menu&metodo=guardarMenu";
-    parametros += '&' + new URLSearchParams(new FormData(document.getElementById('formularioNuevoEditar'))).toString();
+    parametros += '&' + new URLSearchParams(formData).toString();
 
-    fetch("C_Frontal.php?" + parametros, opciones) // Llamada al Controlador frontal
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        throw new Error(res.status);
-    })
-    .then(resultado => {
-        if (resultado.correcto == 'S') {
-            document.getElementById('capaEditarCrear').innerHTML = resultado.msj;
-        } else {
-            document.getElementById('msjError').innerHTML = resultado.msj;
-        }
-    })
-    .catch (err => {
-        console.log("Error al pedir vista", err.message);
-    })
+    fetch("C_Frontal.php?" + parametros, opciones)
+        .then(res => res.text()) // Procesa como texto plano
+        .then(texto => {
+            console.log("Respuesta del servidor:", texto); // Muestra la respuesta en la consola
+            if (texto.includes("Error")) {
+                document.getElementById('msjError').innerHTML = texto; // Muestra el error
+            } else {
+                document.getElementById('capaEditarCrear').innerHTML = ''; // Limpia el formulario
+                document.getElementById('msjError').innerHTML = texto; // Muestra el mensaje de éxito
+            }
+        })
+        .catch(err => {
+            console.error("Error al guardar menú:", err.message);
+            document.getElementById('msjError').innerHTML = `Error inesperado: ${err.message}`;
+        });
 }
+

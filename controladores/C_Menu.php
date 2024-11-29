@@ -35,22 +35,27 @@ class C_Menu {
     }    
 
     public function guardarMenu($datos = array()) {
-        $respuesta['correcto'] = 'S';
-        $respuesta['msj'] = 'Creado correctamente.';
-
-        if ($datos['id'] !== null && $datos['id'] !== '' && isset($datos['id'])) {
-            $id = $this -> menuModel -> editarMenu($datos);
-        } else {
-            $id = $this -> menuModel -> insertarMenu($datos);
+        // Valida los datos
+        if (!is_array($datos) || empty($datos)) {
+            echo "Error: Datos inválidos.";
+            exit;
         }
-
+    
+        // Lógica para guardar o editar
+        if (!empty($datos['id'])) {
+            $id = $this->menuModel->editarMenu($datos);
+        } else {
+            $id = $this->menuModel->insertarMenu($datos);
+        }
+    
+        // Verifica el resultado
         if ($id > 0) {
-
+            echo "Guardado exitosamente.";
         } else {
-            $respuesta['correcto'] = 'N';
-            $respuesta['msj'] = 'Error al crear';
+            echo "Error: No se pudo guardar.";
         }
-        echo json_encode($respuesta);
+    
+        exit;
     }
 }
 ?>
