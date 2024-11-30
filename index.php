@@ -4,6 +4,7 @@
     <head>
         <link rel="stylesheet" href="librerias/bootstrap-5.3.3/dist/css/bootstrap.min.css">
         <script src="librerias/bootstrap-5.3.3/dist/js/bootstrap.bundle.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/app.css">
         <!-- USAR DOCS DE LA 5.0!!! -->
     </head>

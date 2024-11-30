@@ -1,57 +1,72 @@
 <?php 
-    $menus = array();
-    extract($datos);
+$menus = array();
+extract($datos);
 
-    usort($menus, function($a, $b) {
-        if ($a['parent_id'] == 0 && $b['parent_id'] != 0) {
-            return -1;
-        } elseif ($a['parent_id'] != 0 && $b['parent_id'] == 0) {
-            return 1;
-        } else {
-            return $a['position'] - $b['position'];
-        }
-    });
-
-    $html='';
-    // $html.='<button type="button" class="btn btn-primary" onclick="obtenerVista(\'Menu\', \'getVistaListadoMenu\', \'capaContenido\')">Recargar</button>';
-    $html.='<div class="table-responsive">
-                <table class="table table-sm table-striped">
-    ';
-    $html.='<thead>
-                <tr>
-                    <th>Nombre de menu</th>
-                    <th>URL</th>
-                    <th>ID del padre</th>
-                    <th>Position</th>
-                    <th>Nivel</th>
-                    <th>Estado</th>
-                    <th>Accion</th>
-                </tr>
-        </thead>
-        <tbody>';
-    foreach($menus as $posicion => $fila) {
-        $html .= '<tr>
-            <td>' . $fila['label'] . '</td>
-            <td>' . $fila['url'] . '</td>
-            <td>' . $fila['parent_id'] . '</td>
-            <td>' . $fila['position'] . '</td>
-            <td>' . $fila['level'] . '</td>
-            <td>' . ($fila['is_active'] == 1 ? 'Activo' : 'Inactivo') . '</td>
-            <td>
-                <button class="btn btn-primary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $fila['id'] . '\')">
-                    Editar
-                </button>
-                <button class="btn btn-success" onclick="obtenerVista(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', {parent_id: ' . $fila['id'] . '})">
-                    Nueva Opción
-                </button>
-            </td>
-        </tr>';
+// Ordenar los menús
+usort($menus, function($a, $b) {
+    if ($a['parent_id'] == 0 && $b['parent_id'] != 0) {
+        return -1;
+    } elseif ($a['parent_id'] != 0 && $b['parent_id'] == 0) {
+        return 1;
+    } else {
+        return $a['position'] - $b['position'];
     }
-    $html.='</tbody>
-    </table>
-    </div>';
+});
 
-    echo $html;
+// Construir el árbol jerárquico de menús
+function buildMenuTree($menus, $parentId = 0) {
+    $tree = [];
+    foreach ($menus as $menu) {
+        if ($menu['parent_id'] == $parentId) {
+            $children = buildMenuTree($menus, $menu['id']);
+            if ($children) {
+                $menu['children'] = $children;
+            }
+            $tree[] = $menu;
+        }
+    }
+    return $tree;
+}
+
+$menuTree = buildMenuTree($menus);
+
+// Renderizar el menú en forma de lista
+function renderMenu($menuTree, $level = 0) {
+    $html = '<div class="menu-list">';
+    foreach ($menuTree as $menu) {
+        // Fila del menú principal
+        $hasChildren = !empty($menu['children']);
+        $html .= '<div class="menu-row" data-menu-id="' . $menu['id'] . '" onclick="toggleOptions(' . $menu['id'] . ')">';
+        $html .= '<div class="menu-content">';
+        $html .= $hasChildren 
+            ? '<span class="arrow" onclick="toggleChildren(' . $menu['id'] . ', event)"><i class="fas fa-chevron-right"></i></span>' 
+            : '<span class="arrow-placeholder"></span>';
+        $html .= '<span class="menu-name">' . $menu['label'] . '</span>';
+        $html .= '</div>';
+        $html .= '</div>';
+
+        // Fila de opciones (oculta por defecto)
+        $html .= '<div class="menu-options" id="options-' . $menu['id'] . '" style="display: none;">';
+        $html .= '<button class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $menu['id'] . '\')"></i> Editar</button>';
+        $html .= '<button class="btn btn-sm btn-secondary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\')">Añadir arriba</button>';
+        $html .= '<button class="btn btn-sm btn-secondary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\')">Añadir abajo</button>';
+        $html .= '</div>';
+
+        // Submenús (ocultos por defecto)
+        if ($hasChildren) {
+            $html .= '<div class="menu-children" id="children-' . $menu['id'] . '" style="display: none;">';
+            $html .= renderMenu($menu['children'], $level + 1);
+            $html .= '</div>';
+        }
+    }
+    $html .= '</div>';
+    return $html;
+}
+
+// Imprimir el menú
+echo '<div class="menu-container">';
+echo renderMenu($menuTree);
+echo '</div>';
 ?>
 
 <div class="container-fluid" id="capaEditarCrear"></div>

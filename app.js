@@ -74,3 +74,29 @@ function buscar(controlador, metodo, formulario, destino) {
         console.log("Error al pedir vista", err.message);
     })
 }
+
+function toggleChildren(menuId, event) {
+    event.stopPropagation(); // Evitar activar el clic en la fila
+    const children = document.getElementById(`children-${menuId}`);
+    const arrow = event.target.closest('.arrow').querySelector('i'); // Busca el ícono dentro del contenedor de flecha
+
+    if (children.style.display === "none") {
+        children.style.display = "block"; // Mostrar hijos
+        arrow.classList.remove('fa-chevron-right');
+        arrow.classList.add('fa-chevron-down');
+    } else {
+        children.style.display = "none"; // Ocultar hijos
+        arrow.classList.remove('fa-chevron-down');
+        arrow.classList.add('fa-chevron-right');
+    }
+}
+
+
+function toggleOptions(menuId) {
+    const options = document.getElementById(`options-${menuId}`);
+    const allOptions = document.querySelectorAll('.menu-options');
+    allOptions.forEach(opt => {
+        if (opt !== options) opt.style.display = "none"; // Oculta otras opciones
+    });
+    options.style.display = options.style.display === "none" ? "block" : "none";
+}

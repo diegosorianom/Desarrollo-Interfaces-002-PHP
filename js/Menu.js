@@ -28,3 +28,4 @@ function guardarMenu() {
             document.getElementById('msjError').innerHTML = `Error inesperado: ${err.message}`;
         });
 }
+

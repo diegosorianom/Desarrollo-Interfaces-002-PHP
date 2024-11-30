@@ -7,3 +7,62 @@
     vertical-align: middle;
     font-size: 2rem;
 }
+
+.menu-container {
+    font-family: Arial, sans-serif;
+}
+
+.menu-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.menu-row:hover {
+    background-color: #e9e9e9;
+}
+
+.menu-content {
+    display: flex;
+    align-items: center;
+}
+
+.arrow {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.arrow-placeholder {
+    width: 20px;
+}
+
+.menu-options {
+    display: flex; /* Coloca los elementos en línea */
+    flex-direction: row; /* Asegura que estén en fila horizontal */
+    align-items: center; /* Alinea verticalmente los botones */
+    justify-content: flex-start; /* Alinea los botones al inicio */
+    gap: 20px; /* Espaciado uniforme entre botones */
+    padding: 5px;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.menu-options .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px; /* Espaciado entre el icono y el texto */
+}
+
+
+.menu-children {
+    margin-left: 20px;
+    border-left: 2px dashed #ddd;
+    padding-left: 10px;
+}
+
