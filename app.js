@@ -27,27 +27,34 @@ function obtenerVista(controlador, metodo, destino) {
     })
 }
 
-function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
+function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', copy_from_id = '') {
+    let opciones = { method: "GET" };
+    let parametros = "controlador=" + controlador + "&metodo=" + metodo;
 
-    let opciones = {method: "GET",};
-    let parametros = "controlador=" + controlador + "&metodo=" + metodo + "&id=" + id;
+    if (id) {
+        parametros += "&id=" + id;
+    }
+
+    if (copy_from_id) {
+        parametros += "&copy_from_id=" + copy_from_id; // Enviar ID del menú base para "Añadir arriba"
+    }
 
     fetch("C_Frontal.php?" + parametros, opciones) // Llamada al Controlador frontal
-    .then(res => {
-        // Nos devuelve si esta OK o no
-        if (res.ok) {
-            return res.text();
-        }
-        throw new Error(res.status);
-    }) 
-    .then(vista => {
-        document.getElementById(destino).innerHTML = vista;
-        // cargarUnScript('js/'+controlador+'.js');
-    })
-    .catch(err => {
-        console.log("Error al pedir vista", err.message);
-    })
+        .then(res => {
+            // Nos devuelve si esta OK o no
+            if (res.ok) {
+                return res.text();
+            }
+            throw new Error(res.status);
+        })
+        .then(vista => {
+            document.getElementById(destino).innerHTML = vista;
+        })
+        .catch(err => {
+            console.log("Error al pedir vista", err.message);
+        });
 }
+
 
 
 

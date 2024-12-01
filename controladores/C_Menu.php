@@ -23,32 +23,51 @@ class C_Menu {
         Vista::render('./vistas/Menu/V_Menu_Listado.php', array('menus' => $menus));
     }    
 
-    public function getVistaNuevoEditar($datos=array()) {
-        if (!isset($datos['id']) || $datos['id']=='') {
-            // Nuevo
-            Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php');
+    public function getVistaNuevoEditar($datos = array()) {
+        if (!isset($datos['id']) || $datos['id'] == '') {
+            if (isset($datos['copy_from_id']) && $datos['copy_from_id'] != '') {
+                // Caso "Añadir arriba"
+                $menuReferencia = $this->menuModel->buscarOpcionesMenu(['id' => $datos['copy_from_id']])[0];
+                $nuevoMenu = [
+                    'label' => '', // El usuario ingresará esto
+                    'url' => '',
+                    'action' => '',
+                    'position' => $menuReferencia['position'], // Misma posición que el menú base
+                    'level' => $menuReferencia['level'], // Mismo nivel que el menú base
+                    'parent_id' => $menuReferencia['parent_id'], // Mismo padre
+                    'is_active' => 1, // Activado por defecto
+                ];
+                Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $nuevoMenu]);
+            } else {
+                // Nuevo sin referencia
+                Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php');
+            }
         } else {
+            // Edición
             $filtros['id'] = $datos['id'];
-            $menus = $this -> menuModel -> buscarOpcionesMenu($filtros);
-            Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', array('menu' => $menus[0]));
+            $menus = $this->menuModel->buscarOpcionesMenu($filtros);
+            Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $menus[0]]);
         }
-    }    
+    }
+    
 
     public function guardarMenu($datos = array()) {
-        // Valida los datos
         if (!is_array($datos) || empty($datos)) {
             echo "Error: Datos inválidos.";
             exit;
         }
     
-        // Lógica para guardar o editar
-        if (!empty($datos['id'])) {
-            $id = $this->menuModel->editarMenu($datos);
-        } else {
+        if (empty($datos['id'])) {
+            // Actualizar posiciones de los menús existentes
+            $this->menuModel->actualizarPosiciones($datos['level'], $datos['position']);
+    
+            // Insertar el nuevo menú
             $id = $this->menuModel->insertarMenu($datos);
+        } else {
+            // Editar menú existente
+            $id = $this->menuModel->editarMenu($datos);
         }
     
-        // Verifica el resultado
         if ($id > 0) {
             echo "Guardado exitosamente.";
         } else {
@@ -57,5 +76,6 @@ class C_Menu {
     
         exit;
     }
+    
 }
 ?>

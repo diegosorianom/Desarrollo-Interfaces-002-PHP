@@ -48,7 +48,7 @@ function renderMenu($menuTree, $level = 0) {
         // Fila de opciones (oculta por defecto)
         $html .= '<div class="menu-options" id="options-' . $menu['id'] . '" style="display: none;">';
         $html .= '<button class="btn btn-sm btn-primary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $menu['id'] . '\')">Editar</button>';
-        $html .= '<button class="btn btn-sm btn-secondary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\')">Añadir arriba</button>';
+        $html .= '<button class="btn btn-sm btn-secondary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'\', ' . $menu['id'] . ')">Añadir arriba</button>';
         $html .= '<button class="btn btn-sm btn-secondary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\')">Añadir abajo</button>';
         $html .= '</div>';
 

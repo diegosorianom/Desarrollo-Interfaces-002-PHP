@@ -26,7 +26,12 @@ if (isset($datos['menu'])) {
                 <input type="text" id="id" name="id" class="form-control" value="<?php echo $id; ?>">
             </div>
         <?php endif; ?>
-        
+
+        <?php if ($editar == 'Nuevo' && isset($datos['copy_from_id'])): ?>
+            <!-- Campo oculto para identificar la referencia "Añadir arriba" -->
+            <input type="hidden" name="copy_from_id" value="<?php echo $datos['copy_from_id']; ?>">
+        <?php endif; ?>
+
         <div class="mb-3">
             <label for="label" class="form-label">Label</label>
             <input type="text" class="form-control" id="label" name="label" value="<?php echo $label; ?>" required>
@@ -61,7 +66,7 @@ if (isset($datos['menu'])) {
         </div>
 
         <div class="mb-3">
-            <label for="action" class="form-label">Acción</label>
+            <label for="action" class="form-label">Acción</label>
             <input type="text" class="form-control" id="action" name="action" value="<?php echo $action; ?>">
         </div>
 

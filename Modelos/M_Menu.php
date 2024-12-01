@@ -129,6 +129,11 @@ class M_Menu extends Modelo {
         // Ejecutar la consulta y devolver el resultado
         return $this->DAO->actualizar($SQL);
     }
+
     
+    public function actualizarPosiciones($nivel, $posicion) {
+        $SQL = "UPDATE menu SET position = position + 1 WHERE level = $nivel AND position >= $posicion";
+        $this->DAO->actualizar($SQL);
+    }    
 }
 ?>

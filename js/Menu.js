@@ -1,26 +1,36 @@
 function guardarMenu() {
     console.log('Guardando...');
 
-    const formData = new FormData(document.getElementById('formularioNuevoEditar'));
+    const form = document.getElementById('formularioNuevoEditar');
+    const formData = new FormData(form);
+
+    // Validación básica
     if (!formData.get('label')) {
         document.getElementById('msjError').innerHTML = 'El campo Label es obligatorio.';
         return;
     }
 
-    let opciones = { method: "GET" };
-    let parametros = "controlador=Menu&metodo=guardarMenu";
-    parametros += '&' + new URLSearchParams(formData).toString();
+    // Configuración de la solicitud
+    let opciones = {
+        method: "POST",
+        body: formData, // Enviar directamente el FormData
+    };
 
-    fetch("C_Frontal.php?" + parametros, opciones)
-        .then(res => res.text()) // Procesa como texto plano
+    // Endpoint al que se enviará la solicitud
+    let url = "C_Frontal.php?controlador=Menu&metodo=guardarMenu";
+
+    fetch(url, opciones)
+        .then(res => res.text()) // Procesa la respuesta como texto
         .then(texto => {
             console.log("Respuesta del servidor:", texto); // Muestra la respuesta en la consola
+
+            // Manejo de la respuesta
             if (texto.includes("Error")) {
                 document.getElementById('msjError').innerHTML = texto; // Muestra el error
             } else {
                 document.getElementById('capaEditarCrear').innerHTML = ''; // Limpia el formulario
-                obtenerVista('Menu', 'getVistaListadoMenu', 'capaContenido');
-                document.getElementById('msjError').innerHTML = texto; // Muestra el mensaje de éxito
+                obtenerVista('Menu', 'getVistaListadoMenu', 'capaContenido'); // Recargar listado
+                document.getElementById('msjError').innerHTML = texto; // Mensaje de éxito
             }
         })
         .catch(err => {
@@ -28,4 +38,3 @@ function guardarMenu() {
             document.getElementById('msjError').innerHTML = `Error inesperado: ${err.message}`;
         });
 }
-
