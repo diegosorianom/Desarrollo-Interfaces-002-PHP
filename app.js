@@ -27,7 +27,7 @@ function obtenerVista(controlador, metodo, destino) {
     })
 }
 
-function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', copy_from_id = '') {
+function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', menu_id = '', position_type = '') {
     let opciones = { method: "GET" };
     let parametros = "controlador=" + controlador + "&metodo=" + metodo;
 
@@ -35,13 +35,16 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', copy_fr
         parametros += "&id=" + id;
     }
 
-    if (copy_from_id) {
-        parametros += "&copy_from_id=" + copy_from_id; // Enviar ID del menú base para "Añadir arriba"
+    if (menu_id) {
+        parametros += "&menu_id=" + menu_id; // Enviar ID del menú base
     }
 
-    fetch("C_Frontal.php?" + parametros, opciones) // Llamada al Controlador frontal
+    if (position_type) {
+        parametros += "&position_type=" + position_type; // Indicar si es "arriba" o "abajo"
+    }
+
+    fetch("C_Frontal.php?" + parametros, opciones)
         .then(res => {
-            // Nos devuelve si esta OK o no
             if (res.ok) {
                 return res.text();
             }
@@ -54,8 +57,6 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', copy_fr
             console.log("Error al pedir vista", err.message);
         });
 }
-
-
 
 
 // Aqui es donde crearemos las funciones básicas

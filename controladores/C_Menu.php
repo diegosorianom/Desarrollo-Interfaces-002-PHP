@@ -25,30 +25,38 @@ class C_Menu {
 
     public function getVistaNuevoEditar($datos = array()) {
         if (!isset($datos['id']) || $datos['id'] == '') {
-            if (isset($datos['copy_from_id']) && $datos['copy_from_id'] != '') {
-                // Caso "Añadir arriba"
-                $menuReferencia = $this->menuModel->buscarOpcionesMenu(['id' => $datos['copy_from_id']])[0];
+            if (isset($datos['menu_id']) && isset($datos['position_type'])) {
+                // Obtener datos del menú base
+                $menuReferencia = $this->menuModel->buscarOpcionesMenu(['id' => $datos['menu_id']])[0];
+    
+                // Determinar nueva posición según el tipo
+                $nuevaPosicion = $datos['position_type'] === 'below'
+                    ? $menuReferencia['position'] + 1 // Posición para "abajo"
+                    : $menuReferencia['position']; // Posición para "arriba"
+    
                 $nuevoMenu = [
                     'label' => '', // El usuario ingresará esto
                     'url' => '',
                     'action' => '',
-                    'position' => $menuReferencia['position'], // Misma posición que el menú base
+                    'position' => $nuevaPosicion, // Nueva posición calculada
                     'level' => $menuReferencia['level'], // Mismo nivel que el menú base
                     'parent_id' => $menuReferencia['parent_id'], // Mismo padre
                     'is_active' => 1, // Activado por defecto
                 ];
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $nuevoMenu]);
             } else {
-                // Nuevo sin referencia
+                // Caso de nuevo menú sin referencia
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php');
             }
         } else {
-            // Edición
+            // Caso de edición
             $filtros['id'] = $datos['id'];
             $menus = $this->menuModel->buscarOpcionesMenu($filtros);
             Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $menus[0]]);
         }
     }
+    
+    
     
 
     public function guardarMenu($datos = array()) {
@@ -76,6 +84,8 @@ class C_Menu {
     
         exit;
     }
+    
+    
     
 }
 ?>
