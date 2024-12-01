@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <button type="button" class="btn btn-primary" onclick="buscar('Menu', 'getVistaListadoMenu', 'formularioBuscarMenu', 'capaResultadoBusqueda')">Buscar</button>
-                <button type="button" class="btn btn-secondary" onclick="obtenerVista_EditarCrear('Menu', 'getVistaNuevoEditar', 'capaEditarCrear', '')">Nuevo</button>
+                <!-- <button type="button" class="btn btn-secondary" onclick="obtenerVista_EditarCrear('Menu', 'getVistaNuevoEditar', 'capaEditarCrear', '')">Nuevo</button> -->
             </div>
         </div>
     </form>

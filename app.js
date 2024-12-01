@@ -40,7 +40,7 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', menu_id
     }
 
     if (position_type) {
-        parametros += "&position_type=" + position_type; // Indicar si es "arriba" o "abajo"
+        parametros += "&position_type=" + position_type; // Indicar si es "arriba", "abajo" o "hijo"
     }
 
     fetch("C_Frontal.php?" + parametros, opciones)
@@ -57,6 +57,7 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', menu_id
             console.log("Error al pedir vista", err.message);
         });
 }
+
 
 
 // Aqui es donde crearemos las funciones básicas
@@ -108,3 +109,4 @@ function toggleOptions(menuId) {
     });
     options.style.display = options.style.display === "none" ? "block" : "none";
 }
+

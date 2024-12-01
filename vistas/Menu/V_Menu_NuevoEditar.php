@@ -27,9 +27,9 @@ if (isset($datos['menu'])) {
             </div>
         <?php endif; ?>
 
-        <?php if ($editar == 'Nuevo' && isset($datos['copy_from_id'])): ?>
-            <!-- Campo oculto para identificar la referencia "Añadir arriba" -->
-            <input type="hidden" name="copy_from_id" value="<?php echo $datos['copy_from_id']; ?>">
+        <?php if (isset($parent_id) && $parent_id != ''): ?>
+            <!-- Campo oculto para parent_id -->
+            <input type="hidden" id="parent_id" name="parent_id" value="<?php echo $parent_id; ?>">
         <?php endif; ?>
 
         <div class="mb-3">
@@ -43,18 +43,13 @@ if (isset($datos['menu'])) {
         </div>
 
         <div class="mb-3">
-            <label for="parent_id" class="form-label">Parent ID</label>
-            <input type="text" class="form-control" id="parent_id" name="parent_id" value="<?php echo $parent_id; ?>">
-        </div>
-
-        <div class="mb-3">
             <label for="level" class="form-label">Nivel</label>
-            <input type="text" class="form-control" id="level" name="level" value="<?php echo $level; ?>">
+            <input type="text" class="form-control" id="level" name="level" value="<?php echo $level; ?>" readonly>
         </div>
 
         <div class="mb-3">
             <label for="position" class="form-label">Posición</label>
-            <input type="text" class="form-control" id="position" name="position" value="<?php echo $position; ?>">
+            <input type="text" class="form-control" id="position" name="position" value="<?php echo $position; ?>" readonly>
         </div>
 
         <div class="mb-3">
@@ -66,7 +61,7 @@ if (isset($datos['menu'])) {
         </div>
 
         <div class="mb-3">
-            <label for="action" class="form-label">Acción</label>
+            <label for="action" class="form-label">Acción</label>
             <input type="text" class="form-control" id="action" name="action" value="<?php echo $action; ?>">
         </div>
 
@@ -79,3 +74,4 @@ if (isset($datos['menu'])) {
         </div>
     </form>
 </div>
+

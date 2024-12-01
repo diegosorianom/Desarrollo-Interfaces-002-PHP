@@ -135,5 +135,13 @@ class M_Menu extends Modelo {
         $SQL = "UPDATE menu SET position = position + 1 WHERE level = $nivel AND position >= $posicion";
         $this->DAO->actualizar($SQL);
     }    
+
+    public function obtenerUltimaPosicion($parentId) {
+        $SQL = "SELECT MAX(position) AS ultima_posicion FROM menu WHERE parent_id = $parentId";
+        $resultado = $this->DAO->consultar($SQL);
+    
+        return isset($resultado[0]['ultima_posicion']) ? (int)$resultado[0]['ultima_posicion'] : 0;
+    }
+    
 }
 ?>

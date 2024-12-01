@@ -50,6 +50,7 @@ function renderMenu($menuTree, $level = 0) {
         $html .= '<button class="btn btn-sm btn-primary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $menu['id'] . '\')">Editar</button>';
         $html .= '<button class="btn btn-sm btn-secondary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'\', ' . $menu['id'] . ', \'above\')">Añadir arriba</button>';
         $html .= '<button class="btn btn-sm btn-secondary" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'\', ' . $menu['id'] . ', \'below\')">Añadir abajo</button>';
+        $html .= '<button class="btn btn-sm btn-success" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'\', ' . $menu['id'] . ', \'child\')">Añadir hijo</button>';
         $html .= '</div>';
 
         // Submenús (ocultos por defecto)

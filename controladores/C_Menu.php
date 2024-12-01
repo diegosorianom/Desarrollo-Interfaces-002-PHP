@@ -25,22 +25,25 @@ class C_Menu {
 
     public function getVistaNuevoEditar($datos = array()) {
         if (!isset($datos['id']) || $datos['id'] == '') {
-            if (isset($datos['menu_id']) && isset($datos['position_type'])) {
+            if (isset($datos['menu_id']) && isset($datos['position_type']) && $datos['position_type'] === 'child') {
                 // Obtener datos del menú base
                 $menuReferencia = $this->menuModel->buscarOpcionesMenu(['id' => $datos['menu_id']])[0];
     
-                // Determinar nueva posición según el tipo
-                $nuevaPosicion = $datos['position_type'] === 'below'
-                    ? $menuReferencia['position'] + 1 // Posición para "abajo"
-                    : $menuReferencia['position']; // Posición para "arriba"
+                // Calcular el nivel del nuevo hijo
+                $nuevoNivel = $menuReferencia['level'] + 1;
     
+                // Calcular la posición del nuevo hijo
+                $ultimaPosicion = $this->menuModel->obtenerUltimaPosicion($menuReferencia['id']);
+                $nuevaPosicion = $ultimaPosicion + 1;
+    
+                // Configurar datos del nuevo menú
                 $nuevoMenu = [
                     'label' => '', // El usuario ingresará esto
                     'url' => '',
                     'action' => '',
-                    'position' => $nuevaPosicion, // Nueva posición calculada
-                    'level' => $menuReferencia['level'], // Mismo nivel que el menú base
-                    'parent_id' => $menuReferencia['parent_id'], // Mismo padre
+                    'position' => $nuevaPosicion,
+                    'level' => $nuevoNivel,
+                    'parent_id' => $menuReferencia['id'], // El menú base se convierte en el padre
                     'is_active' => 1, // Activado por defecto
                 ];
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $nuevoMenu]);
@@ -55,9 +58,6 @@ class C_Menu {
             Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $menus[0]]);
         }
     }
-    
-    
-    
 
     public function guardarMenu($datos = array()) {
         if (!is_array($datos) || empty($datos)) {
@@ -66,13 +66,10 @@ class C_Menu {
         }
     
         if (empty($datos['id'])) {
-            // Actualizar posiciones de los menús existentes
-            $this->menuModel->actualizarPosiciones($datos['level'], $datos['position']);
-    
-            // Insertar el nuevo menú
+            // Para un nuevo menú
             $id = $this->menuModel->insertarMenu($datos);
         } else {
-            // Editar menú existente
+            // Para un menú existente
             $id = $this->menuModel->editarMenu($datos);
         }
     
@@ -83,9 +80,6 @@ class C_Menu {
         }
     
         exit;
-    }
-    
-    
-    
+    }   
 }
 ?>
