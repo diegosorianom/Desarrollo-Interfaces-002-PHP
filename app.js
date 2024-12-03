@@ -36,11 +36,11 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', menu_id
     }
 
     if (menu_id) {
-        parametros += "&menu_id=" + menu_id; // Enviar ID del menú base
+        parametros += "&menu_id=" + menu_id;
     }
 
     if (position_type) {
-        parametros += "&position_type=" + position_type; // Indicar si es "arriba", "abajo" o "hijo"
+        parametros += "&position_type=" + position_type;
     }
 
     fetch("C_Frontal.php?" + parametros, opciones)
@@ -57,6 +57,8 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', menu_id
             console.log("Error al pedir vista", err.message);
         });
 }
+
+
 
 
 

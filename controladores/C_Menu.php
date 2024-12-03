@@ -25,26 +25,29 @@ class C_Menu {
 
     public function getVistaNuevoEditar($datos = array()) {
         if (!isset($datos['id']) || $datos['id'] == '') {
-            if (isset($datos['menu_id']) && isset($datos['position_type']) && $datos['position_type'] === 'child') {
+            if (isset($datos['menu_id']) && isset($datos['position_type'])) {
                 // Obtener datos del menú base
                 $menuReferencia = $this->menuModel->buscarOpcionesMenu(['id' => $datos['menu_id']])[0];
-    
-                // Calcular el nivel del nuevo hijo
-                $nuevoNivel = $menuReferencia['level'] + 1;
-    
-                // Calcular la posición del nuevo hijo
-                $ultimaPosicion = $this->menuModel->obtenerUltimaPosicion($menuReferencia['id']);
-                $nuevaPosicion = $ultimaPosicion + 1;
-    
-                // Configurar datos del nuevo menú
+
+                // Determinar nueva posición y nivel según el tipo
+                if ($datos['position_type'] === 'child') {
+                    $nuevoNivel = $menuReferencia['level'] + 1;
+                    $nuevaPosicion = $this->menuModel->obtenerUltimaPosicion($menuReferencia['id']) + 1;
+                    $parentId = $menuReferencia['id'];
+                } else {
+                    $nuevoNivel = $menuReferencia['level'];
+                    $nuevaPosicion = $datos['position_type'] === 'below' ? $menuReferencia['position'] + 1 : $menuReferencia['position'];
+                    $parentId = $menuReferencia['parent_id'];
+                }
+
                 $nuevoMenu = [
-                    'label' => '', // El usuario ingresará esto
+                    'label' => '',
                     'url' => '',
                     'action' => '',
                     'position' => $nuevaPosicion,
                     'level' => $nuevoNivel,
-                    'parent_id' => $menuReferencia['id'], // El menú base se convierte en el padre
-                    'is_active' => 1, // Activado por defecto
+                    'parent_id' => $parentId,
+                    'is_active' => 1,
                 ];
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $nuevoMenu]);
             } else {
