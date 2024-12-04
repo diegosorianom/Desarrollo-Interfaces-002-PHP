@@ -24,6 +24,6 @@
     </form>
 </div>
 
+<div class="container-fluid mt-4" id="capaEditarCrear"></div>
 <div class="container-fluid mt-4" id="capaResultadoBusqueda"></div>
 
-<div class="container-fluid mt-4" id="capaEditarCrear"></div>

@@ -19,7 +19,6 @@ function guardarUsuario() {
         } else {
             document.getElementById('msjError').innerHTML = resultado.msj;
         }
-        // document.getElementById(destino).innerHTML = vista;
     })
     .catch(err => {
         console.log("Error al pedir vista", err.message);
