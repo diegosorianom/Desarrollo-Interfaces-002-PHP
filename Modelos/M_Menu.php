@@ -44,15 +44,9 @@ class M_Menu extends Modelo {
                     $SQL.=" OR (titulo LIKE '%$word%')";
             }
         }
-
-        // if($factivo!=''){
-        //     $SQL.=" AND activo='$factivo' ";
-        // }
         if($id!=''){
             $SQL.=" AND id='$id' ";
         }
-
-        // $SQL.=' ORDER BY id ';
 
         $opcionesMenu = $this->DAO->consultar($SQL);
         
@@ -79,58 +73,73 @@ class M_Menu extends Modelo {
     }
 
     public function insertarMenu($datos = array()) {
-        $label = isset($datos['label']) ? "'" . addslashes($datos['label']) . "'" : "NULL";
-        $url = isset($datos['url']) ? "'" . addslashes($datos['url']) . "'" : "NULL";
-        $parent_id = isset($datos['parent_id']) && $datos['parent_id'] !== '' ? intval($datos['parent_id']) : "NULL";
-        $position = isset($datos['position']) ? intval($datos['position']) : "NULL";
-        $level = isset($datos['level']) ? intval($datos['level']) : "NULL";
-        $is_active = isset($datos['is_active']) ? intval($datos['is_active']) : "NULL";
-        $action = isset($datos['action']) ? "'" . addslashes($datos['action']) . "'" : "NULL";
-    
-        $SQL = "INSERT INTO menu SET
-                label=$label,
-                url=$url,
-                parent_id=$parent_id,
-                position=$position,
-                level=$level,
-                is_active=$is_active,
-                action=$action";
-        return $this->DAO->insertar($SQL);
-    }
-    
-
-    public function editarMenu($datos = array()) {
-        // Validar que $datos sea un arreglo y contenga el ID
-        if (!is_array($datos) || empty($datos['id'])) {
-            throw new InvalidArgumentException("Datos inválidos o faltan el ID para editar.");
+        // Default values for all fields
+        $id = '';
+        $label = '';
+        $url = '';
+        $parent_id = '';
+        $position = '';
+        $level = '';
+        $is_active = '';
+        $action = '';
+        $isAbove = false; // Default value for position logic
+        $isEdit = false;  // Default value for edit status
+        
+        // Extract provided data into the variables
+        extract($datos);
+        
+        // Check if 'isAbove' and 'isEdit' are passed and set them accordingly
+        if (isset($datos['isAbove'])) {
+            $isAbove = $datos['isAbove'];
         }
+        
+        if (isset($datos['isEdit'])) {
+            $isEdit = $datos['isEdit'];
+        }
+        
+        // If it's an edit (ID exists), perform an update
+        if ($isEdit && !empty($id)) {
+            // Update query if ID exists
+            $SQL = "UPDATE menu SET
+                    label='$label',
+                    url='$url',
+                    parent_id='$parent_id',
+                    position='$position',
+                    level='$level',
+                    is_active='$is_active',
+                    action='$action'
+                    WHERE id='$id'";
+            return $this->DAO->actualizar($SQL);
+        } else {
+            // Insert query when ID doesn't exist or it's a new menu item
+            
+            // If the position is 'above', set the position to the invoking item's position
+            if ($isAbove) {
+                // Position remains the same as the invoking item
+                $SQL = "INSERT INTO menu SET
+                        label='$label',
+                        url='$url',
+                        parent_id='$parent_id',
+                        position='$position',
+                        level='$level',
+                        is_active='$is_active',
+                        action='$action'";
+            } else {
+                // If the item is being added below, increment the position
+                $SQL = "INSERT INTO menu SET
+                        label='$label',
+                        url='$url',
+                        parent_id='$parent_id',
+                        position=position + 1,   -- This will add the item below the invoking item
+                        level='$level',
+                        is_active='$is_active',
+                        action='$action'";
+            }
+            return $this->DAO->insertar($SQL);
+        }
+    }   
     
-        // Validación y saneamiento de los campos
-        $id = intval($datos['id']); // El ID siempre debe ser un entero
-        $label = isset($datos['label']) ? "'" . addslashes($datos['label']) . "'" : "NULL";
-        $url = isset($datos['url']) ? "'" . addslashes($datos['url']) . "'" : "NULL";
-        $parent_id = isset($datos['parent_id']) && $datos['parent_id'] !== '' ? intval($datos['parent_id']) : "NULL";
-        $position = isset($datos['position']) ? intval($datos['position']) : "NULL";
-        $level = isset($datos['level']) ? intval($datos['level']) : "NULL";
-        $is_active = isset($datos['is_active']) ? intval($datos['is_active']) : "NULL";
-        $action = isset($datos['action']) ? "'" . addslashes($datos['action']) . "'" : "NULL";
-    
-        // Crear la consulta SQL
-        $SQL = "UPDATE menu SET
-                    label=$label,
-                    url=$url,
-                    parent_id=$parent_id,
-                    position=$position,
-                    level=$level,
-                    is_active=$is_active,
-                    action=$action
-                WHERE id=$id";
-    
-        // Ejecutar la consulta y devolver el resultado
-        return $this->DAO->actualizar($SQL);
-    }
-
-    
+        
     public function actualizarPosiciones($nivel, $posicion) {
         $SQL = "UPDATE menu SET position = position + 1 WHERE level = $nivel AND position >= $posicion";
         $this->DAO->actualizar($SQL);

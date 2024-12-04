@@ -68,13 +68,8 @@ class C_Menu {
             exit;
         }
     
-        if (empty($datos['id'])) {
-            // Para un nuevo menú
-            $id = $this->menuModel->insertarMenu($datos);
-        } else {
-            // Para un menú existente
-            $id = $this->menuModel->editarMenu($datos);
-        }
+        // Attempt to insert or update the menu
+        $id = $this->menuModel->insertarMenu($datos); // This will handle both insert and update
     
         if ($id > 0) {
             echo "Guardado exitosamente.";
@@ -83,6 +78,7 @@ class C_Menu {
         }
     
         exit;
-    }   
+    }
+    
 }
 ?>
