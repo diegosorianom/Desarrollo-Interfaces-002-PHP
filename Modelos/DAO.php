@@ -41,6 +41,7 @@
         }
 
         public function actualizar($SQL){
+            error_log("Ejecutando consulta: $SQL"); // Log the query
             $this->conexion->query($SQL, MYSQLI_USE_RESULT);
             if($this->conexion->connect_errno){
                 die('Error consulat a BD: '.$SQL);
@@ -49,7 +50,7 @@
                 return $this->conexion->affected_rows;
             }
         }
-
+        
         public function borrar($SQL){
 			$this->conexion->query($SQL);
 			return $this->conexion->affected_rows;

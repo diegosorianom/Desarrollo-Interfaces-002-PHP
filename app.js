@@ -6,42 +6,28 @@ function cargarUnScript(url) {
 
 // Aqui es donde crearemos las funciones básicas
 function obtenerVista(controlador, metodo, destino) {
+    let parametros = "controlador=" + controlador + "&metodo=" + metodo
+    let opciones = {method: 'GET',}
 
-    let opciones = {method: "GET",};
-    let parametros = "controlador=" + controlador + "&metodo=" + metodo;
-
-    fetch("C_Frontal.php?" + parametros, opciones) // Llamada al Controlador frontal
-    .then(res => {
-        // Nos devuelve si esta OK o no
-        if (res.ok) {
-            return res.text();
-        }
-        throw new Error(res.status);
-    }) 
-    .then(vista => {
-        document.getElementById(destino).innerHTML = vista;
-        cargarUnScript('js/'+controlador+'.js');
-    })
-    .catch(err => {
-        console.log("Error al pedir vista", err.message);
-    })
+    fetch("C_Frontal.php?" + parametros, opciones) 
+        .then(res => {
+            if (res.ok) {
+                return res.text();
+            }
+            throw new Error(res.status);
+        })
+        .then(vista => {
+            document.getElementById(destino).innerHTML = vista;
+            cargarUnScript('js/' + controlador + '.js');
+        })
+        .catch(error => {
+            console.log("Error al pedir vista", error.message); 
+        });
 }
 
-function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', menu_id = '', position_type = '') {
-    let opciones = { method: "GET" };
-    let parametros = "controlador=" + controlador + "&metodo=" + metodo;
-
-    if (id) {
-        parametros += "&id=" + id;
-    }
-
-    if (menu_id) {
-        parametros += "&menu_id=" + menu_id;
-    }
-
-    if (position_type) {
-        parametros += "&position_type=" + position_type;
-    }
+function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
+    let parametros = "controlador=" + controlador + "&metodo=" + metodo + "&id=" + id; // Add '=' after id
+    let opciones = { method: 'GET' };
 
     fetch("C_Frontal.php?" + parametros, opciones)
         .then(res => {
@@ -53,36 +39,31 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', menu_id
         .then(vista => {
             document.getElementById(destino).innerHTML = vista;
         })
-        .catch(err => {
-            console.log("Error al pedir vista", err.message);
+        .catch(error => {
+            console.log("Error al pedir vista", error.message);
         });
 }
 
 // Aqui es donde crearemos las funciones básicas
 function buscar(controlador, metodo, formulario, destino) {
+    let parametros = "controlador=" + controlador + "&metodo=" + metodo; // Fixed the parameter formatting
+    let opciones = { method: 'GET' };
+    parametros += "&" + new URLSearchParams(new FormData(document.getElementById(formulario))).toString();
 
-    let opciones = {method: "GET",};
-    let parametros = "controlador=" + controlador + "&metodo=" + metodo;
-    parametros += '&' + new URLSearchParams(new FormData(document.getElementById(formulario))).toString();
-
-    fetch("C_Frontal.php?" + parametros, opciones) // Llamada al Controlador frontal
-    .then(res => {
-        // Nos devuelve si esta OK o no
-        if (res.ok) {
-            return res.text();
-        }
-        throw new Error(res.status);
-    }) 
-    .then(vista => {
-        document.getElementById(destino).innerHTML = vista;
-        
-    })
-    .catch(err => {
-        console.log("Error al pedir vista", err.message);
-    })
+    fetch("C_Frontal.php?" + parametros, opciones)
+        .then(res => {
+            if (res.ok) {
+                return res.text();
+            }
+            throw new Error(res.status);
+        })
+        .then(vista => {
+            document.getElementById(destino).innerHTML = vista;
+        })
+        .catch(error => {
+            console.log("Error al pedir vista", error.message); // Fixed 'err' to 'error'
+        });
 }
-
-
 
 function toggleChildren(menuId, event) {
     event.stopPropagation(); // Evitar activar el clic en la fila

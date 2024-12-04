@@ -27,7 +27,7 @@ $cNoContesta = $sexo == 'N' ? ' selected ' : '';
 ?>
 
 <div class="container" id="capaEditarCrear" style="max-width: 500px; border: 1px solid #ccc; padding: 20px; margin-right: 20px; border-radius: 5px; float: left;">
-    <form id="formularioNuevoEditar" name="formularioNuevoEditar">
+    <form id="formularioUsuario" name="formularioUsuario">
         <?php if ($editar == 'Editar'): ?>
             <div class="form-group" style="display: none;">
                 <label for="id_Usuario">Id</label>
@@ -111,7 +111,7 @@ $cNoContesta = $sexo == 'N' ? ' selected ' : '';
 
         <div class="row py-1">
             <div class="col-12">
-                <button type="button" class="btn btn-success" onclick="guardarUsuario()"><?php echo $editar == 'Editar' ? 'Guardar' : 'Crear'; ?></button>
+                <button type="button" class="btn btn-outline-primary" onclick="guardarUsuario()"><?php echo $editar; ?></button>
                 <button type="button" class="btn btn-danger" onclick="document.getElementById('capaEditarCrear').innerHTML = '';">Cancelar</button>
                 <span id="msjError" style="color:blue;"></span>
             </div>

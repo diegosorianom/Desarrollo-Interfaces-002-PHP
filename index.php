@@ -1,4 +1,6 @@
 <?php session_start(); ?>
+
+
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -6,7 +8,6 @@
         <script src="librerias/bootstrap-5.3.3/dist/js/bootstrap.bundle.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/app.css">
-        <!-- USAR DOCS DE LA 5.0!!! -->
     </head>
     <body>
         <div class="container-fluid" id="capaEncabezado">
@@ -42,9 +43,7 @@
         <?php include 'vistas/Menu/V_Menu.php'; ?>
 
         <div class="container-fluid" id="capaContenido">
-            <div id="cajaConTexto">
-                
-            </div>
+            <div id="cajaConTexto"></div>
         </div>
         <!-- Asincrona para que lo cargue cuando pueda sin obstaculizar el resto -->
         <script src="app.js" async></script>
