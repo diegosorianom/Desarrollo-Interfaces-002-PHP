@@ -58,10 +58,6 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id = '', menu_id
         });
 }
 
-
-
-
-
 // Aqui es donde crearemos las funciones básicas
 function buscar(controlador, metodo, formulario, destino) {
 
@@ -85,6 +81,8 @@ function buscar(controlador, metodo, formulario, destino) {
         console.log("Error al pedir vista", err.message);
     })
 }
+
+
 
 function toggleChildren(menuId, event) {
     event.stopPropagation(); // Evitar activar el clic en la fila

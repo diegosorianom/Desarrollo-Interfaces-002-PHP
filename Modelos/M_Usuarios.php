@@ -10,7 +10,6 @@ class M_Usuarios extends Modelo {
         $this->DAO = new DAO();
     }
 
-
     public function login($datos=array()){
         $usuario='fsfdfhddhh';
         $pass='dasdfasñlj';
@@ -32,7 +31,6 @@ class M_Usuarios extends Modelo {
 
                 }
             return $id_Usuario;
-
     }
 
     public function buscarUsuarios($filtros = array()) {
@@ -58,7 +56,6 @@ class M_Usuarios extends Modelo {
 
             $SQL .= " AND (" .implode(' OR ', $conditions) . ")";
         }
-
 
         if ($factivo != '') {
             $SQL .= " AND activo='$factivo' "; // Corrige esta línea
@@ -131,7 +128,6 @@ class M_Usuarios extends Modelo {
                 WHERE id_Usuario = '$id_Usuario'";
         return $this->DAO->actualizar($SQL);
     }
-
 
     //Función para validar el usuario del botón de login
     public function validarUsuario($login, $pass) {

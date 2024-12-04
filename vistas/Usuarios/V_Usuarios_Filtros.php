@@ -1,7 +1,7 @@
-<h2>Mantenimiento de usuarios</h2>
 <div class="container-fluid" id="capaFiltrosBusqueda">
+    <h2 class="text-start mb-4">Mantenimiento de usuarios</h2>
     <form id="formularioBuscar" name="formularioBuscar">
-        <div class="row">
+        <div class="row mb-2">
             <div class="form-group col-md-6 col-sm-12">
                 <label for="ftexto">Nombre/texto:</label>
                 <input type="text" id="ftexto" name="ftexto" class="form-control" placeholder="Texto a buscar" value="" /> 
@@ -15,13 +15,15 @@
                 </select>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <button type="button" class="btn btn-primary" onclick="buscar('Usuarios', 'getVistaListadoUsuarios', 'formularioBuscar', 'capaResultadoBusqueda')">Buscar</button>
+        <div class="row mb-2">
+            <div class="col-lg-12 d-flex">
+                <button type="button" class="btn btn-primary me-2" onclick="buscar('Usuarios', 'getVistaListadoUsuarios', 'formularioBuscar', 'capaResultadoBusqueda')">Buscar</button>
                 <button type="button" class="btn btn-secondary" onclick="obtenerVista_EditarCrear ('Usuarios', 'getVistaNuevoEditar', 'capaEditarCrear', '')">Nuevo</button>
             </div>
         </div>
     </form>
 </div>
-<div class="container-fluid" id="capaResultadoBusqueda"></div>
-<div class="container-fluid" id="capaEditarCrear"></div>
+
+<div class="container-fluid mt-4" id="capaResultadoBusqueda"></div>
+
+<div class="container-fluid mt-4" id="capaEditarCrear"></div>

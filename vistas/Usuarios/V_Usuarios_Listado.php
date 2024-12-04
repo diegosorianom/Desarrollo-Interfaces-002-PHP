@@ -1,5 +1,4 @@
 <?php
-    //$usuarios = $datos['usuarios'];
     $usuarios = array();
     extract($datos);
     
@@ -11,26 +10,24 @@
                 <tr>
                     <th>Editar</th>
                     <th>Apellidos, Nombre</th>
-                    <th>Mail</th>
+                    <th>Correo electrónico</th>
                     <th>Login</th>
                     <th>Estado</th>
                     <th>Cambiar estado</th>
                 </tr>
             </thead>
             <tbody>';
-    foreach($usuarios as $posicion => $fila) {
-        // echo '<br>';
-        // echo $fila['nombre'] . ' ' . $fila['apellido_1'] . ' ' . $fila['apellido_2'];
-        // echo '<br>';
-        
+    foreach($usuarios as $posicion => $fila) {        
         $estilo='';
         if ($fila['activo']=='N') { 
             $activo='Inactivo';
+            $rowClass = 'table-danger';  // Cambia el texto a rojo
         } else {
             $activo='Activo';
+            $rowClass = '';  // Sin clase especial para filas activas
         }
 
-        $html.='<tr>
+        $html.='<tr class="'.$rowClass.'">
                     <td><Button class="btn btn-primary" onclick="obtenerVista_EditarCrear(\'Usuarios\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \''. $fila['id_Usuario'].'\')">Editar</Button></td>
                     <td nowrap style="'.$estilo.'">'.$fila['apellido_1'].' '.$fila['apellido_2'].', '.$fila['nombre'].'</td>
                     <td>'. $fila['mail'].'</td>

@@ -29,9 +29,18 @@ function guardarUsuario() {
 function actualizarEstadoVisual(usuarioId) {
     // Cambia el innerHTML del estado inmediatamente
     const estadoElemento = document.getElementById(`estado-${usuarioId}`);
-    
+    const filaElemento = estadoElemento.closest('tr'); // Encuentra la fila (tr) que contiene este elemento
+
     // Alterna entre "Activo" e "Inactivo"
-    estadoElemento.innerHTML = (estadoElemento.innerHTML === 'Activo') ? 'Inactivo' : 'Activo';
+    if (estadoElemento.innerHTML === 'Activo') {
+        estadoElemento.innerHTML = 'Inactivo';
+        filaElemento.classList.add('table-danger');  // Cambia la fila a rojo (inactivo)
+        filaElemento.classList.remove('table-success'); // Remueve la clase activa (si la tiene)
+    } else {
+        estadoElemento.innerHTML = 'Activo';
+        filaElemento.classList.add('table-success');  // Cambia la fila a verde (activo)
+        filaElemento.classList.remove('table-danger'); // Remueve la clase inactiva (si la tiene)
+    }
 }
 
 function toggleEstado(usuarioId) {
