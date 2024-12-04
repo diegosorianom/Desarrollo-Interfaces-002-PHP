@@ -19,46 +19,26 @@
                     Diego Soriano - DI 2024
                 </div>
                 <div class="col-md-2 col-sm-3 d-none d-md-block">
-                    login
-                    <?php echo $_SESSION['login']; ?>
+                    <div>
+                        Bienvenido: 
+                        <?php 
+                            if (isset($_SESSION['login']) && !empty($_SESSION['login'])) {
+                                echo $_SESSION['login'];
+                                echo '<div class="mt-2">';
+                                echo '<a href="logout.php" class="btn btn-danger btn-sm">Cerrar sesión</a>';
+                                echo '</div>';
+                            } else {
+                                echo "Invitado"; 
+                                echo '<div class="mt-2">';
+                                echo '<a href="Login.php" class="btn btn-primary btn-sm">Iniciar sesión</a>';
+                                echo '</div>';
+                            }
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- <div class="container-fluid" id="capaMenu">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#">Navbar</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                            </li>
-                            <li class="nav-item">
-                            <a class="nav-link" href="#">Features</a>
-                            </li>
-                            <li class="nav-item">
-                            <a class="nav-link" href="#">Pricing</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown link
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" onclick="obtenerVista('Usuarios', 'getVistaFiltros', 'capaContenido')">Usuario</a></li>
-                                <li><a class="dropdown-item" href="login.php">Login</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </div> -->
-
         <?php include 'vistas/Menu/V_Menu.php'; ?>
 
         <div class="container-fluid" id="capaContenido">
