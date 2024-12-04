@@ -9,7 +9,7 @@ extract($_POST);
 
 
     if ($usuario === '' || $pass === '') {
-        $msj = 'Debes completar los campos.';
+        // $msj = 'Debes completar los campos.';
     } else {
         //Verificar usuario y pass contra la BD
         require_once 'controladores/C_Usuarios.php';
@@ -23,7 +23,7 @@ extract($_POST);
         }else{
             unset($_SESSION['login']);
             unset($_SESSION['id_Usuario']);
-            $msj='NO es correcto';
+            $msj='Credenciales incorrectas';
         }
     }
 ?>
@@ -50,10 +50,10 @@ extract($_POST);
                             <label for="password">Contraseña</label>
                             <input name="pass" type="password" class="form-control" id="password" placeholder="Ingrese su contraseña" required>
                         </div>
-                        <span id="msj" class="msj text-danger"><?php echo htmlspecialchars($msj); ?></span>
                         <button type="submit" id="aceptar" class="btn btn-primary btn-block m-2">Iniciar Sesión</button>
                     </form>
-                    <div class="text-center mt-3 p-2">
+                    <div class="text-center mt-3 p-2 d-flex flex-column align-items-center">
+                        <span id="msj" class="msj text-danger"><?php echo htmlspecialchars($msj); ?></span>
                         <a href="#">¿Olvidaste tu contraseña?</a>
                     </div>
                 </div>
