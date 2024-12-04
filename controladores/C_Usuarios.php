@@ -30,11 +30,10 @@
                 $usuarios = $this -> modelo -> buscarUsuarios($filtros);
                 Vista::render('./vistas/Usuarios/V_Usuarios_NuevoEditar.php', array('usuario'=>$usuarios[0]));
             }
-
         }
         
         public function getVistaListadoUsuarios($filtros=array()) {
-            var_dump($filtros);
+            // var_dump($filtros);
             $usuarios = $this -> modelo -> buscarUsuarios($filtros);
             Vista::render('./vistas/Usuarios/V_Usuarios_Listado.php', array('usuarios'=>$usuarios));
         }
