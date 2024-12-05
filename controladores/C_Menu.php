@@ -27,29 +27,38 @@ class C_Menu {
         if (!isset($datos['id']) || $datos['id'] == '') {
             if (isset($datos['menu_id']) && isset($datos['position_type'])) {
                 // Obtener datos del menú base
-                $menuReferencia = $this->menuModel->buscarOpcionesMenu(['id' => $datos['menu_id']])[0];
-
-                // Determinar nueva posición y nivel según el tipo
-                if ($datos['position_type'] === 'child') {
-                    $nuevoNivel = $menuReferencia['level'] + 1;
-                    $nuevaPosicion = $this->menuModel->obtenerUltimaPosicion($menuReferencia['id']) + 1;
-                    $parentId = $menuReferencia['id'];
+                $menuReferencia = $this->menuModel->buscarOpcionesMenu(['id' => $datos['menu_id']]);
+    
+                if (!empty($menuReferencia)) {
+                    $menuReferencia = $menuReferencia[0];
+    
+                    // Determinar nueva posición y nivel según el tipo
+                    if ($datos['position_type'] === 'child') {
+                        $nuevoNivel = $menuReferencia['level'] + 1;
+                        $nuevaPosicion = $this->menuModel->obtenerUltimaPosicion($menuReferencia['id']) + 1;
+                        $parentId = $menuReferencia['id'];
+                    } else {
+                        $nuevoNivel = $menuReferencia['level'];
+                        $nuevaPosicion = $datos['position_type'] === 'below' ? $menuReferencia['position'] + 1 : $menuReferencia['position'];
+                        $parentId = $menuReferencia['parent_id'];
+                    }
+    
+                    $nuevoMenu = [
+                        'label' => '',
+                        'url' => '',
+                        'action' => '',
+                        'position' => $nuevaPosicion,
+                        'level' => $nuevoNivel,
+                        'parent_id' => $parentId,
+                        'is_active' => 1,
+                    ];
+                    Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $nuevoMenu]);
                 } else {
-                    $nuevoNivel = $menuReferencia['level'];
-                    $nuevaPosicion = $datos['position_type'] === 'below' ? $menuReferencia['position'] + 1 : $menuReferencia['position'];
-                    $parentId = $menuReferencia['parent_id'];
+                    // Manejar el caso donde no se encuentra el menú de referencia
+                    Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', [
+                        'error' => 'El menú de referencia no existe.'
+                    ]);
                 }
-
-                $nuevoMenu = [
-                    'label' => '',
-                    'url' => '',
-                    'action' => '',
-                    'position' => $nuevaPosicion,
-                    'level' => $nuevoNivel,
-                    'parent_id' => $parentId,
-                    'is_active' => 1,
-                ];
-                Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $nuevoMenu]);
             } else {
                 // Caso de nuevo menú sin referencia
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php');
@@ -58,9 +67,16 @@ class C_Menu {
             // Caso de edición
             $filtros['id'] = $datos['id'];
             $menus = $this->menuModel->buscarOpcionesMenu($filtros);
-            Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $menus[0]]);
+    
+            if (!empty($menus)) {
+                Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $menus[0]]);
+            } else {
+                Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', [
+                    'error' => 'No se encontró el menú a editar.'
+                ]);
+            }
         }
-    }
+    }    
 
     public function guardarMenu($datos = array()) {
         if (!is_array($datos) || empty($datos)) {

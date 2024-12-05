@@ -48,8 +48,8 @@ function renderMenu($menuTree, $level = 0) {
         // Fila de opciones (oculta por defecto)
         $html .= '<div class="menu-options" id="options-' . $menu['id'] . '" style="display: none;">';
         $html .= '<button class="btn btn-sm btn-primary me-2" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $menu['id'] . '\')">Editar</button>';
-        $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $menu['id'] . '\', ' . $menu['level'] . ', ' . $menu['position'] . ', true)">Añadir arriba</button>';
-        $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $menu['id'] . '\', ' . $menu['level'] . ', ' . $menu['position'] . ', false)">Añadir abajo</button>';
+        $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\')">Añadir arriba</button>';
+        $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\')">Añadir abajo</button>';
         $html .= '<button class="btn btn-sm btn-success" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'\', ' . $menu['id'] . ', \'child\')">Añadir hijo</button>';
         $html .= '</div>';
 

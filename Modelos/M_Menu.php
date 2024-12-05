@@ -82,24 +82,13 @@ class M_Menu extends Modelo {
         $level = '';
         $is_active = '';
         $action = '';
-        $isAbove = false; // Default value for position logic
-        $isEdit = false;  // Default value for edit status
         
         // Extract provided data into the variables
         extract($datos);
         
-        // Check if 'isAbove' and 'isEdit' are passed and set them accordingly
-        if (isset($datos['isAbove'])) {
-            $isAbove = $datos['isAbove'];
-        }
-        
-        if (isset($datos['isEdit'])) {
-            $isEdit = $datos['isEdit'];
-        }
-        
-        // If it's an edit (ID exists), perform an update
-        if ($isEdit && !empty($id)) {
-            // Update query if ID exists
+        // If ID exists, perform an update
+        if (!empty($id)) {
+            // Update query
             $SQL = "UPDATE menu SET
                     label='$label',
                     url='$url',
@@ -111,35 +100,19 @@ class M_Menu extends Modelo {
                     WHERE id='$id'";
             return $this->DAO->actualizar($SQL);
         } else {
-            // Insert query when ID doesn't exist or it's a new menu item
-            
-            // If the position is 'above', set the position to the invoking item's position
-            if ($isAbove) {
-                // Position remains the same as the invoking item
-                $SQL = "INSERT INTO menu SET
-                        label='$label',
-                        url='$url',
-                        parent_id='$parent_id',
-                        position='$position',
-                        level='$level',
-                        is_active='$is_active',
-                        action='$action'";
-            } else {
-                // If the item is being added below, increment the position
-                $SQL = "INSERT INTO menu SET
-                        label='$label',
-                        url='$url',
-                        parent_id='$parent_id',
-                        position=position + 1,   -- This will add the item below the invoking item
-                        level='$level',
-                        is_active='$is_active',
-                        action='$action'";
-            }
+            // Insert query for a new menu item
+            $SQL = "INSERT INTO menu SET
+                    label='$label',
+                    url='$url',
+                    parent_id='$parent_id',
+                    position='$position',
+                    level='$level',
+                    is_active='$is_active',
+                    action='$action'";
             return $this->DAO->insertar($SQL);
         }
-    }   
-    
-        
+    }      
+            
     public function actualizarPosiciones($nivel, $posicion) {
         $SQL = "UPDATE menu SET position = position + 1 WHERE level = $nivel AND position >= $posicion";
         $this->DAO->actualizar($SQL);

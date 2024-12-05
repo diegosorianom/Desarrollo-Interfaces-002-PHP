@@ -44,12 +44,12 @@ if (isset($datos['menu'])) {
 
         <div class="mb-3">
             <label for="level" class="form-label">Nivel</label>
-            <input type="text" class="form-control" id="level" name="level" value="<?php echo $level; ?>" readonly>
+            <input type="text" class="form-control" id="level" name="level" value="<?php echo $level; ?>">
         </div>
 
         <div class="mb-3">
             <label for="position" class="form-label">Posición</label>
-            <input type="text" class="form-control" id="position" name="position" value="<?php echo $position; ?>" readonly>
+            <input type="text" class="form-control" id="position" name="position" value="<?php echo $position; ?>">
         </div>
 
         <div class="mb-3">
