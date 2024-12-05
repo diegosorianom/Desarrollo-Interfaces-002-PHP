@@ -28,21 +28,21 @@ class C_Menu {
             if (isset($datos['menu_id']) && isset($datos['position_type'])) {
                 // Obtener datos del menú base
                 $menuReferencia = $this->menuModel->buscarOpcionesMenu(['id' => $datos['menu_id']]);
-    
+        
                 if (!empty($menuReferencia)) {
                     $menuReferencia = $menuReferencia[0];
-    
+        
                     // Determinar nueva posición y nivel según el tipo
-                    if ($datos['position_type'] === 'child') {
-                        $nuevoNivel = $menuReferencia['level'] + 1;
-                        $nuevaPosicion = $this->menuModel->obtenerUltimaPosicion($menuReferencia['id']) + 1;
-                        $parentId = $menuReferencia['id'];
-                    } else {
+                    if ($datos['position_type'] === 'above') {
                         $nuevoNivel = $menuReferencia['level'];
-                        $nuevaPosicion = $datos['position_type'] === 'below' ? $menuReferencia['position'] + 1 : $menuReferencia['position'];
+                        $nuevaPosicion = $menuReferencia['position'];  // Se agregará justo antes de este menú
                         $parentId = $menuReferencia['parent_id'];
+                    } else {
+                        $nuevoNivel = $menuReferencia['level'] + 1;
+                        $nuevaPosicion = 1;  // Asignar una posición predeterminada para el hijo
+                        $parentId = $menuReferencia['id'];
                     }
-    
+        
                     $nuevoMenu = [
                         'label' => '',
                         'url' => '',
@@ -54,20 +54,18 @@ class C_Menu {
                     ];
                     Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $nuevoMenu]);
                 } else {
-                    // Manejar el caso donde no se encuentra el menú de referencia
                     Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', [
                         'error' => 'El menú de referencia no existe.'
                     ]);
                 }
             } else {
-                // Caso de nuevo menú sin referencia
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php');
             }
         } else {
             // Caso de edición
             $filtros['id'] = $datos['id'];
             $menus = $this->menuModel->buscarOpcionesMenu($filtros);
-    
+        
             if (!empty($menus)) {
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $menus[0]]);
             } else {
@@ -76,7 +74,8 @@ class C_Menu {
                 ]);
             }
         }
-    }    
+    }
+    
 
     public function guardarMenu($datos = array()) {
         if (!is_array($datos) || empty($datos)) {

@@ -44,6 +44,31 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
         });
 }
 
+function añadirMenuArriba(menuId) {
+    let parametros = new URLSearchParams();
+    parametros.append('controlador', 'Menu');
+    parametros.append('metodo', 'getVistaNuevoEditar');
+    parametros.append('menu_id', menuId);
+    parametros.append('position_type', 'above');  // Parámetro para indicar que se agregará arriba
+    
+    let opciones = { method: 'GET' };
+
+    fetch("C_Frontal.php?" + parametros.toString(), opciones)
+        .then(res => {
+            if (res.ok) {
+                return res.text();
+            }
+            throw new Error(res.status);
+        })
+        .then(vista => {
+            document.getElementById('capaEditarCrear').innerHTML = vista;
+        })
+        .catch(error => {
+            console.log("Error al añadir el menú arriba", error.message);
+        });
+}
+
+
 // Aqui es donde crearemos las funciones básicas
 function buscar(controlador, metodo, formulario, destino) {
     let parametros = "controlador=" + controlador + "&metodo=" + metodo; // Fixed the parameter formatting
