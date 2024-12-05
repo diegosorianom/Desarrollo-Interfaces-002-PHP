@@ -86,9 +86,9 @@ class M_Menu extends Modelo {
         // Extract provided data into the variables
         extract($datos);
         
-        // If ID exists, perform an update
+        // Si hay un ID, realizar una actualización
         if (!empty($id)) {
-            // Update query
+            // Actualizar consulta
             $SQL = "UPDATE menu SET
                     label='$label',
                     url='$url',
@@ -100,7 +100,27 @@ class M_Menu extends Modelo {
                     WHERE id='$id'";
             return $this->DAO->actualizar($SQL);
         } else {
-            // Insert query for a new menu item
+            // Si es un nuevo menú, actualizar las posiciones
+            // Paso 1: Consultar la máxima posición del menú con el mismo parent_id y level
+            $SQL = "SELECT MAX(position) AS max_position FROM menu WHERE parent_id='$parent_id' AND level='$level'";
+            $resultado = $this->DAO->consultar($SQL);
+            $maxPosition = 0;
+            
+            if (!empty($resultado) && isset($resultado[0]['max_position'])) {
+                $maxPosition = $resultado[0]['max_position'];
+            }
+            
+            // Paso 2: Si se está agregando un nuevo menú en una posición intermedia, ajustamos las posiciones
+            if ($position > 0 && $position <= $maxPosition) {
+                // Mover los menús existentes que tienen una posición mayor o igual a la nueva posición
+                $SQL = "UPDATE menu SET position = position + 1 WHERE parent_id='$parent_id' AND level='$level' AND position >= '$position'";
+                $this->DAO->actualizar($SQL);
+            } else {
+                // Si la posición es mayor a la máxima existente, se agregará al final
+                $position = $maxPosition + 1; // El nuevo menú será el último
+            }
+            
+            // Paso 3: Insertar el nuevo menú con la posición ajustada
             $SQL = "INSERT INTO menu SET
                     label='$label',
                     url='$url',
@@ -109,8 +129,10 @@ class M_Menu extends Modelo {
                     level='$level',
                     is_active='$is_active',
                     action='$action'";
+            
             return $this->DAO->insertar($SQL);
         }
-    }         
+    }
+    
 }
 ?>

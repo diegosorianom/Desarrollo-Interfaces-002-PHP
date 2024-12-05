@@ -83,8 +83,8 @@ class C_Menu {
             exit;
         }
     
-        // Attempt to insert or update the menu
-        $id = $this->menuModel->insertarMenu($datos); // This will handle both insert and update
+        // Intentar insertar o actualizar el menú
+        $id = $this->menuModel->insertarMenu($datos); // Esto manejará tanto inserciones como actualizaciones
     
         if ($id > 0) {
             echo "Guardado exitosamente.";
@@ -94,6 +94,7 @@ class C_Menu {
     
         exit;
     }
+    
     
 }
 ?>

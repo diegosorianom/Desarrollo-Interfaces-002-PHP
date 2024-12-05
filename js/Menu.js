@@ -28,13 +28,8 @@ function guardarMenu() {
             if (texto.includes("Error")) {
                 document.getElementById('msjError').innerHTML = texto; // Muestra el error
             } else {
-                document.getElementById('capaEditarCrear').innerHTML = ''; // Limpia el formulario
-                obtenerVista('Menu', 'getVistaListadoMenu', 'capaContenido'); // Recargar listado
-                document.getElementById('msjError').innerHTML = texto; // Mensaje de éxito
+                // Redirigir o actualizar la UI según el resultado
+                window.location.reload(); // O realizar alguna actualización en la UI
             }
-        })
-        .catch(err => {
-            console.error("Error al guardar menú:", err.message);
-            document.getElementById('msjError').innerHTML = `Error inesperado: ${err.message}`;
         });
 }
