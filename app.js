@@ -44,12 +44,12 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
         });
 }
 
-function añadirMenuArriba(menuId) {
+function añadirMenu(menuId, positionType) {
     let parametros = new URLSearchParams();
     parametros.append('controlador', 'Menu');
     parametros.append('metodo', 'getVistaNuevoEditar');
     parametros.append('menu_id', menuId);
-    parametros.append('position_type', 'above');  // Parámetro para indicar que se agregará arriba
+    parametros.append('position_type', positionType);  // Parámetro para indicar que se agregará arriba
     
     let opciones = { method: 'GET' };
 
@@ -64,9 +64,10 @@ function añadirMenuArriba(menuId) {
             document.getElementById('capaEditarCrear').innerHTML = vista;
         })
         .catch(error => {
-            console.log("Error al añadir el menú arriba", error.message);
+            console.log(`Error al añadir el menú ${positionType}`, error.message);
         });
 }
+
 
 
 // Aqui es donde crearemos las funciones básicas

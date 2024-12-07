@@ -28,21 +28,37 @@ class C_Menu {
             if (isset($datos['menu_id']) && isset($datos['position_type'])) {
                 // Obtener datos del menú base
                 $menuReferencia = $this->menuModel->buscarOpcionesMenu(['id' => $datos['menu_id']]);
-        
+    
                 if (!empty($menuReferencia)) {
                     $menuReferencia = $menuReferencia[0];
-        
-                    // Determinar nueva posición y nivel según el tipo
-                    if ($datos['position_type'] === 'above') {
-                        $nuevoNivel = $menuReferencia['level'];
-                        $nuevaPosicion = $menuReferencia['position'];  // Se agregará justo antes de este menú
-                        $parentId = $menuReferencia['parent_id'];
-                    } else {
-                        $nuevoNivel = $menuReferencia['level'] + 1;
-                        $nuevaPosicion = 1;  // Asignar una posición predeterminada para el hijo
-                        $parentId = $menuReferencia['id'];
+    
+                    // Determinar nueva posición y nivel según el tipo de posición
+                    switch ($datos['position_type']) {
+                        case 'above':
+                            $nuevoNivel = $menuReferencia['level'];
+                            $nuevaPosicion = $menuReferencia['position']; // Se agregará justo antes del menú de referencia
+                            $parentId = $menuReferencia['parent_id'];
+                            break;
+    
+                        case 'below':
+                            $nuevoNivel = $menuReferencia['level'];
+                            $nuevaPosicion = $menuReferencia['position'] + 1; // Se agregará justo después del menú de referencia
+                            $parentId = $menuReferencia['parent_id'];
+                            break;
+    
+                        case 'child':
+                            $nuevoNivel = $menuReferencia['level'] + 1; // Será un hijo del menú de referencia
+                            $nuevaPosicion = 1; // Por defecto, el primer hijo
+                            $parentId = $menuReferencia['id'];
+                            break;
+    
+                        default:
+                            Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', [
+                                'error' => 'Tipo de posición inválido.'
+                            ]);
+                            return;
                     }
-        
+    
                     $nuevoMenu = [
                         'label' => '',
                         'url' => '',
@@ -52,6 +68,7 @@ class C_Menu {
                         'parent_id' => $parentId,
                         'is_active' => 1,
                     ];
+    
                     Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $nuevoMenu]);
                 } else {
                     Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', [
@@ -59,13 +76,14 @@ class C_Menu {
                     ]);
                 }
             } else {
+                // Caso de creación sin referencia
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php');
             }
         } else {
             // Caso de edición
             $filtros['id'] = $datos['id'];
             $menus = $this->menuModel->buscarOpcionesMenu($filtros);
-        
+    
             if (!empty($menus)) {
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', ['menu' => $menus[0]]);
             } else {
@@ -75,6 +93,7 @@ class C_Menu {
             }
         }
     }
+    
     
 
     public function guardarMenu($datos = array()) {

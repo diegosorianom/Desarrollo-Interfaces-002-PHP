@@ -73,7 +73,7 @@ class M_Menu extends Modelo {
     }
 
     public function insertarMenu($datos = array()) {
-        // Default values for all fields
+        // Valores por defecto para los campos
         $id = '';
         $label = '';
         $url = '';
@@ -82,10 +82,10 @@ class M_Menu extends Modelo {
         $level = '';
         $is_active = '';
         $action = '';
-        
-        // Extract provided data into the variables
+    
+        // Extraer los datos proporcionados
         extract($datos);
-        
+    
         // Si hay un ID, realizar una actualización
         if (!empty($id)) {
             // Actualizar consulta
@@ -100,27 +100,29 @@ class M_Menu extends Modelo {
                     WHERE id='$id'";
             return $this->DAO->actualizar($SQL);
         } else {
-            // Si es un nuevo menú, actualizar las posiciones
-            // Paso 1: Consultar la máxima posición del menú con el mismo parent_id y level
+            // Si es un nuevo menú, ajustar las posiciones y luego insertar el nuevo menú
+            // Paso 1: Consultar la máxima posición actual en el mismo nivel y parent_id
             $SQL = "SELECT MAX(position) AS max_position FROM menu WHERE parent_id='$parent_id' AND level='$level'";
             $resultado = $this->DAO->consultar($SQL);
             $maxPosition = 0;
-            
+    
             if (!empty($resultado) && isset($resultado[0]['max_position'])) {
                 $maxPosition = $resultado[0]['max_position'];
             }
-            
-            // Paso 2: Si se está agregando un nuevo menú en una posición intermedia, ajustamos las posiciones
-            if ($position > 0 && $position <= $maxPosition) {
-                // Mover los menús existentes que tienen una posición mayor o igual a la nueva posición
-                $SQL = "UPDATE menu SET position = position + 1 WHERE parent_id='$parent_id' AND level='$level' AND position >= '$position'";
+    
+            // Paso 2: Ajustar posiciones existentes
+            if ($position > 0) {
+                // Mover los menús existentes para hacer espacio al nuevo
+                $SQL = "UPDATE menu 
+                        SET position = position + 1 
+                        WHERE parent_id='$parent_id' AND level='$level' AND position >= '$position'";
                 $this->DAO->actualizar($SQL);
             } else {
-                // Si la posición es mayor a la máxima existente, se agregará al final
-                $position = $maxPosition + 1; // El nuevo menú será el último
+                // Si no se proporciona posición o es inválida, colocar al final
+                $position = $maxPosition + 1;
             }
-            
-            // Paso 3: Insertar el nuevo menú con la posición ajustada
+    
+            // Paso 3: Insertar el nuevo menú
             $SQL = "INSERT INTO menu SET
                     label='$label',
                     url='$url',
@@ -129,10 +131,21 @@ class M_Menu extends Modelo {
                     level='$level',
                     is_active='$is_active',
                     action='$action'";
-            
-            return $this->DAO->insertar($SQL);
+            $insertId = $this->DAO->insertar($SQL);
+    
+            // Paso 4: Reordenar todas las posiciones en el mismo nivel para garantizar consistencia
+            $SQL = "SET @row_number = 0;
+                    UPDATE menu
+                    SET position = (@row_number := @row_number + 1)
+                    WHERE parent_id='$parent_id' AND level='$level'
+                    ORDER BY position ASC;";
+            $this->DAO->actualizar($SQL);
+    
+            return $insertId;
         }
     }
+
+    
     
 }
 ?>
