@@ -149,5 +149,18 @@ class M_Usuarios extends Modelo {
         }
         return false;
     }
+
+    public function isEmailInUse($email, $excludeUserId = null) {
+        $SQL = "SELECT id_Usuario FROM usuarios WHERE mail = '$email'";
+        
+        // If we need to exclude a user from the check (useful for updates)
+        if (!empty($excludeUserId)) {
+            $SQL .= " AND id_Usuario != '$excludeUserId'";
+        }
+    
+        $result = $this->DAO->consultar($SQL);
+        return !empty($result); // Returns true if email is in use, false otherwise
+    }
+    
 }
 ?>
