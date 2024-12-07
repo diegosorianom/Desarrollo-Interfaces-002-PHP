@@ -145,7 +145,14 @@ class M_Menu extends Modelo {
         }
     }
 
+    public function getMaxPosition($parentId, $level) {
+        $SQL = "SELECT MAX(position) AS max_position 
+                FROM menu 
+                WHERE parent_id = '$parentId' AND level = '$level'";
+        $resultado = $this->DAO->consultar($SQL);
     
-    
+        return (!empty($resultado) && isset($resultado[0]['max_position'])) ? $resultado[0]['max_position'] : 0;
+    }
+
 }
 ?>

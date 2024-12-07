@@ -68,6 +68,29 @@ function añadirMenu(menuId, positionType) {
         });
 }
 
+function añadirHijo(menuId) {
+    let parametros = new URLSearchParams();
+    parametros.append('controlador', 'Menu');
+    parametros.append('metodo', 'getVistaNuevoEditar');
+    parametros.append('menu_id', menuId);
+    parametros.append('position_type', 'child'); // Especificar que se agregará un hijo
+
+    let opciones = { method: 'GET' };
+
+    fetch("C_Frontal.php?" + parametros.toString(), opciones)
+        .then(res => {
+            if (res.ok) {
+                return res.text();
+            }
+            throw new Error(res.status);
+        })
+        .then(vista => {
+            document.getElementById('capaEditarCrear').innerHTML = vista;
+        })
+        .catch(error => {
+            console.log("Error al añadir hijo", error.message);
+        });
+}
 
 
 // Aqui es donde crearemos las funciones básicas

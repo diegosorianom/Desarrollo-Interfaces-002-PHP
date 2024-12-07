@@ -33,30 +33,29 @@ class C_Menu {
                     $menuReferencia = $menuReferencia[0];
     
                     // Determinar nueva posición y nivel según el tipo de posición
-                    switch ($datos['position_type']) {
-                        case 'above':
-                            $nuevoNivel = $menuReferencia['level'];
-                            $nuevaPosicion = $menuReferencia['position']; // Se agregará justo antes del menú de referencia
-                            $parentId = $menuReferencia['parent_id'];
-                            break;
+                    if ($datos['position_type'] === 'above') {
+                        $nuevoNivel = $menuReferencia['level'];
+                        $nuevaPosicion = $menuReferencia['position'];
+                        $parentId = $menuReferencia['parent_id'];
+                    } elseif ($datos['position_type'] === 'below') {
+                        $nuevoNivel = $menuReferencia['level'];
+                        $nuevaPosicion = $menuReferencia['position'] + 1;
+                        $parentId = $menuReferencia['parent_id'];
+                    } elseif ($datos['position_type'] === 'child') {
+                        $nuevoNivel = $menuReferencia['level'] + 1; // Incrementa el nivel
+                        $parentId = $menuReferencia['id']; // El parent_id es el ID del menú actual
     
-                        case 'below':
-                            $nuevoNivel = $menuReferencia['level'];
-                            $nuevaPosicion = $menuReferencia['position'] + 1; // Se agregará justo después del menú de referencia
-                            $parentId = $menuReferencia['parent_id'];
-                            break;
+                        // Obtener la posición más alta entre los hijos del menú actual
+                        $maxPosition = $this->menuModel->getMaxPosition($parentId, $nuevoNivel);
     
-                        case 'child':
-                            $nuevoNivel = $menuReferencia['level'] + 1; // Será un hijo del menú de referencia
-                            $nuevaPosicion = 1; // Por defecto, el primer hijo
-                            $parentId = $menuReferencia['id'];
-                            break;
-    
-                        default:
-                            Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', [
-                                'error' => 'Tipo de posición inválido.'
-                            ]);
-                            return;
+                        // Nuevo menú irá a la siguiente posición disponible
+                        $nuevaPosicion = $maxPosition + 1;
+                    } else {
+                        // Caso de error para valores inesperados
+                        Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php', [
+                            'error' => 'Tipo de posición no válido.'
+                        ]);
+                        return;
                     }
     
                     $nuevoMenu = [
@@ -76,7 +75,6 @@ class C_Menu {
                     ]);
                 }
             } else {
-                // Caso de creación sin referencia
                 Vista::render('./vistas/Menu/V_Menu_NuevoEditar.php');
             }
         } else {
@@ -93,6 +91,7 @@ class C_Menu {
             }
         }
     }
+    
     
     
 
