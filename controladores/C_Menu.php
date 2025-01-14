@@ -91,9 +91,6 @@ class C_Menu {
             }
         }
     }
-    
-    
-    
 
     public function guardarMenu($datos = array()) {
         if (!is_array($datos) || empty($datos)) {
@@ -112,7 +109,7 @@ class C_Menu {
     
         exit;
     }
-    
+
     
 }
 ?>
