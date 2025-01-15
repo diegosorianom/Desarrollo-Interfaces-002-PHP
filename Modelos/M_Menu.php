@@ -12,17 +12,17 @@ class M_Menu extends Modelo {
     public function getMenuOptions() {
         // SQL para obtener todas las opciones del menu, ordenads por nivel y posición
         $sql = "SELECT * FROM menu WHERE is_active = 1 ORDER BY level, position";
-    }
-
-    public function getPermisos() {
-        $sql = "SELECT * FROM permisos WHERE id_menu = ?";
-
+        
+        // Llamada al metodo 'consultar' del DAO para ejecutar la consulta
         try {
-            $permisos = $this -> DAO -> consultar($sql);
+            $menuOptions = $this -> DAO -> consultar($sql);
         } catch (Exception $e) {
-            echo "Error al obtener los permisos: " . $e -> getMessage();
+            // Manejo de error si falla la consulta
+            echo "Error al obtener el menú: " . $e -> getMessage();
             return [];
         }
+
+        return $this -> formatMenu($menuOptions);
     }
 
     //a
@@ -155,5 +155,6 @@ class M_Menu extends Modelo {
     
         return (!empty($resultado) && isset($resultado[0]['max_position'])) ? $resultado[0]['max_position'] : 0;
     }
+
 }
 ?>
