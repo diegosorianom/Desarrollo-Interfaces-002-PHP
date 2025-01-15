@@ -32,6 +32,7 @@ class M_Usuarios extends Modelo {
             return $id_Usuario;
     }
 
+    // Este método realiza la consulta SQL con base en los filtros proporcionados
     public function buscarUsuarios($filtros=array()){
         $ftexto = '';
         $factivo = '';

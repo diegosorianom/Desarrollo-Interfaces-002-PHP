@@ -25,6 +25,20 @@ class M_Menu extends Modelo {
         return $this -> formatMenu($menuOptions);
     }
 
+    public function getPermisos() {
+        $sql = "SELECT * FROM permisos"; // Consulta para obtener todos los permisos
+    
+        try {
+            $permisos = $this->DAO->consultar($sql); // Ejecutar la consulta usando el DAO
+        } catch (Exception $e) {
+            echo "Error al obtener los permisos: " . $e->getMessage();
+            return [];
+        }
+    
+        return $permisos;
+    }
+    
+
     public function buscarOpcionesMenu($filtros=array()){
         $ftexto="";
         // $factivo="";

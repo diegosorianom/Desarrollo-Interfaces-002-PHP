@@ -32,6 +32,7 @@
             }
         }
         
+        // Método que se utiliza para obtener la lista de usuarios y mostrarla en la vista correspondiente
         public function getVistaListadoUsuarios($filtros=array()) {
             $usuarios = $this->modelo->buscarUsuarios($filtros);
         Vista::render('vistas/Usuarios/V_Usuarios_Listado.php', array('usuarios' => $usuarios));

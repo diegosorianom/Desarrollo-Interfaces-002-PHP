@@ -23,6 +23,12 @@ class C_Menu {
         Vista::render('./vistas/Menu/V_Menu_Listado.php', array('menus' => $menus));
     }    
 
+    public function getVistaPermisos() {
+        $permisos = $this->menuModel->getPermisos(); // Obtener permisos desde el modelo
+        Vista::render('./vistas/Menu/V_Menu_Permisos.php', ['permisos' => $permisos]); // Pasar los datos a la vista
+    }
+    
+
     public function getVistaNuevoEditar($datos = array()) {
         if (!isset($datos['id']) || $datos['id'] == '') {
             if (isset($datos['menu_id']) && isset($datos['position_type'])) {
