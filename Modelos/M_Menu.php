@@ -25,6 +25,8 @@ class M_Menu extends Modelo {
         return $this -> formatMenu($menuOptions);
     }
 
+    //a
+
     public function buscarOpcionesMenu($filtros=array()){
         $ftexto="";
         // $factivo="";
