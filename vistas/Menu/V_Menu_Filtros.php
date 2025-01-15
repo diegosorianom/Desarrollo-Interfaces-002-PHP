@@ -1,7 +1,7 @@
 <h2>Mantenimiento de menús</h2>
 <div class="container-fluid" id="capaFiltrosBusqueda">
     <form id="formularioBuscarMenu" name="formularioBuscarMenu">
-        <div class="row">
+        <!-- <div class="row">
             <div class="form-group col-md-6 col-sm-12">
                 <label for="fnombre">Nombre del menú:</label>
                 <input type="text" id="fnombre" name="fnombre" class="form-control" placeholder="Texto a buscar" value="" /> 
@@ -14,7 +14,7 @@
                     <option value="N">No activos</option>     
                 </select>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-lg-12">
                 <button type="button" class="btn btn-primary" onclick="buscar('Menu', 'getVistaListadoMenu', 'formularioBuscarMenu', 'capaResultadoBusqueda')">Buscar</button>

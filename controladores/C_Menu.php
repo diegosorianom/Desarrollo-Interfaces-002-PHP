@@ -108,8 +108,6 @@ class C_Menu {
         }
     
         exit;
-    }
-
-    
+    }    
 }
 ?>

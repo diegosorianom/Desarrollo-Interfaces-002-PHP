@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-01-2025 a las 11:47:04
+-- Tiempo de generación: 15-01-2025 a las 12:54:12
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `di2024`
 --
-
-CREATE DATABASE IF NOT EXISTS `di2024` DEFAULT CHARACTER SET latin1 COLLATE latin1_spanish_ci;
-USE `di2024`;
 
 -- --------------------------------------------------------
 
@@ -52,7 +49,7 @@ INSERT INTO `menu` (`id`, `label`, `url`, `parent_id`, `position`, `level`, `is_
 (4, 'Dropdown', '#', 0, 5, 1, 1, NULL),
 (5, 'Usuarios', NULL, 4, 1, 2, 1, 'onclick=\"obtenerVista(\'Usuarios\', \'getVistaFiltros\', \'capaContenido\')\"'),
 (6, 'Login', 'Login.php', 4, 2, 2, 0, NULL),
-(7, 'Mantenimiento', NULL, 4, 4, 2, 1, 'onclick=\"obtenerVista(\'Menu\', \'getVistaListadoMenu\', \'capaContenido\')\"');
+(7, 'Mantenimiento', NULL, 4, 4, 2, 1, 'onclick=\"obtenerVista(\'Menu\', \'getVistaFiltros\', \'capaContenido\')\"');
 
 -- --------------------------------------------------------
 
