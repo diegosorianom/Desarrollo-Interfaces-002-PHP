@@ -25,6 +25,8 @@ class M_Menu extends Modelo {
         }
     }
 
+    //a
+
     public function buscarOpcionesMenu($filtros=array()){
         $ftexto="";
         // $factivo="";
