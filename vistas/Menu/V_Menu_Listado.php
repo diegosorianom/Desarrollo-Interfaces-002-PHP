@@ -5,7 +5,7 @@ extract($datos);
 function renderPermisos($permisos) {
     $html = '<ul>';
     foreach ($permisos as $permiso) {
-        $html .= '<li>' . htmlspecialchars($permiso['permiso']) . ' (' . htmlspecialchars($permiso['codigo_permiso']) . ')</li>';
+        $html .= '<li>' . htmlspecialchars($permiso['id']) . ' - ' . htmlspecialchars($permiso['permiso']) . '</li>';
     }
     $html .= '</ul>';
     return $html;
