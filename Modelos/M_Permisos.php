@@ -39,31 +39,31 @@ class M_Permisos extends Modelo {
         return $this->DAO->consultar($SQL);
     }
 
-    public function insertarPermiso($datos = array()) {
-        $id = '';
-        $permiso = '';
-        $id_menu = '';
-        $codigo_permiso = '';
-        extract($datos);
+    // public function insertarPermiso($datos = array()) {
+    //     $id = '';
+    //     $permiso = '';
+    //     $id_menu = '';
+    //     $codigo_permiso = '';
+    //     extract($datos);
 
-        if (!empty($id)) {
-            $SQL = "UPDATE permisos SET
-                        permiso = '$permiso',
-                        id_menu = '$id_menu',
-                        codigo_permiso = '$codigo_permiso'
-                    WHERE id = '$id'";
-            return $this->DAO->actualizar($SQL);
-        } else {
-            $SQL = "INSERT INTO permisos SET 
-                        permiso = '$permiso',
-                        id_menu = '$id_menu',
-                        codigo_permiso = '$codigo_permiso'";
-            return $this->DAO->insertar($SQL);
-        }
-    }
+    //     if (!empty($id)) {
+    //         $SQL = "UPDATE permisos SET
+    //                     permiso = '$permiso',
+    //                     id_menu = '$id_menu',
+    //                     codigo_permiso = '$codigo_permiso'
+    //                 WHERE id = '$id'";
+    //         return $this->DAO->actualizar($SQL);
+    //     } else {
+    //         $SQL = "INSERT INTO permisos SET 
+    //                     permiso = '$permiso',
+    //                     id_menu = '$id_menu',
+    //                     codigo_permiso = '$codigo_permiso'";
+    //         return $this->DAO->insertar($SQL);
+    //     }
+    // }
 
-    public function eliminarPermiso($id) {
-        $SQL = "DELETE FROM permisos WHERE id = '$id'";
-        return $this->DAO->eliminar($SQL);
-    }
+    // public function eliminarPermiso($id) {
+    //     $SQL = "DELETE FROM permisos WHERE id = '$id'";
+    //     return $this->DAO->eliminar($SQL);
+    // }
 }

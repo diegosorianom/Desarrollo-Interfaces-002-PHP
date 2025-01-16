@@ -2,6 +2,15 @@
 $menus = array();
 extract($datos);
 
+function renderPermisos($permisos) {
+    $html = '<ul>';
+    foreach ($permisos as $permiso) {
+        $html .= '<li>' . htmlspecialchars($permiso['permiso']) . ' (' . htmlspecialchars($permiso['codigo_permiso']) . ')</li>';
+    }
+    $html .= '</ul>';
+    return $html;
+}
+
 // Ordenar los menús
 usort($menus, function($a, $b) {
     if ($a['parent_id'] == 0 && $b['parent_id'] != 0) {
@@ -44,6 +53,13 @@ function renderMenu($menuTree, $level = 0) {
         $html .= '<span class="menu-name">' . $menu['label'] . '</span>';
         $html .= '</div>';
         $html .= '</div>';
+
+        if (!empty($menu['permisos'])) {
+            $html .= '<div class="menu-permisos">';
+            $html .= '<h5>Permisos:</h5>';
+            $html .= renderPermisos($menu['permisos']);
+            $html .= '</div>';
+        }
 
         // Fila de opciones (oculta por defecto)
         $html .= '<div class="menu-options" id="options-' . $menu['id'] . '" style="display: none;">';

@@ -25,19 +25,21 @@ class M_Menu extends Modelo {
         return $this -> formatMenu($menuOptions);
     }
 
-    public function getPermisos() {
-        $sql = "SELECT * FROM permisos"; // Consulta para obtener todos los permisos
+    public function getMenusWithPermisos($filtros = array()) {
+        // Obtener los menús según los filtros aplicados
+        $menus = $this->buscarOpcionesMenu($filtros);
     
-        try {
-            $permisos = $this->DAO->consultar($sql); // Ejecutar la consulta usando el DAO
-        } catch (Exception $e) {
-            echo "Error al obtener los permisos: " . $e->getMessage();
-            return [];
+        // Instanciar el modelo de permisos
+        require_once 'M_Permisos.php';
+        $permisosModel = new M_Permisos();
+    
+        // Asociar los permisos a cada menú
+        foreach ($menus as &$menu) {
+            $menu['permisos'] = $permisosModel->buscarPermisos(['id_menu' => $menu['id']]);
         }
     
-        return $permisos;
+        return $menus;
     }
-    
 
     public function buscarOpcionesMenu($filtros=array()){
         $ftexto="";

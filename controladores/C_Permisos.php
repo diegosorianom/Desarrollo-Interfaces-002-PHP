@@ -22,37 +22,37 @@ class C_Permisos extends Controlador {
         Vista::render('./vistas/Permisos/V_Permisos_Listado.php', ['permisos' => $permisos]);
     }
 
-    public function getVistaNuevoEditar($datos = array()) {
-        if (!isset($datos['id']) || $datos['id'] == '') {
-            Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php');
-        } else {
-            $filtros['id'] = $datos['id'];
-            $permisos = $this->modelo->buscarPermisos($filtros);
-            Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php', ['permiso' => $permisos[0]]);
-        }
-    }
+    // public function getVistaNuevoEditar($datos = array()) {
+    //     if (!isset($datos['id']) || $datos['id'] == '') {
+    //         Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php');
+    //     } else {
+    //         $filtros['id'] = $datos['id'];
+    //         $permisos = $this->modelo->buscarPermisos($filtros);
+    //         Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php', ['permiso' => $permisos[0]]);
+    //     }
+    // }
 
-    public function guardarPermiso($datos = array()) {
-        $respuesta['correcto'] = 'S';
-        $respuesta['msj'] = 'Guardado correctamente';
+    // public function guardarPermiso($datos = array()) {
+    //     $respuesta['correcto'] = 'S';
+    //     $respuesta['msj'] = 'Guardado correctamente';
 
-        $id = $this->modelo->insertarPermiso($datos);
-        if ($id <= 0) {
-            $respuesta['correcto'] = 'N';
-            $respuesta['msj'] = 'Error al guardar';
-        }
+    //     $id = $this->modelo->insertarPermiso($datos);
+    //     if ($id <= 0) {
+    //         $respuesta['correcto'] = 'N';
+    //         $respuesta['msj'] = 'Error al guardar';
+    //     }
 
-        echo json_encode($respuesta);
-    }
+    //     echo json_encode($respuesta);
+    // }
 
-    public function eliminarPermiso($datos = array()) {
-        $id = $datos['id'] ?? '';
-        $resultado = $this->modelo->eliminarPermiso($id);
+    // public function eliminarPermiso($datos = array()) {
+    //     $id = $datos['id'] ?? '';
+    //     $resultado = $this->modelo->eliminarPermiso($id);
 
-        $respuesta['correcto'] = $resultado ? 'S' : 'N';
-        $respuesta['msj'] = $resultado ? 'Eliminado correctamente' : 'Error al eliminar';
-        echo json_encode($respuesta);
-    }
+    //     $respuesta['correcto'] = $resultado ? 'S' : 'N';
+    //     $respuesta['msj'] = $resultado ? 'Eliminado correctamente' : 'Error al eliminar';
+    //     echo json_encode($respuesta);
+    // }
 }
 
 // Para probar cambiar action de mantenimiento.
