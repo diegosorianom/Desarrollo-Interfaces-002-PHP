@@ -54,6 +54,7 @@ function renderMenu($menuTree, $level = 0) {
         $html .= '</div>';
         $html .= '</div>';
 
+        // Mostrar permisos si están disponibles
         if (!empty($menu['permisos'])) {
             $html .= '<div class="menu-permisos">';
             $html .= '<h5>Permisos:</h5>';
@@ -67,7 +68,6 @@ function renderMenu($menuTree, $level = 0) {
         $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirMenu(' . $menu['id'] . ', \'above\')">Añadir Arriba</button>';
         $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirMenu(' . $menu['id'] . ', \'below\')">Añadir Abajo</button>';
         $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirHijo(' . $menu['id'] . ')">Añadir Hijo</button>';
-        
         $html .= '</div>';
 
         // Submenús (ocultos por defecto)
@@ -88,5 +88,3 @@ echo '</div>';
 ?>
 
 <div class="container-fluid" id="capaEditarCrear"></div>
-
-
