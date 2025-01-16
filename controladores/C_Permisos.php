@@ -22,37 +22,35 @@ class C_Permisos extends Controlador {
         Vista::render('./vistas/Permisos/V_Permisos_Listado.php', ['permisos' => $permisos]);
     }
 
-    // public function getVistaNuevoEditar($datos = array()) {
-    //     if (!isset($datos['id']) || $datos['id'] == '') {
-    //         Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php');
-    //     } else {
-    //         $filtros['id'] = $datos['id'];
-    //         $permisos = $this->modelo->buscarPermisos($filtros);
-    //         Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php', ['permiso' => $permisos[0]]);
-    //     }
-    // }
+    public function getVistaNuevoEditar($datos = array()) {
+        if (!isset($datos['id']) || $datos['id'] == '') {
+            Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php');
+        } else {
+            $filtros['id'] = $datos['id'];
+            $permisos = $this->modelo->buscarPermisos($filtros);
+            Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php', ['permiso' => $permisos[0]]);
+        }
+    }
 
-    // public function guardarPermiso($datos = array()) {
-    //     $respuesta['correcto'] = 'S';
-    //     $respuesta['msj'] = 'Guardado correctamente';
+    public function guardarPermiso($datos = array()) {
+        // Prepara una respuesta por defecto
+        $resultado = [
+            'correcto' => 'N',
+            'msj'      => 'No se pudo guardar el permiso'
+        ];
 
-    //     $id = $this->modelo->insertarPermiso($datos);
-    //     if ($id <= 0) {
-    //         $respuesta['correcto'] = 'N';
-    //         $respuesta['msj'] = 'Error al guardar';
-    //     }
+        // Llamamos al método del modelo para guardar
+        $resp = $this->modelo->guardarPermiso($datos);
+        
+        // Si el modelo responde satisfactoriamente, modificamos el resultado
+        if ($resp) {
+            $resultado['correcto'] = 'S';
+            $resultado['msj'] = 'Permiso guardado con éxito.';
+        }
 
-    //     echo json_encode($respuesta);
-    // }
-
-    // public function eliminarPermiso($datos = array()) {
-    //     $id = $datos['id'] ?? '';
-    //     $resultado = $this->modelo->eliminarPermiso($id);
-
-    //     $respuesta['correcto'] = $resultado ? 'S' : 'N';
-    //     $respuesta['msj'] = $resultado ? 'Eliminado correctamente' : 'Error al eliminar';
-    //     echo json_encode($respuesta);
-    // }
+        // Retornamos la respuesta en formato JSON
+        echo json_encode($resultado);
+    }
 }
 
 // Para probar cambiar action de mantenimiento.

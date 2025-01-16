@@ -47,5 +47,6 @@
         </div>
         <!-- Asincrona para que lo cargue cuando pueda sin obstaculizar el resto -->
         <script src="app.js" async></script>
+        <!-- <script src="js/Permisos.js" ></script> -->
     </body>
 </html>

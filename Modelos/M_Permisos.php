@@ -39,31 +39,27 @@ class M_Permisos extends Modelo {
         return $this->DAO->consultar($SQL);
     }
 
-    // public function insertarPermiso($datos = array()) {
-    //     $id = '';
-    //     $permiso = '';
-    //     $id_menu = '';
-    //     $codigo_permiso = '';
-    //     extract($datos);
+    public function guardarPermiso($datos) {
+        // Extraemos los valores del array $datos
+        $id             = $datos['id']             ?? '';
+        $permiso        = $datos['permiso']        ?? '';
+        $id_menu        = $datos['id_menu']        ?? '';
+        $codigo_permiso = $datos['codigo_permiso'] ?? '';
 
-    //     if (!empty($id)) {
-    //         $SQL = "UPDATE permisos SET
-    //                     permiso = '$permiso',
-    //                     id_menu = '$id_menu',
-    //                     codigo_permiso = '$codigo_permiso'
-    //                 WHERE id = '$id'";
-    //         return $this->DAO->actualizar($SQL);
-    //     } else {
-    //         $SQL = "INSERT INTO permisos SET 
-    //                     permiso = '$permiso',
-    //                     id_menu = '$id_menu',
-    //                     codigo_permiso = '$codigo_permiso'";
-    //         return $this->DAO->insertar($SQL);
-    //     }
-    // }
+        // Si $id está vacío, es un INSERT; si no, es un UPDATE.
+        if ($id === '') {
+            // Insertar
+            $SQL = "INSERT INTO permisos (permiso, id_menu, codigo_permiso)
+                    VALUES ('$permiso', '$id_menu', '$codigo_permiso')";
+        } else {
+            // Actualizar
+            $SQL = "UPDATE permisos
+                    SET permiso        = '$permiso',
+                        id_menu        = '$id_menu',
+                        codigo_permiso = '$codigo_permiso'
+                    WHERE id = '$id'";
+        }
 
-    // public function eliminarPermiso($id) {
-    //     $SQL = "DELETE FROM permisos WHERE id = '$id'";
-    //     return $this->DAO->eliminar($SQL);
-    // }
+        return $this->DAO->insertar($SQL);
+    }
 }

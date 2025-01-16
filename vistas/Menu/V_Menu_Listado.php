@@ -5,7 +5,7 @@ extract($datos);
 function renderPermisos($permisos) {
     $html = '<ul>';
     foreach ($permisos as $permiso) {
-        $html .= '<li>' . htmlspecialchars($permiso['id']) . ' - ' . htmlspecialchars($permiso['permiso']) . '</li>';
+        $html .= '<li>' . htmlspecialchars($permiso['codigo_permiso']) . ' - ' . htmlspecialchars($permiso['permiso']) . '</li>';
     }
     $html .= '</ul>';
     return $html;
@@ -67,6 +67,7 @@ function renderMenu($menuTree, $level = 0) {
         $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirMenu(' . $menu['id'] . ', \'above\')">Añadir Arriba</button>';
         $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirMenu(' . $menu['id'] . ', \'below\')">Añadir Abajo</button>';
         $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirHijo(' . $menu['id'] . ')">Añadir Hijo</button>';
+        $html .= '<button class="btn btn-sm btn-info me-2" onclick="obtenerVista_EditarCrear(\'Permisos\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $menu['id'] . '\')">Permisos</button>';
         
         $html .= '</div>';
 
