@@ -30,12 +30,8 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
     parametros.append('controlador', controlador);
     parametros.append('metodo', metodo);
     
-    // If it's a permission form, pass the id as id_menu
-    if (controlador === 'Permisos' && metodo === 'getVistaNuevoEditar') {
-        parametros.append('id_menu', id);
-    } else {
-        parametros.append('id', id);
-    }
+    // Ajuste para siempre enviar el ID como 'id'
+    parametros.append('id', id);
 
     let opciones = { method: 'GET' };
 
@@ -53,6 +49,7 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
             console.log("Error al pedir vista", error.message);
         });
 }
+
 
 function añadirMenu(menuId, positionType) {
     let parametros = new URLSearchParams();
