@@ -22,36 +22,42 @@ class C_Permisos extends Controlador {
         Vista::render('./vistas/Permisos/V_Permisos_Listado.php', ['permisos' => $permisos]);
     }
 
-    public function getVistaNuevoEditar($datos = array()) {
-        // Debug: Print received data
-        echo "<pre>Debug: Received data in getVistaNuevoEditar:\n";
-        print_r($datos);
-        echo "</pre>";
-
-        $permiso = [];
-
-        // If id_menu is set, we're creating a new permission for a specific menu
-        if (isset($datos['id_menu']) && $datos['id_menu'] != '') {
-            $permiso['id_menu'] = $datos['id_menu'];
-        }
-        // If id is set, we're editing an existing permission
-        elseif (isset($datos['id']) && $datos['id'] != '') {
-            $filtros['id'] = $datos['id'];
-            $permisos = $this->modelo->buscarPermisos($filtros);
-            if (!empty($permisos)) {
-                $permiso = $permisos[0];
-            }
-        }
-
-        // Debug: Print permiso array
-        echo "<pre>Debug: Permiso array to be passed to view:\n";
-        print_r($permiso);
-        echo "</pre>";
-
-        Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php', ['permiso' => $permiso]);
-    }
+    // public function getVistaNuevoEditar($datos = array()) {
+    //     // Inicializar array vacío para el permiso
+    //     $permiso = [];
     
-
+    //     // Caso: Nuevo permiso para un menú específico
+    //     if (isset($datos['id_menu']) && !empty($datos['id_menu'])) {
+    //         $permiso['id_menu'] = $datos['id_menu']; // Asociar al menú
+    //     } 
+    //     // Caso: Editar permiso existente
+    //     elseif (isset($datos['id']) && !empty($datos['id'])) {
+    //         $filtros['id'] = $datos['id'];
+    //         $permisos = $this->modelo->buscarPermisos($filtros); // Buscar el permiso en la base de datos
+    //         if (!empty($permisos)) {
+    //             $permiso = $permisos[0]; // Usar el primer resultado
+    //         }
+    //     } else {
+    //         // Manejo de error: No hay información suficiente para determinar el contexto
+    //         echo "<pre>Error: No se recibió id_menu o id para procesar la solicitud.</pre>";
+    //         return;
+    //     }
+    
+    //     // Debug: Mostrar información recibida y procesada
+    //     echo "<pre>Debug: Datos recibidos en getVistaNuevoEditar:\n";
+    //     print_r($datos);
+    //     echo "</pre>";
+    
+    //     echo "<pre>Debug: Permiso preparado para la vista:\n";
+    //     print_r($permiso);
+    //     echo "</pre>";
+    
+    //     // Renderizar la vista con los datos del permiso
+    //     Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php', ['permiso' => $permiso]);
+    // }
+    
+    
+    
     public function guardarPermiso($datos = array()) {
         // Prepara una respuesta por defecto
         $resultado = [

@@ -1,15 +1,37 @@
 <?php 
 $menus = array();
+$permisos = array();
 extract($datos);
 
+// Verifica el contenido de los menús y permisos
+// echo '<h3>Contenido de $menus:</h3>';
+// echo '<pre>';
+// print_r($menus);
+// echo '</pre>';
+
+// echo '<h3>Contenido de $permisos:</h3>';
+// echo '<pre>';
+// print_r($permisos);
+// echo '</pre>';
+
 function renderPermisos($permisos) {
+    // Verificar si hay permisos disponibles
+    if (empty($permisos)) {
+        return '<p>No hay permisos asociados.</p>';
+    }
+
     $html = '<ul>';
     foreach ($permisos as $permiso) {
-        $html .= '<li>' . htmlspecialchars($permiso['codigo_permiso']) . ' - ' . htmlspecialchars($permiso['permiso']) . '</li>';
+        $html .= '<li>';
+        $html .= htmlspecialchars($permiso['permiso']) . ' (Código: ' . htmlspecialchars($permiso['codigo_permiso']) . ') ';
+        // Botón de edición utilizando obtenerVista_EditarCrear
+        $html .= '<button class="btn btn-sm btn-warning ms-2" onclick="obtenerVista_EditarCrear(\'Permisos\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . htmlspecialchars($permiso['id']) . '\')">Editar</button>';
+        $html .= '</li>';
     }
     $html .= '</ul>';
-    return $html;
+    return $html; // Devolver el HTML generado
 }
+
 
 // Ordenar los menús
 usort($menus, function($a, $b) {
@@ -54,10 +76,11 @@ function renderMenu($menuTree, $level = 0) {
         $html .= '</div>';
         $html .= '</div>';
 
+        // Obtener permisos desde el menú directamente
         if (!empty($menu['permisos'])) {
             $html .= '<div class="menu-permisos">';
             $html .= '<h5>Permisos:</h5>';
-            $html .= renderPermisos($menu['permisos']);
+            $html .= renderPermisos($menu['permisos']); // Usa los permisos embebidos
             $html .= '</div>';
         }
 
@@ -80,6 +103,7 @@ function renderMenu($menuTree, $level = 0) {
     $html .= '</div>';
     return $html;
 }
+
 
 // Imprimir el menú
 echo '<div class="menu-container">';

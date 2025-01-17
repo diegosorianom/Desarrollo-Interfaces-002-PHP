@@ -2,28 +2,19 @@
 $permisos = array();
 extract($datos);
 
-$html = '<div class="table-responsive"><table class="table table-striped">';
-$html .= '<thead>
-            <tr>
-                <th>ID</th>
-                <th>Permiso</th>
-                <th>Menú</th>
-                <th>Código</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
-            </tr>
-          </thead>
-          <tbody>';
+// Inicio del contenedor
+$html = '<div class="listado-permisos">';
+
+// Recorrido de los permisos para generar las líneas
 foreach ($permisos as $permiso) {
-    $html .= '<tr>
-                <td>' . $permiso['id'] . '</td>
-                <td>' . $permiso['permiso'] . '</td>
-                <td>' . $permiso['id_menu'] . '</td>
-                <td>' . $permiso['codigo_permiso'] . '</td>
-                <td><button class="btn btn-primary" onclick="obtenerVista_EditarCrear(\'Permisos\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $permiso['id'] . '\')">Editar</button></td>
-                <td><button class="btn btn-danger" onclick="eliminarPermiso(\'' . $permiso['id'] . '\')">Eliminar</button></td>
-              </tr>';
+    $html .= '[' . htmlspecialchars($permiso['codigo_permiso']) . '] - [' . htmlspecialchars($permiso['permiso']) . ']<br>';
 }
-$html .= '</tbody></table></div>';
+
+// Cierre del contenedor
+$html .= '</div>';
+
+// Añadimos una línea para mostrar toda la información de los permisos
+$html .= '<pre>' . print_r($permisos, true) . '</pre>';
+
 echo $html;
 ?>

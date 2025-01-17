@@ -61,5 +61,5 @@ class M_Permisos extends Modelo {
         }
 
         return $this->DAO->insertar($SQL);
-    }
+    }    
 }
