@@ -26,10 +26,20 @@ function obtenerVista(controlador, metodo, destino) {
 }
 
 function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
-    let parametros = "controlador=" + controlador + "&metodo=" + metodo + "&id=" + id; // Add '=' after id
+    let parametros = new URLSearchParams();
+    parametros.append('controlador', controlador);
+    parametros.append('metodo', metodo);
+    
+    // If it's a permission form, pass the id as id_menu
+    if (controlador === 'Permisos' && metodo === 'getVistaNuevoEditar') {
+        parametros.append('id_menu', id);
+    } else {
+        parametros.append('id', id);
+    }
+
     let opciones = { method: 'GET' };
 
-    fetch("C_Frontal.php?" + parametros, opciones)
+    fetch("C_Frontal.php?" + parametros.toString(), opciones)
         .then(res => {
             if (res.ok) {
                 return res.text();
@@ -157,36 +167,29 @@ function guardarPermiso() {
         errores.push("El campo 'Código' es obligatorio.");
     }
 
-    // Si hay errores, los mostramos y detenemos la ejecución
     if (errores.length > 0) {
-        alert(errores.join("\n")); // O bien, tu contenedor de errores
+        alert(errores.join("\n"));
         return;
     }
 
     // 2. Construir los parámetros para la petición
-    let parametros = "controlador=Permisos&metodo=guardarPermiso";
-    let opciones = { method: 'GET' };
-
-    // Obtenemos todos los datos del formulario
-    parametros += "&" + new URLSearchParams(new FormData(document.getElementById('formularioPermiso'))).toString();
+    let parametros = new URLSearchParams(new FormData(document.getElementById('formularioPermiso'))).toString();
+    let opciones   = { method: 'GET' };
 
     // 3. Hacemos la petición al servidor
-    fetch("C_Frontal.php?" + parametros, opciones)
+    fetch("C_Frontal.php?controlador=Permisos&metodo=guardarPermiso&" + parametros, opciones)
         .then(res => {
             if (res.ok) {
-                // Se espera una respuesta en JSON (por el echo json_encode en el controlador)
                 return res.json();
             }
             throw new Error(res.status);
         })
         .then(resultado => {
             if (resultado.correcto === 'S') {
-                // Si se guardó correctamente, mostramos el mensaje o refrescamos la vista
                 alert(resultado.msj); 
-                // Por ejemplo, podrías recargar la lista de permisos o cerrar un modal
-                document.getElementById('capaEditarCrear').innerHTML = resultado.msj;
+                // Recargamos el contenedor de edición/creación:
+                document.getElementById('capaEditarCrear').innerHTML = '';
             } else {
-                // Mostramos el mensaje de error que nos vino del servidor
                 alert(resultado.msj);
             }
         })

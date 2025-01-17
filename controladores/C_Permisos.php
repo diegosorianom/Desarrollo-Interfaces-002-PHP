@@ -23,14 +23,34 @@ class C_Permisos extends Controlador {
     }
 
     public function getVistaNuevoEditar($datos = array()) {
-        if (!isset($datos['id']) || $datos['id'] == '') {
-            Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php');
-        } else {
+        // Debug: Print received data
+        echo "<pre>Debug: Received data in getVistaNuevoEditar:\n";
+        print_r($datos);
+        echo "</pre>";
+
+        $permiso = [];
+
+        // If id_menu is set, we're creating a new permission for a specific menu
+        if (isset($datos['id_menu']) && $datos['id_menu'] != '') {
+            $permiso['id_menu'] = $datos['id_menu'];
+        }
+        // If id is set, we're editing an existing permission
+        elseif (isset($datos['id']) && $datos['id'] != '') {
             $filtros['id'] = $datos['id'];
             $permisos = $this->modelo->buscarPermisos($filtros);
-            Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php', ['permiso' => $permisos[0]]);
+            if (!empty($permisos)) {
+                $permiso = $permisos[0];
+            }
         }
+
+        // Debug: Print permiso array
+        echo "<pre>Debug: Permiso array to be passed to view:\n";
+        print_r($permiso);
+        echo "</pre>";
+
+        Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php', ['permiso' => $permiso]);
     }
+    
 
     public function guardarPermiso($datos = array()) {
         // Prepara una respuesta por defecto
