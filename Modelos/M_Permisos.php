@@ -39,27 +39,66 @@ class M_Permisos extends Modelo {
         return $this->DAO->consultar($SQL);
     }
 
-    public function guardarPermiso($datos) {
-        // Extraemos los valores del array $datos
+    // public function guardarPermiso($datos) {
+    //     // Extraemos los valores del array $datos
+    //     $id             = $datos['id']             ?? '';
+    //     $permiso        = $datos['permiso']        ?? '';
+    //     $id_menu        = $datos['id_menu']        ?? '';
+    //     $codigo_permiso = $datos['codigo_permiso'] ?? '';
+
+    //     // Si $id está vacío, es un INSERT; si no, es un UPDATE.
+    //     if ($id === '') {
+    //         // Insertar
+    //         $SQL = "INSERT INTO permisos (permiso, id_menu, codigo_permiso)
+    //                 VALUES ('$permiso', '$id_menu', '$codigo_permiso')";
+    //     } else {
+    //         // Actualizar
+    //         $SQL = "UPDATE permisos
+    //                 SET permiso        = '$permiso',
+    //                     id_menu        = '$id_menu',
+    //                     codigo_permiso = '$codigo_permiso'
+    //                 WHERE id = '$id'";
+    //     }
+
+    //     return $this->DAO->insertar($SQL);
+    // }    
+
+    public function insertarPermiso($datos) {
+        // Extract values from the $datos array
+        $permiso        = $datos['permiso']        ?? '';
+        $id_menu        = $datos['id_menu']        ?? '';
+        $codigo_permiso = $datos['codigo_permiso'] ?? '';
+    
+        // Construct the INSERT SQL query
+        $SQL = "INSERT INTO permisos (permiso, id_menu, codigo_permiso)
+                VALUES ('$permiso', '$id_menu', '$codigo_permiso')";
+    
+        // Execute and return the result
+        return $this->DAO->insertar($SQL);
+    }
+
+    public function actualizarPermiso($datos) {
+        // Extract values from the $datos array
         $id             = $datos['id']             ?? '';
         $permiso        = $datos['permiso']        ?? '';
         $id_menu        = $datos['id_menu']        ?? '';
         $codigo_permiso = $datos['codigo_permiso'] ?? '';
-
-        // Si $id está vacío, es un INSERT; si no, es un UPDATE.
+    
+        // If no ID is provided, return false (invalid operation)
         if ($id === '') {
-            // Insertar
-            $SQL = "INSERT INTO permisos (permiso, id_menu, codigo_permiso)
-                    VALUES ('$permiso', '$id_menu', '$codigo_permiso')";
-        } else {
-            // Actualizar
-            $SQL = "UPDATE permisos
-                    SET permiso        = '$permiso',
-                        id_menu        = '$id_menu',
-                        codigo_permiso = '$codigo_permiso'
-                    WHERE id = '$id'";
+            return false;
         }
-
-        return $this->DAO->insertar($SQL);
-    }    
+    
+        // Construct the UPDATE SQL query
+        $SQL = "UPDATE permisos
+                SET permiso        = '$permiso',
+                    id_menu        = '$id_menu',
+                    codigo_permiso = '$codigo_permiso'
+                WHERE id = '$id'";
+    
+        // Execute and return the result
+        return $this->DAO->actualizar($SQL);
+    }
+    
+    
 }

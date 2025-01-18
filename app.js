@@ -151,9 +151,9 @@ function toggleOptions(menuId) {
 }
 
 function guardarPermiso() {
-    // 1. Validar campos del formulario
-    let permiso        = document.getElementById('permiso').value;
-    let id_menu        = document.getElementById('id_menu').value;
+    // 1. Validate form fields
+    let permiso = document.getElementById('permiso').value;
+    let id_menu = document.getElementById('id_menu').value;
     let codigo_permiso = document.getElementById('codigo_permiso').value;
     let errores = [];
 
@@ -172,28 +172,33 @@ function guardarPermiso() {
         return;
     }
 
-    // 2. Construir los parámetros para la petición
+    // 2. Build the parameters for the request
     let parametros = new URLSearchParams(new FormData(document.getElementById('formularioPermiso'))).toString();
-    let opciones   = { method: 'GET' };
+    let opciones = { method: 'GET' };
 
-    // 3. Hacemos la petición al servidor
+    // 3. Send the request to the server
     fetch("C_Frontal.php?controlador=Permisos&metodo=guardarPermiso&" + parametros, opciones)
         .then(res => {
             if (res.ok) {
-                return res.json();
+                return res.json(); // Parse the response as JSON
             }
-            throw new Error(res.status);
+            throw new Error("Error al procesar la respuesta del servidor."); // Handle non-2xx HTTP responses
         })
         .then(resultado => {
             if (resultado.correcto === 'S') {
-                alert(resultado.msj); 
-                // Recargamos el contenedor de edición/creación:
+                alert(resultado.msj); // Show success message
+                
+                // Clear the editing/creating view
                 document.getElementById('capaEditarCrear').innerHTML = '';
+
+                // Reload the list view
+                obtenerVista('Permisos', 'getVistaListado', 'capaListado');
             } else {
-                alert(resultado.msj);
+                alert(resultado.msj); // Show the error message from the backend
             }
         })
         .catch(err => {
             console.error("Error al guardar el permiso:", err.message);
+            alert("Error inesperado al guardar el permiso. Por favor, intenta nuevamente.");
         });
 }

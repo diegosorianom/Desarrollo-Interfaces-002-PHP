@@ -48,24 +48,26 @@ class C_Permisos extends Controlador {
 
     
     public function guardarPermiso($datos = array()) {
-        // Prepara una respuesta por defecto
         $resultado = [
             'correcto' => 'N',
             'msj'      => 'No se pudo guardar el permiso'
         ];
-
-        // Llamamos al método del modelo para guardar
-        $resp = $this->modelo->guardarPermiso($datos);
-        
-        // Si el modelo responde satisfactoriamente, modificamos el resultado
+    
+        // Decide whether to insert or update based on the presence of an ID
+        if (isset($datos['id']) && !empty($datos['id'])) {
+            $resp = $this->modelo->actualizarPermiso($datos);
+        } else {
+            $resp = $this->modelo->insertarPermiso($datos);
+        }
+    
         if ($resp) {
             $resultado['correcto'] = 'S';
             $resultado['msj'] = 'Permiso guardado con éxito.';
         }
-
-        // Retornamos la respuesta en formato JSON
+    
         echo json_encode($resultado);
     }
+    
 }
 
 // Para probar cambiar action de mantenimiento.
