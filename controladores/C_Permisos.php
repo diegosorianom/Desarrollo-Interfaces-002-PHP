@@ -23,35 +23,29 @@ class C_Permisos extends Controlador {
     }
 
     public function getVistaNuevoEditar($datos = array()) {
-        $permiso = []; // Inicializar el array vacío
-        
-        // Caso: Editar permiso existente
+        $permiso = []; // Initialize an empty array for a new form
+    
+        // Case: Edit existing permission
         if (isset($datos['id']) && !empty($datos['id'])) {
             $filtros['id'] = $datos['id'];
-            $permisos = $this->modelo->buscarPermisos($filtros); // Buscar los permisos en la base de datos
-            
+            $permisos = $this->modelo->buscarPermisos($filtros);
+    
             if (!empty($permisos)) {
-                $permiso = $permisos[0]; // Asignar el primer resultado al permiso
+                $permiso = $permisos[0];
             } else {
-                echo "<pre>Error: No se encontraron datos para el ID proporcionado.</pre>";
+                echo "<pre>Error: No data found for the provided ID.</pre>";
                 return;
             }
-        } else {
-            echo "<pre>Error: No se recibió un ID válido.</pre>";
-            return;
         }
-        
-        // Debug para verificar que los datos completos se están obteniendo
-        echo "<pre>Debug: Permiso preparado para la vista:\n";
-        print_r($permiso);
-        echo "</pre>";
-        
-        // Renderizar la vista con los datos completos
+    
+        // Case: New permission (only id_menu is prefilled if provided)
+        if (isset($datos['id_menu'])) {
+            $permiso['id_menu'] = $datos['id_menu'];
+        }
+    
         Vista::render('./vistas/Permisos/V_Permisos_NuevoEditar.php', ['permiso' => $permiso]);
     }
-    
-    
-    
+
     
     public function guardarPermiso($datos = array()) {
         // Prepara una respuesta por defecto

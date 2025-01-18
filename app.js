@@ -25,17 +25,19 @@ function obtenerVista(controlador, metodo, destino) {
         });
 }
 
-function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
+function obtenerVista_EditarCrear(controlador, metodo, destino, id = null, id_menu = null) {
     let parametros = new URLSearchParams();
     parametros.append('controlador', controlador);
     parametros.append('metodo', metodo);
-    
-    // Ajuste para siempre enviar el ID como 'id'
-    parametros.append('id', id);
 
-    let opciones = { method: 'GET' };
+    if (id) {
+        parametros.append('id', id);
+    }
+    if (id_menu) {
+        parametros.append('id_menu', id_menu);
+    }
 
-    fetch("C_Frontal.php?" + parametros.toString(), opciones)
+    fetch("C_Frontal.php?" + parametros.toString(), { method: 'GET' })
         .then(res => {
             if (res.ok) {
                 return res.text();
@@ -46,9 +48,10 @@ function obtenerVista_EditarCrear(controlador, metodo, destino, id) {
             document.getElementById(destino).innerHTML = vista;
         })
         .catch(error => {
-            console.log("Error al pedir vista", error.message);
+            console.log("Error loading view", error.message);
         });
 }
+
 
 
 function añadirMenu(menuId, positionType) {
