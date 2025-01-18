@@ -100,5 +100,17 @@ class M_Permisos extends Modelo {
         return $this->DAO->actualizar($SQL);
     }
     
+    public function eliminarPermiso($id) {
+        if (empty($id)) {
+            return false; // Return false if no ID is provided
+        }
+    
+        // Construct the DELETE SQL query
+        $SQL = "DELETE FROM permisos WHERE id = '$id'";
+    
+        // Use the `borrar` method from the DAO to execute the query
+        return $this->DAO->borrar($SQL) > 0;
+    }
+    
     
 }

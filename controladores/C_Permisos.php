@@ -68,6 +68,30 @@ class C_Permisos extends Controlador {
         echo json_encode($resultado);
     }
     
+    public function eliminarPermiso($datos = array()) {
+        $resultado = [
+            'correcto' => 'N',
+            'msj'      => 'No se pudo eliminar el permiso'
+        ];
+    
+        // Validate that an ID is provided
+        if (!isset($datos['id']) || empty($datos['id'])) {
+            $resultado['msj'] = 'ID de permiso no proporcionado.';
+            echo json_encode($resultado);
+            return;
+        }
+    
+        // Call the model to delete the permission
+        $resp = $this->modelo->eliminarPermiso($datos['id']);
+    
+        if ($resp) {
+            $resultado['correcto'] = 'S';
+            $resultado['msj'] = 'Permiso eliminado con éxito.';
+        }
+    
+        echo json_encode($resultado);
+    }
+    
 }
 
 // Para probar cambiar action de mantenimiento.

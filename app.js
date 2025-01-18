@@ -202,3 +202,36 @@ function guardarPermiso() {
             alert("Error inesperado al guardar el permiso. Por favor, intenta nuevamente.");
         });
 }
+
+function eliminarPermiso(id) {
+    if (!confirm("¿Estás seguro de que deseas eliminar este permiso?")) {
+        return; // Exit if the user cancels the confirmation dialog
+    }
+
+    let parametros = new URLSearchParams();
+    parametros.append('controlador', 'Permisos');
+    parametros.append('metodo', 'eliminarPermiso');
+    parametros.append('id', id);
+
+    fetch("C_Frontal.php?" + parametros.toString(), { method: 'GET' })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            throw new Error("Error al procesar la respuesta del servidor.");
+        })
+        .then(resultado => {
+            if (resultado.correcto === 'S') {
+                alert(resultado.msj);
+                // Reload the list view
+                obtenerVista('Permisos', 'getVistaListado', 'capaListado');
+            } else {
+                alert(resultado.msj);
+            }
+        })
+        .catch(err => {
+            console.error("Error al eliminar el permiso:", err.message);
+            alert("Error inesperado al eliminar el permiso. Por favor, intenta nuevamente.");
+        });
+}
+

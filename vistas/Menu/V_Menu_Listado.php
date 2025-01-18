@@ -15,7 +15,6 @@ extract($datos);
 // echo '</pre>';
 
 function renderPermisos($permisos) {
-    // Verificar si hay permisos disponibles
     if (empty($permisos)) {
         return '<p>No hay permisos asociados.</p>';
     }
@@ -24,13 +23,14 @@ function renderPermisos($permisos) {
     foreach ($permisos as $permiso) {
         $html .= '<li>';
         $html .= htmlspecialchars($permiso['permiso']) . ' (Código: ' . htmlspecialchars($permiso['codigo_permiso']) . ') ';
-        // Botón de edición utilizando obtenerVista_EditarCrear
         $html .= '<button class="btn btn-sm btn-warning ms-2" onclick="obtenerVista_EditarCrear(\'Permisos\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . htmlspecialchars($permiso['id']) . '\')">Editar</button>';
+        $html .= '<button class="btn btn-sm btn-danger ms-2" onclick="eliminarPermiso(' . htmlspecialchars($permiso['id']) . ')">Eliminar</button>';
         $html .= '</li>';
     }
     $html .= '</ul>';
-    return $html; // Devolver el HTML generado
+    return $html;
 }
+
 
 
 // Ordenar los menús
