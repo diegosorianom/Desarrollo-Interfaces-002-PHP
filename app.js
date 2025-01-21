@@ -140,6 +140,15 @@ function toggleChildren(menuId, event) {
     }
 }
 
+function mostrarSeleccion() {
+    const seleccion = document.getElementById('frol').value;
+    console.log('Rol seleccionado:', seleccion);
+}
+
+function mostrarSeleccionUsuario() {
+    const usuario = document.getElementById('fusuario').value;
+    console.log('Usuario seleccionado:', usuario);
+}
 
 function toggleOptions(menuId) {
     const options = document.getElementById(`options-${menuId}`);
@@ -234,4 +243,3 @@ function eliminarPermiso(id) {
             alert("Error inesperado al eliminar el permiso. Por favor, intenta nuevamente.");
         });
 }
-

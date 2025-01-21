@@ -83,7 +83,10 @@
         
             echo json_encode($respuesta);
         }
-        
-        
-    }
+
+        public function getUsuariosDropdown() {
+            $usuarios = $this->modelo->buscarUsuarios(); // Llama al modelo para obtener los usuarios
+            return $usuarios;
+        }        
+    }    
 ?>

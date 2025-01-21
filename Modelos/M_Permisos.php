@@ -45,7 +45,7 @@ class M_Permisos extends Modelo {
     //     $permiso        = $datos['permiso']        ?? '';
     //     $id_menu        = $datos['id_menu']        ?? '';
     //     $codigo_permiso = $datos['codigo_permiso'] ?? '';
-
+    
     //     // Si $id está vacío, es un INSERT; si no, es un UPDATE.
     //     if ($id === '') {
     //         // Insertar
