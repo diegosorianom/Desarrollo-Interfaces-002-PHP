@@ -104,7 +104,7 @@ function añadirHijo(menuId) {
 
 
 // Aqui es donde crearemos las funciones básicas
-function buscar(controlador, metodo, formulario, destino) {
+function buscar(controlador, metodo, formulario, destino) {    
     let parametros = "controlador=" + controlador + "&metodo=" + metodo; // Fixed the parameter formatting
     let opciones = { method: 'GET' };
     parametros += "&" + new URLSearchParams(new FormData(document.getElementById(formulario))).toString();
@@ -121,6 +121,35 @@ function buscar(controlador, metodo, formulario, destino) {
         })
         .catch(error => {
             console.log("Error al pedir vista", error.message); // Fixed 'err' to 'error'
+        });
+}
+
+function buscarConsola(controlador, metodo, formulario, destino) {
+    // 1. Obtenemos el valor de los dropdown
+    const rolSeleccionado = document.getElementById('frol').value;
+    const usuarioSeleccionado = document.getElementById('fusuario').value;
+
+    // 2. Mostramos los valores por consola
+    console.log("Rol seleccionado: ", rolSeleccionado);
+    console.log("Usuario seleccionado: ", usuarioSeleccionado);
+
+    // 3. Repetimos la misma lógica de tu función buscar original
+    let parametros = "controlador=" + controlador + "&metodo=" + metodo;
+    let opciones = { method: 'GET' };
+    parametros += "&" + new URLSearchParams(new FormData(document.getElementById(formulario))).toString();
+
+    fetch("C_Frontal.php?" + parametros, opciones)
+        .then(res => {
+            if (res.ok) {
+                return res.text();
+            }
+            throw new Error(res.status);
+        })
+        .then(vista => {
+            document.getElementById(destino).innerHTML = vista;
+        })
+        .catch(error => {
+            console.log("Error al pedir vista", error.message);
         });
 }
 

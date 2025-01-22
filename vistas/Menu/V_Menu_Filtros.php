@@ -36,7 +36,7 @@
         </div>
         <div class="row mt-3">
             <div class="col-lg-12">
-                <button type="button" class="btn btn-primary" onclick="buscar('Menu', 'getVistaListadoMenu', 'formularioBuscarMenu', 'capaResultadoBusqueda')">Buscar</button>
+                <button type="button" class="btn btn-primary" onclick="buscarConsola('Menu', 'getVistaListadoMenu', 'formularioBuscarMenu', 'capaResultadoBusqueda')">Buscar</button>
                 <!-- <button type="button" class="btn btn-primary" onclick="buscar('Permisos', 'getVistaListado', 'formularioBuscarMenu', 'capaResultadoBusqueda')">Buscar</button> -->
                 <!-- Botón para mostrar la selección del dropdown en la consola -->
                 <!-- <button type="button" class="btn btn-secondary" onclick="mostrarSeleccion()">Mostrar Selección</button> -->

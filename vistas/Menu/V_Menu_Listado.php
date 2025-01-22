@@ -31,8 +31,6 @@ function renderPermisos($permisos) {
     return $html;
 }
 
-
-
 // Ordenar los menús
 usort($menus, function($a, $b) {
     if ($a['parent_id'] == 0 && $b['parent_id'] != 0) {
