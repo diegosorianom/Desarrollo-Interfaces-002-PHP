@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-01-2025 a las 12:54:12
+-- Tiempo de generación: 22-01-2025 a las 12:44:24
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `di2024`
 --
-
-CREATE DATABASE IF NOT EXISTS `di2024` DEFAULT CHARACTER SET latin1 COLLATE latin1_spanish_ci;
-USE `di2024`;
 
 -- --------------------------------------------------------
 
@@ -81,6 +78,48 @@ INSERT INTO `permisos` (`id`, `permiso`, `id_menu`, `codigo_permiso`) VALUES
 (7, 'Ver Pedidos', 3, '1'),
 (8, 'Ver Pedidos', 3, '2'),
 (9, 'Editar Pedidos', 3, '3');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `permisosroles`
+--
+
+CREATE TABLE `permisosroles` (
+  `id_rol` int(11) NOT NULL,
+  `id_permiso` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `permisosusuario`
+--
+
+CREATE TABLE `permisosusuario` (
+  `id_usuario` int(11) UNSIGNED NOT NULL,
+  `id_permiso` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `roles`
+--
+
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL,
+  `nombre_rol` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`id`, `nombre_rol`) VALUES
+(1, 'Administracion'),
+(3, 'Seguridad'),
+(2, 'Ventas');
 
 -- --------------------------------------------------------
 
@@ -269,6 +308,27 @@ ALTER TABLE `permisos`
   ADD KEY `id_menu` (`id_menu`);
 
 --
+-- Indices de la tabla `permisosroles`
+--
+ALTER TABLE `permisosroles`
+  ADD PRIMARY KEY (`id_rol`,`id_permiso`),
+  ADD KEY `fk_permisosRoles_permiso` (`id_permiso`);
+
+--
+-- Indices de la tabla `permisosusuario`
+--
+ALTER TABLE `permisosusuario`
+  ADD PRIMARY KEY (`id_usuario`,`id_permiso`),
+  ADD KEY `fk_permisosUsuario_permisos` (`id_permiso`);
+
+--
+-- Indices de la tabla `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nombre_rol` (`nombre_rol`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -292,6 +352,12 @@ ALTER TABLE `permisos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT de la tabla `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -306,6 +372,20 @@ ALTER TABLE `usuarios`
 --
 ALTER TABLE `permisos`
   ADD CONSTRAINT `permisos_ibfk_1` FOREIGN KEY (`id_menu`) REFERENCES `menu` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `permisosroles`
+--
+ALTER TABLE `permisosroles`
+  ADD CONSTRAINT `fk_permisosRoles_permiso` FOREIGN KEY (`id_permiso`) REFERENCES `permisos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_permisosRoles_rol` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `permisosusuario`
+--
+ALTER TABLE `permisosusuario`
+  ADD CONSTRAINT `fk_permisosUsuario_permisos` FOREIGN KEY (`id_permiso`) REFERENCES `permisos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_permisosUsuario_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_Usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
