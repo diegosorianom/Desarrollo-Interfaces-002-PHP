@@ -1,20 +1,12 @@
 <?php 
 $menus = array();
 $permisos = array();
+$frol = isset($_GET['frol']) ? $_GET['frol'] : '';
+$fusuario = isset($_GET['fusuario']) ? $_GET['fusuario'] : '';
 extract($datos);
 
 // Verifica el contenido de los menús y permisos
-// echo '<h3>Contenido de $menus:</h3>';
-// echo '<pre>';
-// print_r($menus);
-// echo '</pre>';
-
-// echo '<h3>Contenido de $permisos:</h3>';
-// echo '<pre>';
-// print_r($permisos);
-// echo '</pre>';
-
-function renderPermisos($permisos) {
+function renderPermisos($permisos, $frol, $fusuario) {
     if (empty($permisos)) {
         return '<p>No hay permisos asociados.</p>';
     }
@@ -23,12 +15,25 @@ function renderPermisos($permisos) {
     foreach ($permisos as $permiso) {
         $html .= '<li>';
         $html .= htmlspecialchars($permiso['permiso']) . ' (Código: ' . htmlspecialchars($permiso['codigo_permiso']) . ') ';
-        $html .= '<button class="btn btn-sm btn-warning ms-2" onclick="obtenerVista_EditarCrear(\'Permisos\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . htmlspecialchars($permiso['id']) . '\')">Editar</button>';
-        $html .= '<button class="btn btn-sm btn-danger ms-2" onclick="eliminarPermiso(' . htmlspecialchars($permiso['id']) . ')">Eliminar</button>';
+        
+        // Solo muestra los botones si no hay rol o usuario seleccionado
+        if (empty($frol) && empty($fusuario)) {
+            $html .= '<button class="btn btn-sm btn-warning ms-2" onclick="obtenerVista_EditarCrear(\'Permisos\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . htmlspecialchars($permiso['id']) . '\')">Editar</button>';
+            $html .= '<button class="btn btn-sm btn-danger ms-2" onclick="eliminarPermiso(' . htmlspecialchars($permiso['id']) . ')">Eliminar</button>';
+        }
+        
         $html .= '</li>';
     }
     $html .= '</ul>';
     return $html;
+}
+
+if (!empty($frol)) {
+    echo '<p>Rol seleccionado: ' . htmlspecialchars($frol) . '</p>';
+}
+
+if (!empty($fusuario)) {
+    echo '<p>Usuario seleccionado: ' . htmlspecialchars($fusuario) . '</p>';
 }
 
 // Ordenar los menús
@@ -60,7 +65,7 @@ function buildMenuTree($menus, $parentId = 0) {
 $menuTree = buildMenuTree($menus);
 
 // Renderizar el menú en forma de lista
-function renderMenu($menuTree, $level = 0) {
+function renderMenu($menuTree, $frol, $fusuario, $level = 0) {
     $html = '<div class="menu-list">';
     foreach ($menuTree as $menu) {
         // Fila del menú principal
@@ -78,7 +83,7 @@ function renderMenu($menuTree, $level = 0) {
         if (!empty($menu['permisos'])) {
             $html .= '<div class="menu-permisos">';
             $html .= '<h5>Permisos:</h5>';
-            $html .= renderPermisos($menu['permisos']); // Usa los permisos embebidos
+            $html .= renderPermisos($menu['permisos'], $frol, $fusuario); // Pasamos $frol y $fusuario
             $html .= '</div>';
         }
 
@@ -94,7 +99,7 @@ function renderMenu($menuTree, $level = 0) {
         // Submenús (ocultos por defecto)
         if ($hasChildren) {
             $html .= '<div class="menu-children" id="children-' . $menu['id'] . '" style="display: none;">';
-            $html .= renderMenu($menu['children'], $level + 1);
+            $html .= renderMenu($menu['children'], $frol, $fusuario, $level + 1);
             $html .= '</div>';
         }
     }
@@ -102,13 +107,8 @@ function renderMenu($menuTree, $level = 0) {
     return $html;
 }
 
-
 // Imprimir el menú
 echo '<div class="menu-container">';
-echo renderMenu($menuTree);
+echo renderMenu($menuTree, $frol, $fusuario);
 echo '</div>';
 ?>
-
-<div class="container-fluid" id="capaEditarCrear"></div>
-
-
