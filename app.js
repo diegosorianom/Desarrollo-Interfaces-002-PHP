@@ -124,13 +124,31 @@ function buscar(controlador, metodo, formulario, destino) {
         });
 }
 
+// Mantén un registro de los permisos seleccionados
+const permisosSeleccionados = new Map();
+
 function mostrarPermiso(checkbox) {
+    const permisoId = checkbox.getAttribute("data-id");
+    const permisoNombre = checkbox.value;
+    const permisoCodigo = checkbox.getAttribute("data-codigo");
+
     if (checkbox.checked) {
-        console.log("Permiso seleccionado: " + checkbox.value);
+        // Agregar permiso al registro
+        permisosSeleccionados.set(permisoId, {
+            id: permisoId,
+            nombre: permisoNombre,
+            codigo: permisoCodigo,
+        });
     } else {
-        console.log("Permiso deseleccionado: " + checkbox.value);
+        // Eliminar permiso del registro
+        permisosSeleccionados.delete(permisoId);
     }
+
+    // Mostrar el estado actualizado en la consola
+    console.log("Permisos seleccionados:", Array.from(permisosSeleccionados.values()));
 }
+
+
 
 function buscarConsola(controlador, metodo, formulario, destino) {
     // 1. Obtenemos el valor de los dropdown

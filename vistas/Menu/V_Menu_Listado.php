@@ -28,7 +28,10 @@ function renderPermisos($permisos, $frol, $fusuario) {
         // Mostrar checkbox si hay un rol o usuario seleccionado
         if (!empty($frol) || !empty($fusuario)) {
             $html .= '<input type="checkbox" class="permiso-checkbox" id="permiso-' . htmlspecialchars($permiso['id']) . '" ';
-            $html .= 'value="' . htmlspecialchars($permiso['permiso']) . '" onclick="mostrarPermiso(this)" /> ';
+            $html .= 'value="' . htmlspecialchars($permiso['permiso']) . '" ';
+            $html .= 'data-id="' . htmlspecialchars($permiso['id']) . '" ';
+            $html .= 'data-codigo="' . htmlspecialchars($permiso['codigo_permiso']) . '" ';
+            $html .= 'onclick="mostrarPermiso(this)" /> ';
         }
 
         // Mostrar el nombre del permiso
@@ -45,6 +48,7 @@ function renderPermisos($permisos, $frol, $fusuario) {
     $html .= '</ul>';
     return $html;
 }
+
 
 if (!empty($frol)) {
     echo '<p>Rol seleccionado: ' . htmlspecialchars($frol) . '</p>';
