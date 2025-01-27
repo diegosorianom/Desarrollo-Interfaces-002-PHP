@@ -1,3 +1,13 @@
+<script>
+    // Definimos la función en el contexto global
+    function mostrarPermiso(checkbox) {
+        if (checkbox.checked) {
+            console.log("Permiso seleccionado: " + checkbox.value);
+        } else {
+            console.log("Permiso deseleccionado: " + checkbox.value);
+        }
+    }
+</script>
 <?php 
 $menus = array();
 $permisos = array();
@@ -35,8 +45,6 @@ function renderPermisos($permisos, $frol, $fusuario) {
     $html .= '</ul>';
     return $html;
 }
-
-
 
 if (!empty($frol)) {
     echo '<p>Rol seleccionado: ' . htmlspecialchars($frol) . '</p>';

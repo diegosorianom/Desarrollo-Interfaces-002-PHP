@@ -124,6 +124,14 @@ function buscar(controlador, metodo, formulario, destino) {
         });
 }
 
+function mostrarPermiso(checkbox) {
+    if (checkbox.checked) {
+        console.log("Permiso seleccionado: " + checkbox.value);
+    } else {
+        console.log("Permiso deseleccionado: " + checkbox.value);
+    }
+}
+
 function buscarConsola(controlador, metodo, formulario, destino) {
     // 1. Obtenemos el valor de los dropdown
     const rolSeleccionado = document.getElementById('frol').value;
@@ -151,14 +159,6 @@ function buscarConsola(controlador, metodo, formulario, destino) {
         .catch(error => {
             console.log("Error al pedir vista", error.message);
         });
-}
-
-function mostrarPermiso(checkbox) {
-    if (checkbox.checked) {
-        console.log("Permiso seleccionado: " + checkbox.value);
-    } else {
-        console.log("Permiso deseleccionado: " + checkbox.value);
-    }
 }
 
 function toggleChildren(menuId, event) {
