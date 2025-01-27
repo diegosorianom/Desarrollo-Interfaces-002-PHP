@@ -153,6 +153,14 @@ function buscarConsola(controlador, metodo, formulario, destino) {
         });
 }
 
+function mostrarPermiso(checkbox) {
+    if (checkbox.checked) {
+        console.log("Permiso seleccionado: " + checkbox.value);
+    } else {
+        console.log("Permiso deseleccionado: " + checkbox.value);
+    }
+}
+
 function toggleChildren(menuId, event) {
     event.stopPropagation(); // Evitar activar el clic en la fila
     const children = document.getElementById(`children-${menuId}`);

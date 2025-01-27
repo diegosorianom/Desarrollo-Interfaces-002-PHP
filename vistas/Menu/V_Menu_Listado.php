@@ -14,19 +14,29 @@ function renderPermisos($permisos, $frol, $fusuario) {
     $html = '<ul>';
     foreach ($permisos as $permiso) {
         $html .= '<li>';
+
+        // Mostrar checkbox si hay un rol o usuario seleccionado
+        if (!empty($frol) || !empty($fusuario)) {
+            $html .= '<input type="checkbox" class="permiso-checkbox" id="permiso-' . htmlspecialchars($permiso['id']) . '" ';
+            $html .= 'value="' . htmlspecialchars($permiso['permiso']) . '" onclick="mostrarPermiso(this)" /> ';
+        }
+
+        // Mostrar el nombre del permiso
         $html .= htmlspecialchars($permiso['permiso']) . ' (Código: ' . htmlspecialchars($permiso['codigo_permiso']) . ') ';
-        
-        // Solo muestra los botones si no hay rol o usuario seleccionado
+
+        // Mostrar botones si NO hay un rol o usuario seleccionado
         if (empty($frol) && empty($fusuario)) {
             $html .= '<button class="btn btn-sm btn-warning ms-2" onclick="obtenerVista_EditarCrear(\'Permisos\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . htmlspecialchars($permiso['id']) . '\')">Editar</button>';
             $html .= '<button class="btn btn-sm btn-danger ms-2" onclick="eliminarPermiso(' . htmlspecialchars($permiso['id']) . ')">Eliminar</button>';
         }
-        
+
         $html .= '</li>';
     }
     $html .= '</ul>';
     return $html;
 }
+
+
 
 if (!empty($frol)) {
     echo '<p>Rol seleccionado: ' . htmlspecialchars($frol) . '</p>';
