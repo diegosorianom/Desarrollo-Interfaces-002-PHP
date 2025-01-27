@@ -39,6 +39,86 @@ class M_Permisos extends Modelo {
         return $this->DAO->consultar($SQL);
     }
 
+    public function insertarPermisoRol($id_rol, $id_permiso) {
+        try {
+            // Validar que el rol y el permiso existan
+            $SQL_validacion = "SELECT 
+                (SELECT COUNT(*) FROM roles WHERE id = '$id_rol') as rol_existe,
+                (SELECT COUNT(*) FROM permisos WHERE id = '$id_permiso') as permiso_existe";
+            
+            $validacion = $this->DAO->consultar($SQL_validacion);
+            
+            if ($validacion[0]['rol_existe'] == 0) {
+                throw new Exception("El rol especificado no existe");
+            }
+            
+            if ($validacion[0]['permiso_existe'] == 0) {
+                throw new Exception("El permiso especificado no existe");
+            }
+    
+            // Verificar si ya existe la relación
+            $SQL_existe = "SELECT COUNT(*) as existe FROM permisosroles 
+                          WHERE id_rol = '$id_rol' AND id_permiso = '$id_permiso'";
+            
+            $resultado = $this->DAO->consultar($SQL_existe);
+            
+            if ($resultado[0]['existe'] > 0) {
+                return true; // Ya existe la relación
+            }
+    
+            // Insertar la nueva relación
+            $SQL = "INSERT INTO permisosroles (id_rol, id_permiso) 
+                    VALUES ('$id_rol', '$id_permiso')";
+            
+            $resultado = $this->DAO->insertar($SQL);
+            
+            if ($resultado === false) {
+                throw new Exception("Error al insertar en la base de datos");
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Error en insertarPermisoRol: " . $e->getMessage());
+            throw $e;
+        }
+    }
+    
+    public function eliminarPermisoRol($id_rol, $id_permiso) {
+        try {
+            // Verificar que la relación exista antes de eliminar
+            $SQL_existe = "SELECT COUNT(*) as existe FROM permisosroles 
+                          WHERE id_rol = '$id_rol' AND id_permiso = '$id_permiso'";
+            
+            $resultado = $this->DAO->consultar($SQL_existe);
+            
+            if ($resultado[0]['existe'] == 0) {
+                return true; // No existe la relación, consideramos éxito
+            }
+    
+            $SQL = "DELETE FROM permisosroles 
+                    WHERE id_rol = '$id_rol' AND id_permiso = '$id_permiso'";
+            
+            $resultado = $this->DAO->borrar($SQL);
+            
+            if ($resultado === false) {
+                throw new Exception("Error al eliminar de la base de datos");
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Error en eliminarPermisoRol: " . $e->getMessage());
+            throw $e;
+        }
+    }
+    
+    // Método adicional para verificar permisos existentes
+    public function obtenerPermisosRol($id_rol) {
+        $SQL = "SELECT id_permiso FROM permisosroles WHERE id_rol = '$id_rol'";
+        return $this->DAO->consultar($SQL);
+    }
+    
+    
+
     // public function guardarPermiso($datos) {
     //     // Extraemos los valores del array $datos
     //     $id             = $datos['id']             ?? '';

@@ -92,6 +92,52 @@ class C_Permisos extends Controlador {
         echo json_encode($resultado);
     }
     
+    public function asignarPermisoRol($datos = array()) {
+        $resultado = [
+            'correcto' => 'N',
+            'msj' => 'No se pudo procesar la operación'
+        ];
+    
+        // Validación más detallada de los datos
+        if (empty($datos['id_permiso'])) {
+            $resultado['msj'] = 'ID de permiso no proporcionado';
+            echo json_encode($resultado);
+            return;
+        }
+    
+        if (empty($datos['id_rol'])) {
+            $resultado['msj'] = 'ID de rol no proporcionado';
+            echo json_encode($resultado);
+            return;
+        }
+    
+        if (!isset($datos['asignar'])) {
+            $resultado['msj'] = 'Acción no especificada (asignar/desasignar)';
+            echo json_encode($resultado);
+            return;
+        }
+    
+        try {
+            if ($datos['asignar'] === '1') {
+                $resp = $this->modelo->insertarPermisoRol($datos['id_rol'], $datos['id_permiso']);
+                $resultado['msj'] = 'Permiso asignado correctamente';
+            } else {
+                $resp = $this->modelo->eliminarPermisoRol($datos['id_rol'], $datos['id_permiso']);
+                $resultado['msj'] = 'Permiso removido correctamente';
+            }
+    
+            if ($resp) {
+                $resultado['correcto'] = 'S';
+            } else {
+                $resultado['msj'] = 'Error en la operación de base de datos';
+            }
+        } catch (Exception $e) {
+            $resultado['msj'] = 'Error: ' . $e->getMessage();
+        }
+    
+        echo json_encode($resultado);
+    }  
+    
 }
 
 // Para probar cambiar action de mantenimiento.

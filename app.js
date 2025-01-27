@@ -128,27 +128,51 @@ function buscar(controlador, metodo, formulario, destino) {
 const permisosSeleccionados = new Map();
 
 function mostrarPermiso(checkbox) {
-    const permisoId = checkbox.getAttribute("data-id");
-    const permisoNombre = checkbox.value;
-    const permisoCodigo = checkbox.getAttribute("data-codigo");
-
-    if (checkbox.checked) {
-        // Agregar permiso al registro
-        permisosSeleccionados.set(permisoId, {
-            id: permisoId,
-            nombre: permisoNombre,
-            codigo: permisoCodigo,
-        });
-    } else {
-        // Eliminar permiso del registro
-        permisosSeleccionados.delete(permisoId);
+    const permisoId = checkbox.getAttribute("data-id")
+    const rolId = document.getElementById("frol").value
+  
+    if (!rolId) {
+      alert("Por favor, seleccione un rol primero")
+      checkbox.checked = !checkbox.checked // Revertir el estado del checkbox
+      return
     }
-
-    // Mostrar el estado actualizado en la consola
-    console.log("Permisos seleccionados:", Array.from(permisosSeleccionados.values()));
-}
-
-
+  
+    // Prepare the parameters
+    const parametros = new URLSearchParams()
+    parametros.append("controlador", "Permisos")
+    parametros.append("metodo", "asignarPermisoRol")
+    parametros.append("id_permiso", permisoId)
+    parametros.append("id_rol", rolId)
+    parametros.append("asignar", checkbox.checked ? "1" : "0")
+  
+    // Mostrar indicador de carga
+    checkbox.disabled = true
+  
+    // Send request to server
+    fetch("C_Frontal.php?" + parametros.toString(), { method: "GET" })
+      .then((res) => {
+        if (res.ok) {
+          return res.json()
+        }
+        throw new Error("Error en la respuesta del servidor")
+      })
+      .then((resultado) => {
+        if (resultado.correcto === "S") {
+          console.log(resultado.msj)
+        } else {
+          alert(resultado.msj)
+          checkbox.checked = !checkbox.checked // Revertir el estado
+        }
+      })
+      .catch((err) => {
+        console.error("Error:", err.message)
+        alert("Error al procesar la operación: " + err.message)
+        checkbox.checked = !checkbox.checked // Revertir el estado
+      })
+      .finally(() => {
+        checkbox.disabled = false // Rehabilitar el checkbox
+      })
+  }
 
 function buscarConsola(controlador, metodo, formulario, destino) {
     // 1. Obtenemos el valor de los dropdown
