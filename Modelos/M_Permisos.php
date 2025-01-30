@@ -116,32 +116,6 @@ class M_Permisos extends Modelo {
         $SQL = "SELECT id_permiso FROM permisosroles WHERE id_rol = '$id_rol'";
         return $this->DAO->consultar($SQL);
     }
-    
-    
-
-    // public function guardarPermiso($datos) {
-    //     // Extraemos los valores del array $datos
-    //     $id             = $datos['id']             ?? '';
-    //     $permiso        = $datos['permiso']        ?? '';
-    //     $id_menu        = $datos['id_menu']        ?? '';
-    //     $codigo_permiso = $datos['codigo_permiso'] ?? '';
-    
-    //     // Si $id está vacío, es un INSERT; si no, es un UPDATE.
-    //     if ($id === '') {
-    //         // Insertar
-    //         $SQL = "INSERT INTO permisos (permiso, id_menu, codigo_permiso)
-    //                 VALUES ('$permiso', '$id_menu', '$codigo_permiso')";
-    //     } else {
-    //         // Actualizar
-    //         $SQL = "UPDATE permisos
-    //                 SET permiso        = '$permiso',
-    //                     id_menu        = '$id_menu',
-    //                     codigo_permiso = '$codigo_permiso'
-    //                 WHERE id = '$id'";
-    //     }
-
-    //     return $this->DAO->insertar($SQL);
-    // }    
 
     public function insertarPermiso($datos) {
         // Extract values from the $datos array
