@@ -127,9 +127,10 @@ function cargarUnScript(url) {
   function mostrarPermiso(checkbox) {
     const permisoId = checkbox.getAttribute("data-id")
     const rolId = document.getElementById("frol").value
+    const usuarioId = document.getElementById("fusuario").value
   
-    if (!rolId) {
-      alert("Por favor, seleccione un rol primero")
+    if (!rolId && !usuarioId) {
+      alert("Por favor, seleccione un rol o un usuario primero")
       checkbox.checked = !checkbox.checked // Revertir el estado del checkbox
       return
     }
@@ -139,7 +140,11 @@ function cargarUnScript(url) {
     parametros.append("controlador", "Permisos")
     parametros.append("metodo", "asignarPermisoRol")
     parametros.append("id_permiso", permisoId)
-    parametros.append("id_rol", rolId)
+    if (rolId) {
+      parametros.append("id_rol", rolId)
+    } else {
+      parametros.append("id_usuario", usuarioId)
+    }
     parametros.append("asignar", checkbox.checked ? "1" : "0")
   
     // Mostrar indicador de carga
@@ -195,7 +200,9 @@ function cargarUnScript(url) {
       .then((vista) => {
         document.getElementById(destino).innerHTML = vista
         if (rolSeleccionado) {
-          marcarPermisosAsociados(rolSeleccionado)
+          marcarPermisosAsociados(rolSeleccionado, "rol")
+        } else if (usuarioSeleccionado) {
+          marcarPermisosAsociados(usuarioSeleccionado, "usuario")
         }
       })
       .catch((error) => {
@@ -203,11 +210,11 @@ function cargarUnScript(url) {
       })
   }
   
-  function marcarPermisosAsociados(rolId) {
+  function marcarPermisosAsociados(id, tipo) {
     const parametros = new URLSearchParams()
-    parametros.append("controlador", "Roles")
-    parametros.append("metodo", "obtenerPermisosRol")
-    parametros.append("id_rol", rolId)
+    parametros.append("controlador", tipo === "rol" ? "Roles" : "Permisos")
+    parametros.append("metodo", tipo === "rol" ? "obtenerPermisosRol" : "obtenerPermisosUsuario")
+    parametros.append(tipo === "rol" ? "id_rol" : "id_usuario", id)
   
     fetch("C_Frontal.php?" + parametros.toString(), { method: "GET" })
       .then((res) => {
@@ -217,7 +224,7 @@ function cargarUnScript(url) {
         throw new Error("Error en la respuesta del servidor")
       })
       .then((permisos) => {
-        console.log("Permisos asociados al rol:", permisos)
+        console.log(`Permisos asociados al ${tipo}:`, permisos)
         permisos.forEach((permiso) => {
           const checkbox = document.querySelector(`input[type="checkbox"][data-id="${permiso.id}"]`)
           if (checkbox) {
@@ -226,7 +233,7 @@ function cargarUnScript(url) {
         })
       })
       .catch((err) => {
-        console.error("Error al obtener permisos:", err.message)
+        console.error(`Error al obtener permisos del ${tipo}:`, err.message)
       })
   }
   

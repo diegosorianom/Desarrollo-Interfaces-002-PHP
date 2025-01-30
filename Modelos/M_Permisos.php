@@ -167,4 +167,80 @@ class M_Permisos extends Modelo {
     }
     
     
+    public function obtenerPermisosUsuario($id_usuario) {
+        $SQL = "SELECT p.id, p.permiso, p.codigo_permiso 
+                FROM permisos p 
+                INNER JOIN permisosusuario pu ON p.id = pu.id_permiso 
+                WHERE pu.id_usuario = '$id_usuario'";
+        return $this->DAO->consultar($SQL);
+    }
+
+    public function insertarPermisoUsuario($id_usuario, $id_permiso) {
+        try {
+            $SQL_validacion = "SELECT 
+                (SELECT COUNT(*) FROM usuarios WHERE id_Usuario = '$id_usuario') as usuario_existe,
+                (SELECT COUNT(*) FROM permisos WHERE id = '$id_permiso') as permiso_existe";
+            
+            $validacion = $this->DAO->consultar($SQL_validacion);
+            
+            if ($validacion[0]['usuario_existe'] == 0) {
+                throw new Exception("El usuario especificado no existe");
+            }
+            
+            if ($validacion[0]['permiso_existe'] == 0) {
+                throw new Exception("El permiso especificado no existe");
+            }
+
+            $SQL_existe = "SELECT COUNT(*) as existe FROM permisosusuario 
+                          WHERE id_usuario = '$id_usuario' AND id_permiso = '$id_permiso'";
+            
+            $resultado = $this->DAO->consultar($SQL_existe);
+            
+            if ($resultado[0]['existe'] > 0) {
+                return true; // Ya existe la relación
+            }
+
+            $SQL = "INSERT INTO permisosusuario (id_usuario, id_permiso) 
+                    VALUES ('$id_usuario', '$id_permiso')";
+            
+            $resultado = $this->DAO->insertar($SQL);
+            
+            if ($resultado === false) {
+                throw new Exception("Error al insertar en la base de datos");
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Error en insertarPermisoUsuario: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function eliminarPermisoUsuario($id_usuario, $id_permiso) {
+        try {
+            $SQL_existe = "SELECT COUNT(*) as existe FROM permisosusuario 
+                          WHERE id_usuario = '$id_usuario' AND id_permiso = '$id_permiso'";
+            
+            $resultado = $this->DAO->consultar($SQL_existe);
+            
+            if ($resultado[0]['existe'] == 0) {
+                return true; // No existe la relación, consideramos éxito
+            }
+
+            $SQL = "DELETE FROM permisosusuario
+                    WHERE id_usuario = '$id_usuario' AND id_permiso = '$id_permiso'";
+            
+            $resultado = $this->DAO->borrar($SQL);
+            
+            if ($resultado === false) {
+                throw new Exception("Error al eliminar de la base de datos");
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Error en eliminarPermisoUsuario: " . $e->getMessage());
+            throw $e;
+        }
+    }
 }
+

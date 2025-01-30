@@ -97,35 +97,46 @@ class C_Permisos extends Controlador {
             'correcto' => 'N',
             'msj' => 'No se pudo procesar la operación'
         ];
-    
-        // Validación más detallada de los datos
+
         if (empty($datos['id_permiso'])) {
             $resultado['msj'] = 'ID de permiso no proporcionado';
             echo json_encode($resultado);
             return;
         }
-    
-        if (empty($datos['id_rol'])) {
-            $resultado['msj'] = 'ID de rol no proporcionado';
+
+        if (empty($datos['id_rol']) && empty($datos['id_usuario'])) {
+            $resultado['msj'] = 'ID de rol o usuario no proporcionado';
             echo json_encode($resultado);
             return;
         }
-    
+
         if (!isset($datos['asignar'])) {
             $resultado['msj'] = 'Acción no especificada (asignar/desasignar)';
             echo json_encode($resultado);
             return;
         }
-    
+
         try {
-            if ($datos['asignar'] === '1') {
-                $resp = $this->modelo->insertarPermisoRol($datos['id_rol'], $datos['id_permiso']);
-                $resultado['msj'] = 'Permiso asignado correctamente';
+            if (!empty($datos['id_rol'])) {
+                // Asignar/desasignar permiso a rol
+                if ($datos['asignar'] === '1') {
+                    $resp = $this->modelo->insertarPermisoRol($datos['id_rol'], $datos['id_permiso']);
+                    $resultado['msj'] = 'Permiso asignado correctamente al rol';
+                } else {
+                    $resp = $this->modelo->eliminarPermisoRol($datos['id_rol'], $datos['id_permiso']);
+                    $resultado['msj'] = 'Permiso removido correctamente del rol';
+                }
             } else {
-                $resp = $this->modelo->eliminarPermisoRol($datos['id_rol'], $datos['id_permiso']);
-                $resultado['msj'] = 'Permiso removido correctamente';
+                // Asignar/desasignar permiso a usuario
+                if ($datos['asignar'] === '1') {
+                    $resp = $this->modelo->insertarPermisoUsuario($datos['id_usuario'], $datos['id_permiso']);
+                    $resultado['msj'] = 'Permiso asignado correctamente al usuario';
+                } else {
+                    $resp = $this->modelo->eliminarPermisoUsuario($datos['id_usuario'], $datos['id_permiso']);
+                    $resultado['msj'] = 'Permiso removido correctamente del usuario';
+                }
             }
-    
+
             if ($resp) {
                 $resultado['correcto'] = 'S';
             } else {
@@ -134,10 +145,21 @@ class C_Permisos extends Controlador {
         } catch (Exception $e) {
             $resultado['msj'] = 'Error: ' . $e->getMessage();
         }
-    
+
         echo json_encode($resultado);
     }  
     
+    public function obtenerPermisosUsuario($datos = array()) {
+        $id_usuario = $datos['id_usuario'] ?? '';
+        if (empty($id_usuario)) {
+            echo json_encode([]);
+            return;
+        }
+
+        $permisos = $this->modelo->obtenerPermisosUsuario($id_usuario);
+        echo json_encode($permisos);
+    }
 }
 
 // Para probar cambiar action de mantenimiento.
+
