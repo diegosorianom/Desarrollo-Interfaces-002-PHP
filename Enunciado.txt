@@ -1,0 +1,30 @@
+Implementa un sistema de permisos para el mantenimiento de menús, cumpliendo los siguientes puntos:
+
+1 - Modelo de permisos
+    - Restringe el acceso de usuarios a opciones de menú.
+
+    - Define acciones (consultar, editar, crear, imprimir, importar, etc.) que cada usuario puede realizar.
+
+    - Permite asignar permisos directamente a usuarios o a roles.
+
+2 - Vista de mantenimiento de menús
+    - Muestra, edita y elimina los permisos asociados a cada opción de menú en el mismo lugar donde se listan 
+    (sin ventanas emergentes o secciones laterales).
+
+    - Permite crear nuevos permisos justo debajo del último permiso existente para esa opción, 
+    actualizando solo la sección de permisos correspondiente.
+
+    - Se pueden eliminar permisos según sea necesario.
+
+3 - Filtros de usuario y rol
+    - Incorpora en la parte superior dos desplegables: uno para seleccionar usuarios y otro para roles 
+    (asegúrate de crear algunos roles en la base de datos para pruebas).
+
+    - Al seleccionar un usuario o rol y pulsar “Buscar”, la vista se mostrará sin botones para crear, 
+    modificar o borrar opciones y permisos.
+
+    - En lugar de esos botones, se mostrará un checkbox al lado de cada permiso para asignarlo o quitarlo al usuario o rol seleccionado.
+
+    - Los permisos previamente asignados aparecerán marcados y al interactuar con los checkboxes se actualizarán inmediatamente, 
+    sin necesidad de un botón adicional para guardar.
+
