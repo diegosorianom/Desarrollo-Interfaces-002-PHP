@@ -209,6 +209,57 @@ function cargarUnScript(url) {
         console.log("Error al pedir vista", error.message)
       })
   }
+
+  function obtenerRolesUsuario(id, tipo) {
+    const parametros = new URLSearchParams()
+    parametros.append("controlador", "Roles")
+    parametros.append("metodo", tipo === "rol" ? "obtenerRolesUsuario" : "obtenerRolesUsuario")
+    parametros.append(tipo === "rol" ? "id_rol" : "id_usuario", id)
+
+    fetch ("C_Frontal.php?" + parametros.toString(), {method: "GET"})
+      .then((res) => {
+        if (res.ok) {
+          return res.json()
+        }
+        throw new Error("Error en la respuesta del servidor")
+      })
+      .then((roles) => {
+        console.log(`Roles asociados al ${tipo}:`, roles)
+        actualizarInterfazRoles(roles, tipo)
+      })
+      .catch((err) => {
+        console.error(`Error al obtener roles del ${tipo}:`, err.message)
+      })
+  }
+
+  function actualizarInterfazRoles(roles, tipo) {
+    const rolesSelect = document.getElementById("roles")
+    if (rolesSelect) {
+      rolesSelect.innerHTML = ""
+      roles.forEach((rol) => {
+        const option = document.createElement("option")
+        option.value = rol.id
+        option.textContent = rol.nombre_rol
+        option.selected = rol.asignado
+        rolesSelect.appendChild(option)
+      })
+  
+      // Actualizar botones
+      const crearBtn = document.getElementById("crearRolBtn")
+      const editarBtn = document.getElementById("editarRolBtn")
+      const eliminarBtn = document.getElementById("eliminarRolBtn")
+  
+      if (roles.some((rol) => rol.asignado)) {
+        crearBtn.style.display = "none"
+        editarBtn.style.display = "inline-block"
+        eliminarBtn.style.display = "inline-block"
+      } else {
+        crearBtn.style.display = "inline-block"
+        editarBtn.style.display = "none"
+        eliminarBtn.style.display = "none"
+      }
+    }
+  }
   
   function marcarPermisosAsociados(id, tipo) {
     const parametros = new URLSearchParams()

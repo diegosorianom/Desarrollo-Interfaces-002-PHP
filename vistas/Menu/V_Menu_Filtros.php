@@ -33,6 +33,17 @@
                     ?>
                 </select>
             </div>
+            <div class="form-group col-md-6 col-sm-12">
+                <label for="roles">Roles:</label>
+                <select id="roles" name="roles" class="form-control" multiple>
+                    <!-- Las opciones se llenarán dinámicamente con JavaScript -->
+                </select>
+            </div>
+            <div class="form-group col-md-6 col-sm-12">
+                <button id="crearRolBtn" class="btn btn-primary" style="display:none;">Crear Rol</button>
+                <button id="editarRolBtn" class="btn btn-secondary" style="display:none;">Editar Rol</button>
+                <button id="eliminarRolBtn" class="btn btn-danger" style="display:none;">Eliminar Rol</button>
+            </div>
         </div>
         <div class="row mt-3">
             <div class="col-lg-12">
@@ -47,3 +58,4 @@
 </div>
 <div class="container-fluid" id="capaResultadoBusqueda"></div>
 <div class="container-fluid" id="capaEditarCrear"></div>
+

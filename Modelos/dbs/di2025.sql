@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-01-2025 a las 12:44:24
+-- Tiempo de generación: 04-02-2025 a las 13:04:49
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `di2024`
 --
-
-CREATE DATABASE IF NOT EXISTS `di2024` DEFAULT CHARACTER SET latin1 COLLATE latin1_spanish_ci;
-USE `di2024`;
 
 -- --------------------------------------------------------
 
@@ -293,6 +290,17 @@ INSERT INTO `usuarios` (`id_Usuario`, `nombre`, `apellido_1`, `apellido_2`, `sex
 (535, 'Johgn', 'fortni', 'ken', 'H', '2024-12-04', 'josecrear@gmail.com', '123235', 'josecrear', '6a204bd89f3c8348afd5c77c717a097a', 'S'),
 (536, 'pruebaMail', 'pruebaMail', 'pruebaMail', 'H', '2024-12-07', 'pruebaMail@gmail.com', '123123123', 'pruebaMail', '9edcdf5bf23a7e8dc17c0b06cc0c2782', 'S');
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario_roles`
+--
+
+CREATE TABLE `usuario_roles` (
+  `id_rol` int(11) UNSIGNED NOT NULL,
+  `id_usuario` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
 --
 -- Índices para tablas volcadas
 --
@@ -315,6 +323,7 @@ ALTER TABLE `permisos`
 --
 ALTER TABLE `permisosroles`
   ADD PRIMARY KEY (`id_rol`,`id_permiso`),
+  ADD UNIQUE KEY `fk_permisosRoles_rol` (`id_rol`),
   ADD KEY `fk_permisosRoles_permiso` (`id_permiso`);
 
 --
@@ -322,6 +331,7 @@ ALTER TABLE `permisosroles`
 --
 ALTER TABLE `permisosusuario`
   ADD PRIMARY KEY (`id_usuario`,`id_permiso`),
+  ADD UNIQUE KEY `fk_permisosUsuario_usuario` (`id_usuario`),
   ADD KEY `fk_permisosUsuario_permisos` (`id_permiso`);
 
 --
@@ -337,6 +347,14 @@ ALTER TABLE `roles`
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_Usuario`),
   ADD UNIQUE KEY `login` (`login`);
+
+--
+-- Indices de la tabla `usuario_roles`
+--
+ALTER TABLE `usuario_roles`
+  ADD PRIMARY KEY (`id_rol`,`id_usuario`),
+  ADD UNIQUE KEY `fk_usuarioRoles_rol` (`id_rol`),
+  ADD UNIQUE KEY `fk_usuarioRoles_usuario` (`id_usuario`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas

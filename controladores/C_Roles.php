@@ -25,6 +25,19 @@ class C_Roles extends Controlador {
         $permisos = $this->modelo->obtenerPermisosRol($id_rol);
         echo json_encode($permisos);
     }
+
+    public function obtenerRolesUsuario() {
+        $id_rol = $_GET['id_rol'] ?? '';
+        $id_usuario = $_GET['id_usuario'] ?? '';
+    
+        if (empty($id_rol) && empty($id_usuario)) {
+            echo json_encode([]);
+            return;
+        }
+
+        $roles = $this->modelo->obtenerRolesUsuario($id_rol, $id_usuario);
+        echo json_encode($roles);
+    }
 }
 ?>
 
