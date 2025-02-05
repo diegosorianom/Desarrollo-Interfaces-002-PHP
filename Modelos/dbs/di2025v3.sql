@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-02-2025 a las 18:40:57
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Tiempo de generación: 05-02-2025 a las 11:52:19
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -58,6 +58,31 @@ INSERT INTO `menu` (`id`, `label`, `url`, `parent_id`, `position`, `level`, `is_
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `menu_permisos`
+--
+
+CREATE TABLE `menu_permisos` (
+  `id` int(11) NOT NULL,
+  `permiso_id` int(11) NOT NULL,
+  `menu_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `menu_permisos`
+--
+
+INSERT INTO `menu_permisos` (`id`, `permiso_id`, `menu_id`) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(4, 1, 1),
+(5, 1, 2),
+(6, 2, 1),
+(7, 2, 3),
+(8, 3, 2);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `permiso`
 --
 
@@ -67,6 +92,42 @@ CREATE TABLE `permiso` (
   `descripcion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `permiso`
+--
+
+INSERT INTO `permiso` (`id`, `nombre`, `descripcion`) VALUES
+(1, 'LECTURA', 'Permite leer registros'),
+(2, 'ESCRITURA', 'Permite escribir nuevos registros'),
+(3, 'ACTUALIZACION', 'Permite actualizar registros existentes'),
+(4, 'ELIMINACION', 'Permite eliminar registros'),
+(5, 'ADMINISTRACION', 'Permite acceso total a las funcionalidades del sistema');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `permisos_usuarios`
+--
+
+CREATE TABLE `permisos_usuarios` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `permiso_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `permisos_usuarios`
+--
+
+INSERT INTO `permisos_usuarios` (`id`, `usuario_id`, `permiso_id`) VALUES
+(8, 1, 1),
+(9, 1, 2),
+(10, 2, 1),
+(11, 3, 3),
+(12, 3, 4),
+(13, 4, 2),
+(14, 5, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -75,21 +136,20 @@ CREATE TABLE `permiso` (
 
 CREATE TABLE `permiso_rol` (
   `id` int(11) NOT NULL,
-  `rol_id` int(11) DEFAULT NULL,
-  `permiso_id` int(11) DEFAULT NULL
+  `rol_id` int(11) NOT NULL,
+  `permiso_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
--- --------------------------------------------------------
-
 --
--- Estructura de tabla para la tabla `permiso_usuario`
+-- Volcado de datos para la tabla `permiso_rol`
 --
 
-CREATE TABLE `permiso_usuario` (
-  `id` int(11) NOT NULL,
-  `usuario_id` int(11) DEFAULT NULL,
-  `permiso_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+INSERT INTO `permiso_rol` (`id`, `rol_id`, `permiso_id`) VALUES
+(4, 1, 1),
+(5, 1, 2),
+(6, 2, 1),
+(7, 2, 3),
+(8, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -101,6 +161,17 @@ CREATE TABLE `rol` (
   `id` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `rol`
+--
+
+INSERT INTO `rol` (`id`, `nombre`) VALUES
+(1, 'ADMINISTRADOR'),
+(3, 'GESTOR'),
+(4, 'INVITADO'),
+(5, 'SUPERVISOR'),
+(2, 'USUARIO');
 
 -- --------------------------------------------------------
 
@@ -283,6 +354,14 @@ ALTER TABLE `menu`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `menu_permisos`
+--
+ALTER TABLE `menu_permisos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_menuPermisos_permiso` (`permiso_id`) USING BTREE,
+  ADD KEY `fk_menuPermisos_menu` (`menu_id`) USING BTREE;
+
+--
 -- Indices de la tabla `permiso`
 --
 ALTER TABLE `permiso`
@@ -290,22 +369,20 @@ ALTER TABLE `permiso`
   ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
+-- Indices de la tabla `permisos_usuarios`
+--
+ALTER TABLE `permisos_usuarios`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_permisoUsuario_usuario` (`usuario_id`) USING BTREE,
+  ADD KEY `fk_permisoUsuario_permiso` (`permiso_id`) USING BTREE;
+
+--
 -- Indices de la tabla `permiso_rol`
 --
 ALTER TABLE `permiso_rol`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_rol_permiso` (`rol_id`,`permiso_id`),
-  ADD UNIQUE KEY `fk_rol_id` (`rol_id`),
-  ADD KEY `fk_permiso_id` (`permiso_id`) USING BTREE;
-
---
--- Indices de la tabla `permiso_usuario`
---
-ALTER TABLE `permiso_usuario`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_usuario_permiso` (`usuario_id`,`permiso_id`),
-  ADD UNIQUE KEY `fk_permiso_id` (`permiso_id`),
-  ADD UNIQUE KEY `fk_usuario_id` (`usuario_id`);
+  ADD KEY `fk_rol_id` (`rol_id`),
+  ADD KEY `fk_permiso_id` (`permiso_id`);
 
 --
 -- Indices de la tabla `rol`
@@ -332,28 +409,34 @@ ALTER TABLE `menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
+-- AUTO_INCREMENT de la tabla `menu_permisos`
+--
+ALTER TABLE `menu_permisos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT de la tabla `permiso`
 --
 ALTER TABLE `permiso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `permisos_usuarios`
+--
+ALTER TABLE `permisos_usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `permiso_rol`
 --
 ALTER TABLE `permiso_rol`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `permiso_usuario`
---
-ALTER TABLE `permiso_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -366,11 +449,17 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- Filtros para la tabla `permisos_usuarios`
+--
+ALTER TABLE `permisos_usuarios`
+  ADD CONSTRAINT `fk_permisoUsuario_permiso` FOREIGN KEY (`permiso_id`) REFERENCES `permiso` (`id`);
+
+--
 -- Filtros para la tabla `permiso_rol`
 --
 ALTER TABLE `permiso_rol`
-  ADD CONSTRAINT `permiso_rol_ibfk_1` FOREIGN KEY (`rol_id`) REFERENCES `rol` (`id`),
-  ADD CONSTRAINT `permiso_rol_ibfk_2` FOREIGN KEY (`permiso_id`) REFERENCES `permiso` (`id`);
+  ADD CONSTRAINT `fk_permiso_id` FOREIGN KEY (`permiso_id`) REFERENCES `permiso` (`id`),
+  ADD CONSTRAINT `fk_rol_id` FOREIGN KEY (`rol_id`) REFERENCES `rol` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
