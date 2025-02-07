@@ -140,3 +140,34 @@ function toggleOptions(menuId) {
     options.style.display = options.style.display === "none" ? "block" : "none";
 }
 
+function buscarRol() {
+    let select = document.getElementById("frol");
+    let selectedRoleId = select.value;
+    let selectedRoleName = select.options[select.selectedIndex].text;
+
+    console.log("🔍 ID del Rol seleccionado:", selectedRoleId);
+    console.log("🔍 Nombre del Rol seleccionado:", selectedRoleName);
+    
+    let parametros = new URLSearchParams();
+    parametros.append('controlador', 'Menu');
+    parametros.append('metodo', 'getVistaListadoMenu');
+    parametros.append('frol', selectedRoleId);
+
+    let opciones = { method: 'GET' };
+
+    fetch("C_Frontal.php?" + parametros.toString(), opciones)
+        .then(res => {
+            if (res.ok) {
+                return res.text();
+            }
+            throw new Error(res.status);
+        })
+        .then(vista => {
+            document.getElementById("capaResultadoBusqueda").innerHTML = vista;
+        })
+        .catch(error => {
+            console.log("❌ Error al buscar menús y permisos:", error.message);
+        });
+}
+
+

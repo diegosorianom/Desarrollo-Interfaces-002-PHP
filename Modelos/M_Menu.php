@@ -25,6 +25,12 @@ class M_Menu extends Modelo {
         return $this -> formatMenu($menuOptions);
     }
 
+    public function getRoles() {
+        $SQL = "SELECT * FROM roles ORDER BY nombre";
+        return $this->DAO->consultar($SQL);
+    }
+    
+
     public function buscarOpcionesMenu($filtros=array()){
         $ftexto="";
         // $factivo="";
@@ -152,6 +158,16 @@ class M_Menu extends Modelo {
         $resultado = $this->DAO->consultar($SQL);
     
         return (!empty($resultado) && isset($resultado[0]['max_position'])) ? $resultado[0]['max_position'] : 0;
+    }
+
+
+    public function getPermisosPorMenu() {
+        $SQL = "SELECT p.id, p.nombre, p.id_menu, m.label as menu_label 
+                FROM permisos p 
+                INNER JOIN menu m ON p.id_menu = m.id 
+                ORDER BY m.position, p.nombre";
+
+        return $this -> DAO -> consultar($SQL);
     }
 
 }

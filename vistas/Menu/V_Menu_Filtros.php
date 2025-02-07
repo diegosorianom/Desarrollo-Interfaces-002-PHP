@@ -1,27 +1,37 @@
+<?php
+// Asegurar que $roles siempre está definido
+$roles = isset($datos['roles']) ? $datos['roles'] : [];
+?>
+
+
 <h2>Mantenimiento de menús</h2>
 <div class="container-fluid" id="capaFiltrosBusqueda">
     <form id="formularioBuscarMenu" name="formularioBuscarMenu">
-        <!-- <div class="row">
+        <div class="row">
+            <!-- Dropdown de Roles -->
             <div class="form-group col-md-6 col-sm-12">
-                <label for="fnombre">Nombre del menú:</label>
-                <input type="text" id="fnombre" name="fnombre" class="form-control" placeholder="Texto a buscar" value="" /> 
-            </div>
-            <div class="form-group col-md-6 col-sm-12">
-                <label for="factivoMenu">Estado:</label>
-                <select id="factivoMenu" name="factivoMenu" class="form-control">
-                    <option value="" selected>Todos</option>     
-                    <option value="S">Activos</option>     
-                    <option value="N">No activos</option>     
+                <label for="frol">Selecciona un Rol:</label>
+                <select id="frol" name="frol" class="form-control">
+                    <option value="">Todos</option>
+                    <?php
+                    if (!empty($roles) && is_array($roles)) {
+                        foreach ($roles as $rol) {
+                            echo '<option value="' . htmlspecialchars($rol['id']) . '">' . htmlspecialchars($rol['nombre']) . '</option>';
+                        }
+                    } else {
+                        echo '<option value="">No hay roles disponibles</option>';
+                    }
+                    ?>
                 </select>
             </div>
-        </div> -->
+        </div>
         <div class="row">
             <div class="col-lg-12">
-                <button type="button" class="btn btn-primary" onclick="buscar('Menu', 'getVistaListadoMenu', 'formularioBuscarMenu', 'capaResultadoBusqueda')">Buscar</button>
-                <!-- <button type="button" class="btn btn-secondary" onclick="obtenerVista_EditarCrear('Menu', 'getVistaNuevoEditar', 'capaEditarCrear', '')">Nuevo</button> -->
+                <button type="button" class="btn btn-primary" onclick="buscarRol()">Buscar</button>
             </div>
         </div>
     </form>
 </div>
 <div class="container-fluid" id="capaResultadoBusqueda"></div>
 <div class="container-fluid" id="capaEditarCrear"></div>
+

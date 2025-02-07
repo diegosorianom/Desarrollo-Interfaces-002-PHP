@@ -31,7 +31,7 @@ function buildMenuTree($menus, $parentId = 0) {
 $menuTree = buildMenuTree($menus);
 
 // Renderizar el menú en forma de lista
-function renderMenu($menuTree, $level = 0) {
+function renderMenu($menuTree, $permisos, $level = 0) {
     $html = '<div class="menu-list">';
     foreach ($menuTree as $menu) {
         // Fila del menú principal
@@ -43,6 +43,15 @@ function renderMenu($menuTree, $level = 0) {
             : '<span class="arrow-placeholder"></span>';
         $html .= '<span class="menu-name">' . $menu['label'] . '</span>';
         $html .= '</div>';
+        $html .= '</div>';
+
+        // Permisos
+        $html .= '<div class="menu-permissions">';
+        foreach ($permisos as $permiso) {
+            if ($permiso['id_menu'] == $menu['id']) {
+                $html .= '<div class="permiso-item">• ' . $permiso['nombre'] . '</div>';
+            }
+        }
         $html .= '</div>';
 
         // Fila de opciones (oculta por defecto)
@@ -57,7 +66,7 @@ function renderMenu($menuTree, $level = 0) {
         // Submenús (ocultos por defecto)
         if ($hasChildren) {
             $html .= '<div class="menu-children" id="children-' . $menu['id'] . '" style="display: none;">';
-            $html .= renderMenu($menu['children'], $level + 1);
+            $html .= renderMenu($menu['children'], $permisos, $level + 1);
             $html .= '</div>';
         }
     }
@@ -67,7 +76,7 @@ function renderMenu($menuTree, $level = 0) {
 
 // Imprimir el menú
 echo '<div class="menu-container">';
-echo renderMenu($menuTree);
+echo renderMenu($menuTree, isset($permisos) ? $permisos : []);
 echo '</div>';
 ?>
 

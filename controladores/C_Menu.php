@@ -7,20 +7,34 @@ class C_Menu {
     private $menuModel;
 
     public function __construct() {
-        $this -> menuModel = new M_Menu();
+        $this->menuModel = new M_Menu();
     }
 
     public function getFormattedMenu() {
         return $this -> menuModel -> getMenuOptions();
     }
 
-    public function getVistaFiltros($datos=array()){
-        Vista::render('./vistas/Menu/V_Menu_Filtros.php');
+    public function getVistaFiltros($datos = array()) {
+        $roles = $this->menuModel->getRoles();
+    
+        // Asegurar que siempre se pase un array
+        if (!is_array($roles)) {
+            $roles = [];
+        }
+    
+        // Pasar los roles correctamente a la vista
+        Vista::render('./vistas/Menu/V_Menu_Filtros.php', ['roles' => $roles]);
     }
 
     public function getVistaListadoMenu($filtros=array()) {
         $menus = $this -> menuModel -> buscarOpcionesMenu($filtros);
-        Vista::render('./vistas/Menu/V_Menu_Listado.php', array('menus' => $menus));
+        $permisos = $this -> menuModel -> getPermisosPorMenu();
+
+        // Pasamos los datos a la vista
+        Vista::render('./vistas/Menu/V_Menu_Listado.php', array(
+            'menus' => $menus,
+            'permisos' => $permisos
+        ));
     }    
 
     public function getVistaNuevoEditar($datos = array()) {
@@ -111,3 +125,4 @@ class C_Menu {
     }    
 }
 ?>
+
