@@ -16,26 +16,38 @@ class C_Menu {
 
     public function getVistaFiltros($datos = array()) {
         $roles = $this->menuModel->getRoles();
+        $usuarios = $this->menuModel->getUsuarios();
     
         // Asegurar que siempre se pase un array
         if (!is_array($roles)) {
             $roles = [];
         }
+        if (!is_array($usuarios)) {
+            $usuarios = [];
+        }
     
         // Pasar los roles correctamente a la vista
-        Vista::render('./vistas/Menu/V_Menu_Filtros.php', ['roles' => $roles]);
+        Vista::render('./vistas/Menu/V_Menu_Filtros.php', [
+            'roles' => $roles,
+            'usuarios' => $usuarios
+        ]);
     }
 
-    public function getVistaListadoMenu($filtros=array()) {
-        $menus = $this -> menuModel -> buscarOpcionesMenu($filtros);
-        $permisos = $this -> menuModel -> getPermisosPorMenu();
-
+    public function getVistaListadoMenu($filtros = array()) {
+        $menus = $this->menuModel->buscarOpcionesMenu($filtros);
+        $permisos = $this->menuModel->getPermisosPorMenu();
+    
+        // Agregamos el filtro de usuario si está presente
+        $idUsuario = isset($filtros['fusuario']) ? $filtros['fusuario'] : null;
+    
         // Pasamos los datos a la vista
-        Vista::render('./vistas/Menu/V_Menu_Listado.php', array(
+        Vista::render('./vistas/Menu/V_Menu_Listado.php', [
             'menus' => $menus,
-            'permisos' => $permisos
-        ));
-    }    
+            'permisos' => $permisos,
+            'id_Usuario' => $idUsuario // Ahora se envía el ID del usuario seleccionado
+        ]);
+    }
+    
 
     public function getVistaNuevoEditar($datos = array()) {
         if (!isset($datos['id']) || $datos['id'] == '') {

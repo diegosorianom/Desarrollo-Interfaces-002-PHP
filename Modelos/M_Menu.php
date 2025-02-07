@@ -29,8 +29,12 @@ class M_Menu extends Modelo {
         $SQL = "SELECT * FROM roles ORDER BY nombre";
         return $this->DAO->consultar($SQL);
     }
-    
 
+    public function getUsuarios() {
+        $SQL = "SELECT id_Usuario, nombre FROM usuarios ORDER BY nombre";
+        return $this->DAO->consultar($SQL);
+    }
+    
     public function buscarOpcionesMenu($filtros=array()){
         $ftexto="";
         // $factivo="";

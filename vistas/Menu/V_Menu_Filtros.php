@@ -1,6 +1,7 @@
 <?php
 // Asegurar que $roles siempre está definido
 $roles = isset($datos['roles']) ? $datos['roles'] : [];
+$usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
 ?>
 
 
@@ -20,6 +21,21 @@ $roles = isset($datos['roles']) ? $datos['roles'] : [];
                         }
                     } else {
                         echo '<option value="">No hay roles disponibles</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+            <!-- Dropdown de Usuarios -->
+            <!-- Dropdown de Usuarios -->
+            <div class="form-group col-md-6 col-sm-12">
+                <label for="fusuario">Selecciona un Usuario:</label>
+                <select id="fusuario" name="fusuario" class="form-control">
+                    <option value="">Todos</option>
+                    <?php
+                    if (!empty($usuarios) && is_array($usuarios)) {
+                        foreach ($usuarios as $usuario) {
+                            echo '<option value="' . htmlspecialchars($usuario['id_Usuario']) . '">' . htmlspecialchars($usuario['nombre']) . '</option>';
+                        }
                     }
                     ?>
                 </select>

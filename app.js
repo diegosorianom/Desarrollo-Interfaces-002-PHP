@@ -141,17 +141,20 @@ function toggleOptions(menuId) {
 }
 
 function buscarRol() {
-    let select = document.getElementById("frol");
-    let selectedRoleId = select.value;
-    let selectedRoleName = select.options[select.selectedIndex].text;
+    let selectRol = document.getElementById("frol");
+    let selectedRoleId = selectRol ? selectRol.value : ""; // Asegurar que el select existe
+
+    let selectUsuario = document.getElementById("fusuario");
+    let selectedUserId = selectUsuario ? selectUsuario.value : ""; // Asegurar que el select existe
 
     console.log("🔍 ID del Rol seleccionado:", selectedRoleId);
-    console.log("🔍 Nombre del Rol seleccionado:", selectedRoleName);
-    
+    console.log("🔍 ID del Usuario seleccionado (id_Usuario):", selectedUserId);
+
     let parametros = new URLSearchParams();
     parametros.append('controlador', 'Menu');
     parametros.append('metodo', 'getVistaListadoMenu');
     parametros.append('frol', selectedRoleId);
+    parametros.append('fusuario', selectedUserId); // Ahora se envía correctamente
 
     let opciones = { method: 'GET' };
 
@@ -169,5 +172,3 @@ function buscarRol() {
             console.log("❌ Error al buscar menús y permisos:", error.message);
         });
 }
-
-
