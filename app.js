@@ -142,33 +142,68 @@ function toggleOptions(menuId) {
 
 function buscarRol() {
     let selectRol = document.getElementById("frol");
-    let selectedRoleId = selectRol ? selectRol.value : ""; // Asegurar que el select existe
+    let selectedRoleId = selectRol ? selectRol.value : ""; 
 
     let selectUsuario = document.getElementById("fusuario");
-    let selectedUserId = selectUsuario ? selectUsuario.value : ""; // Asegurar que el select existe
+    let selectedUserId = selectUsuario ? selectUsuario.value : ""; 
 
     console.log("🔍 ID del Rol seleccionado:", selectedRoleId);
-    console.log("🔍 ID del Usuario seleccionado (id_Usuario):", selectedUserId);
+    console.log("🔍 ID del Usuario seleccionado:", selectedUserId);
 
     let parametros = new URLSearchParams();
     parametros.append('controlador', 'Menu');
     parametros.append('metodo', 'getVistaListadoMenu');
     parametros.append('frol', selectedRoleId);
-    parametros.append('fusuario', selectedUserId); // Ahora se envía correctamente
+    parametros.append('fusuario', selectedUserId); 
 
     let opciones = { method: 'GET' };
 
     fetch("C_Frontal.php?" + parametros.toString(), opciones)
-        .then(res => {
-            if (res.ok) {
-                return res.text();
-            }
-            throw new Error(res.status);
-        })
+        .then(res => res.text())
         .then(vista => {
             document.getElementById("capaResultadoBusqueda").innerHTML = vista;
         })
-        .catch(error => {
-            console.log("❌ Error al buscar menús y permisos:", error.message);
-        });
+        .catch(error => console.log("❌ Error al buscar menús y permisos:", error.message));
+}
+
+function togglePermiso(permisoId) {
+    let checkbox = document.querySelector(`input[data-permiso-id="${permisoId}"]`);
+    let seleccionado = checkbox.checked;
+
+    let selectRol = document.getElementById("frol");
+    let selectedRoleId = selectRol ? selectRol.value : ""; 
+
+    let selectUsuario = document.getElementById("fusuario");
+    let selectedUserId = selectUsuario ? selectUsuario.value : ""; 
+
+    if (!selectedRoleId && !selectedUserId) {
+        console.log("⚠️ No se seleccionó un rol ni un usuario.");
+        return;
+    }
+
+    let parametros = new URLSearchParams();
+    parametros.append('controlador', 'Permisos'); // Usamos el nuevo controlador
+    parametros.append('metodo', 'actualizarPermiso');
+    parametros.append('id_permiso', permisoId);
+    parametros.append('asignado', seleccionado ? "1" : "0");
+
+    if (selectedRoleId) {
+        parametros.append('frol', selectedRoleId);
+    }
+    if (selectedUserId) {
+        parametros.append('fusuario', selectedUserId);
+    }
+
+    console.log("🔄 Enviando solicitud de actualización:", parametros.toString());
+
+    fetch("C_Frontal.php?" + parametros.toString(), { method: 'POST' })
+        .then(res => res.text())
+        .then(respuesta => console.log("🔄 Respuesta del servidor:", respuesta))
+        .catch(error => console.log("❌ Error al actualizar permiso:", error.message));
+}
+
+
+
+function mostrarPermisoSeleccionado(permisoId) {
+    console.log("🔹 Permiso seleccionado:", permisoId);
 }
