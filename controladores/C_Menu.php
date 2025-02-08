@@ -1,6 +1,7 @@
 <?php
 require_once './controladores/Controlador.php';
 require_once 'modelos/M_Menu.php';
+require_once 'modelos/M_Permisos.php';  // Agregamos la inclusión del modelo de permisos
 require_once './vistas/Vista.php';
 
 class C_Menu {
@@ -37,16 +38,28 @@ class C_Menu {
         $menus = $this->menuModel->buscarOpcionesMenu($filtros);
         $permisos = $this->menuModel->getPermisosPorMenu();
     
-        // Agregamos el filtro de usuario si está presente
+        // Obtener los filtros de usuario y rol
         $idUsuario = isset($filtros['fusuario']) ? $filtros['fusuario'] : null;
+        $idRol = isset($filtros['frol']) ? $filtros['frol'] : null;
     
-        // Pasamos los datos a la vista
+        // Obtener permisos asignados según rol o usuario
+        $mPermisos = new M_Permisos();
+        $permisosAsignados = [];
+        if (!empty($idRol)) {
+            $permisosAsignados = $mPermisos->getPermisosAsignados($idRol);
+        } elseif (!empty($idUsuario)) {
+            $permisosAsignados = $mPermisos->getPermisosAsignadosUsuario($idUsuario);
+        }
+    
+        // Pasar los datos a la vista, incluyendo los permisos asignados
         Vista::render('./vistas/Menu/V_Menu_Listado.php', [
-            'menus' => $menus,
-            'permisos' => $permisos,
-            'id_Usuario' => $idUsuario // Ahora se envía el ID del usuario seleccionado
+            'menus'              => $menus,
+            'permisos'           => $permisos,
+            'id_Usuario'         => $idUsuario,
+            'permisosAsignados'  => $permisosAsignados,
         ]);
     }
+    
     
 
     public function getVistaNuevoEditar($datos = array()) {

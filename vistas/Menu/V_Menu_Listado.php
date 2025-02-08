@@ -1,8 +1,11 @@
 <?php 
-$menus = array();
+// Se asume que $datos contiene 'menus', 'permisos', 'permisosAsignados', etc.
 extract($datos);
 
-// Ordenar los menús
+$rolSeleccionado = isset($_GET['frol']) ? $_GET['frol'] : null;
+$usuarioSeleccionado = isset($_GET['fusuario']) ? $_GET['fusuario'] : null;
+
+// Ordenar los menús y construir el árbol jerárquico (ya implementado)
 usort($menus, function($a, $b) {
     if ($a['parent_id'] == 0 && $b['parent_id'] != 0) {
         return -1;
@@ -13,7 +16,6 @@ usort($menus, function($a, $b) {
     }
 });
 
-// Construir el árbol jerárquico de menús
 function buildMenuTree($menus, $parentId = 0) {
     $tree = [];
     foreach ($menus as $menu) {
@@ -30,7 +32,7 @@ function buildMenuTree($menus, $parentId = 0) {
 
 $menuTree = buildMenuTree($menus);
 
-// Renderizar el menú en forma de lista
+// Función para renderizar el menú
 function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $usuarioSeleccionado = null, $permisosAsignados = []) {
     $html = '<div class="menu-list">';
     foreach ($menuTree as $menu) {
@@ -48,8 +50,9 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
         $html .= '<div class="menu-permissions">';
         foreach ($permisos as $permiso) {
             if ($permiso['id_menu'] == $menu['id']) {
+                // Si el permiso está asignado, se marca el checkbox
                 $checked = in_array($permiso['id'], $permisosAsignados) ? 'checked' : '';
-                $permisoNombre = isset($permiso['nombre']) ? $permiso['nombre'] : 'Sin nombre'; // Corrección aquí
+                $permisoNombre = isset($permiso['nombre']) ? $permiso['nombre'] : 'Sin nombre';
                 
                 $html .= '<div class="permiso-item">';
                 if ($rolSeleccionado || $usuarioSeleccionado) {
@@ -61,7 +64,7 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
         }
         $html .= '</div>';
 
-        // Opciones del menú
+        // Opciones del menú (edición, añadir arriba/abajo/hijo)
         $html .= '<div class="menu-options" id="options-' . $menu['id'] . '" style="display: none;">';
         $html .= '<button class="btn btn-sm btn-primary me-2" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $menu['id'] . '\')">Editar</button>';
         $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirMenu(' . $menu['id'] . ', \'above\')">Añadir Arriba</button>';
@@ -79,15 +82,8 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
     return $html;
 }
 
-
-
-$rolSeleccionado = isset($_GET['frol']) ? $_GET['frol'] : null;
-$usuarioSeleccionado = isset($_GET['fusuario']) ? $_GET['fusuario'] : null;
-
-// Imprimir el menú
+// Imprimir el menú pasando también el arreglo de permisos asignados
 echo '<div class="menu-container">';
-echo renderMenu($menuTree, isset($permisos) ? $permisos : [], 0, $rolSeleccionado, $usuarioSeleccionado);
+echo renderMenu($menuTree, isset($permisos) ? $permisos : [], 0, $rolSeleccionado, $usuarioSeleccionado, isset($permisosAsignados) ? $permisosAsignados : []);
 echo '</div>';
 ?>
-
-<div class="container-fluid" id="capaEditarCrear"></div>

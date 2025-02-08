@@ -19,7 +19,8 @@ class M_Permisos {
     public function getPermisosAsignados($idRol) {
         $SQL = "SELECT id_permiso FROM permisos_roles WHERE id_rol = '$idRol'";
         $result = $this -> DAO -> consultar($SQL);
-        return array_colum ($result, 'id_permiso');
+        return array_column($result, 'id_permiso');
+
     }
 
     // Obtener permisos asignados a un usuario
