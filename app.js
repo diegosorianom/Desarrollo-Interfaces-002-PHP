@@ -207,3 +207,31 @@ function togglePermiso(permisoId) {
 function mostrarPermisoSeleccionado(permisoId) {
     console.log("🔹 Permiso seleccionado:", permisoId);
 }
+
+document.addEventListener("change", function (event) {
+    let selectRol = document.getElementById("frol");
+    let selectUsuario = document.getElementById("fusuario");
+
+    if (event.target && event.target.id === "frol") {
+        console.log("🔹 Rol seleccionado:", event.target.value);
+        
+        // 🚫 Deshabilitar usuario si se selecciona un rol
+        if (event.target.value !== "") {
+            selectUsuario.disabled = true; // ❌ Deshabilitar usuario
+        } else {
+            selectUsuario.disabled = false; // ✅ Volver a habilitar si se quita el rol
+        }
+    }
+
+    if (event.target && event.target.id === "fusuario") {
+        console.log("🔹 Usuario seleccionado:", event.target.value);
+        
+        // 🚫 Deshabilitar rol si se selecciona un usuario
+        if (event.target.value !== "") {
+            selectRol.disabled = true; // ❌ Deshabilitar rol
+        } else {
+            selectRol.disabled = false; // ✅ Volver a habilitar si se quita el usuario
+        }
+    }
+});
+
