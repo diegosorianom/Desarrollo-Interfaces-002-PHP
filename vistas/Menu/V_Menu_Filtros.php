@@ -44,6 +44,7 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
         <div class="row">
             <div class="col-lg-12">
                 <button type="button" class="btn btn-primary" onclick="buscarRol()">Buscar</button>
+                <button class="btn btn-success" onclick="obtenerVista_EditarCrear('Roles', 'getVistaNuevoEditar', 'capaEditarCrear', '')"> + Crear Nuevo Rol </button>
             </div>
         </div>
     </form>

@@ -235,3 +235,35 @@ document.addEventListener("change", function (event) {
     }
 });
 
+function guardarRol() {
+    let formData = new FormData(document.getElementById("formularioNuevoEditar"));
+
+    let opciones = {
+        method: 'POST',
+        body: formData
+    };
+
+    fetch("C_Frontal.php?controlador=Roles&metodo=guardarRol", opciones)
+        .then(res => {
+            return res.text().then(text => {
+                console.log("Respuesta completa del servidor:", text);
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    throw new Error(`Error al parsear JSON: ${e.message}. Respuesta del servidor: ${text}`);
+                }
+            });
+        })
+        .then(respuesta => {
+            if (respuesta.correcto === 'S') {
+                alert(respuesta.msj);
+                obtenerVista('Roles', 'getVistaListadoRoles', 'capaResultadoBusqueda');
+            } else {
+                document.getElementById("msjError").innerText = respuesta.msj;
+            }
+        })
+        .catch(error => {
+            console.error("❌ Error detallado al guardar rol:", error.message);
+            document.getElementById("msjError").innerText = "Error al procesar la solicitud. Por favor, revise la consola para más detalles.";
+        });
+}
