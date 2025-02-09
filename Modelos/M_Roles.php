@@ -11,14 +11,14 @@ class M_Roles extends Modelo {
     }
 
     public function buscarRoles($filtros = array()) {
-        $id_Rol = '';
+        $id = '';
         $nombre = '';
         extract($filtros);
 
         $SQL = "SELECT * FROM roles WHERE 1=1";
 
-        if (!empty($id_Rol)) {
-            $SQL .= " AND id_Rol = '$id_Rol'";
+        if (!empty($id)) {
+            $SQL .= " AND id = '$id'";
         }
 
         if (!empty($nombre)) {
@@ -31,33 +31,28 @@ class M_Roles extends Modelo {
     }
 
     public function insertarRol($datos = array()) {
-        $id_Rol = '';
+        $id = '';
         $nombre = '';
-        $descripcion = '';
-        extract($datos);
-
-        if (!empty($id_Rol)) {
+        extract($datos); // Extraer solo las variables disponibles
+    
+        if (!empty($id)) {
             // Actualizar rol existente
-            $SQL = "UPDATE roles SET 
-                        nombre = '$nombre',
-                        descripcion = '$descripcion'
-                    WHERE id_Rol = '$id_Rol'";
+            $SQL = "UPDATE roles SET nombre = '$nombre' WHERE id = '$id'";
             return $this->DAO->actualizar($SQL);
         } else {
             // Insertar nuevo rol
-            $SQL = "INSERT INTO roles SET 
-                        nombre = '$nombre',
-                        descripcion = '$descripcion'";
+            $SQL = "INSERT INTO roles (nombre) VALUES ('$nombre')";
             return $this->DAO->insertar($SQL);
         }
     }
+    
 
     public function isNombreEnUso($nombre, $excludeRoleId = null) {
-        $SQL = "SELECT id_Rol FROM roles WHERE nombre = '$nombre'";
+        $SQL = "SELECT id FROM roles WHERE nombre = '$nombre'";
 
         // Excluir un rol específico en caso de edición
         if (!empty($excludeRoleId)) {
-            $SQL .= " AND id_Rol != '$excludeRoleId'";
+            $SQL .= " AND id != '$excludeRoleId'";
         }
 
         $result = $this->DAO->consultar($SQL);

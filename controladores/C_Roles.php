@@ -21,7 +21,7 @@ class C_Roles extends Controlador {
             Vista::render('./vistas/Roles/V_Roles_NuevoEditar.php');
         } else {
             // Editando
-            $filtros['id_Rol'] = $datos['id'];
+            $filtros['id'] = $datos['id'];
             $roles = $this->modelo->buscarRoles($filtros);
             Vista::render('./vistas/Roles/V_Roles_NuevoEditar.php', array('rol' => $roles[0]));
         }
@@ -43,12 +43,12 @@ class C_Roles extends Controlador {
 
             $respuesta = ['correcto' => 'S', 'msj' => 'Creado correctamente'];
         
-            if (!empty($datos['id_Rol'])) {
-                $rolExistente = $this->modelo->buscarRoles(['id_Rol' => $datos['id_rol']]);
+            if (!empty($datos['id'])) {
+                $rolExistente = $this->modelo->buscarRoles(['id' => $datos['id']]);
                 if (empty($rolExistente)) {
                     $respuesta = ['correcto' => 'N', 'msj' => 'El rol a editar no existe'];
                 } else {
-                    if (!empty($datos['nombre']) && $this->modelo->isNombreEnUso($datos['nombre'], $datos['id_Rol'])) {
+                    if (!empty($datos['nombre']) && $this->modelo->isNombreEnUso($datos['nombre'], $datos['id'])) {
                         $respuesta = ['correcto' => 'N', 'msj' => 'El nombre del rol ya está registrado'];
                     } else {
                         $id = $this->modelo->insertarRol($datos);
