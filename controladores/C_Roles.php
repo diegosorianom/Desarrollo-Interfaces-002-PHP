@@ -96,7 +96,27 @@ class C_Roles extends Controlador {
         }
     }
     
+    public function obtenerRolesDeUsuario($datos = array()) {
+        header('Content-Type: application/json'); // Aseguramos respuesta JSON
     
+        if (!isset($datos['usuario_id']) || $datos['usuario_id'] == '') {
+            echo json_encode(['correcto' => 'N', 'msj' => 'Usuario no especificado']);
+            return;
+        }
+    
+        $usuarioId = $datos['usuario_id'];
+        $rolesUsuario = $this->modelo->obtenerRolesDeUsuario($usuarioId);
+    
+        // Extraer solo los IDs de los roles
+        $ids = [];
+        if (!empty($rolesUsuario)) {
+            foreach ($rolesUsuario as $role) {
+                $ids[] = $role['id_rol'];
+            }
+        }
+        echo json_encode(['correcto' => 'S', 'roles' => $ids]);
+    }
+        
     
 } // 🔹 Aquí cerramos correctamente la clase 🔹
 

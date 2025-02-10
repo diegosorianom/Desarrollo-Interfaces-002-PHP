@@ -75,7 +75,10 @@ class M_Roles {
         }
     }
     
-    
+    public function obtenerRolesDeUsuario($usuarioId) {
+        $SQL = "SELECT id_rol FROM roles_usuarios WHERE id_usuario = '$usuarioId'";
+        return $this->DAO->consultar($SQL);
+    }
     
     
 }

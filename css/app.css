@@ -65,3 +65,9 @@
     border-left: 2px dashed #ddd;
     padding-left: 10px;
 }
+
+.linked-role {
+    background-color: #d4edda; /* Ejemplo: fondo verde claro */
+    color: #155724;            /* Ejemplo: texto en verde oscuro */
+  }
+  

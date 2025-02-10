@@ -221,6 +221,7 @@ function cargarUnScript(url) {
   
     if (event.target && event.target.id === "fusuario") {
       console.log("🔹 Usuario seleccionado:", event.target.value)
+      destacarRolesPorUsuario();
   
       // 🚫 Deshabilitar rol si se selecciona un usuario
     //   if (event.target.value !== "") {
@@ -490,6 +491,43 @@ function habilitarBotonesRol() {
             });
     }
     
-    
+    function destacarRolesPorUsuario() {
+        const selectUsuario = document.getElementById("fusuario");
+        const usuarioId = selectUsuario.value;
+        const selectRol = document.getElementById("frol");
+      
+        // Primero removemos cualquier clase previamente aplicada en las opciones
+        for (let option of selectRol.options) {
+          option.classList.remove("linked-role");
+        }
+      
+        // Si no se seleccionó usuario, no hacemos nada
+        if (!usuarioId) return;
+      
+        // Configurar parámetros para la petición AJAX
+        const parametros = new URLSearchParams();
+        parametros.append("controlador", "Roles");
+        parametros.append("metodo", "obtenerRolesDeUsuario");
+        parametros.append("usuario_id", usuarioId);
+      
+        fetch("C_Frontal.php?" + parametros.toString(), { method: "GET" })
+          .then(response => response.json())
+          .then(data => {
+            if (data.correcto === "S") {
+              const rolesVinculados = data.roles; // Array con IDs de roles asignados
+              // Recorrer todas las opciones del select de roles
+              for (let option of selectRol.options) {
+                // Si el valor de la opción está en la lista, se añade la clase
+                if (rolesVinculados.includes(option.value)) {
+                  option.classList.add("linked-role");
+                }
+              }
+            } else {
+              console.error("Error:", data.msj);
+            }
+          })
+          .catch(error => console.error("Error obteniendo roles del usuario:", error));
+      }
+      
     
     
