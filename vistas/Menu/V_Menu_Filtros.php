@@ -4,7 +4,6 @@ $roles = isset($datos['roles']) ? $datos['roles'] : [];
 $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
 ?>
 
-
 <h2>Mantenimiento de menús</h2>
 <div class="container-fluid" id="capaFiltrosBusqueda">
     <form id="formularioBuscarMenu" name="formularioBuscarMenu">
@@ -12,7 +11,7 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
             <!-- Dropdown de Roles -->
             <div class="form-group col-md-6 col-sm-12">
                 <label for="frol">Selecciona un Rol:</label>
-                <select id="frol" name="frol" class="form-control">
+                <select id="frol" name="frol" class="form-control" onchange="habilitarBotonesRol()">
                     <option value="">Todos</option>
                     <?php
                     if (!empty($roles) && is_array($roles)) {
@@ -25,7 +24,6 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
                     ?>
                 </select>
             </div>
-            <!-- Dropdown de Usuarios -->
             <!-- Dropdown de Usuarios -->
             <div class="form-group col-md-6 col-sm-12">
                 <label for="fusuario">Selecciona un Usuario:</label>
@@ -44,7 +42,9 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
         <div class="row">
             <div class="col-lg-12">
                 <button type="button" class="btn btn-primary" onclick="buscarRol()">Buscar</button>
-                <button class="btn btn-success" onclick="obtenerVista_EditarCrear('Roles', 'getVistaNuevoEditar', 'capaEditarCrear', '')"> + Crear Nuevo Rol </button>
+                <button type="button" class="btn btn-success" onclick="obtenerVista_EditarCrear('Roles', 'getVistaNuevoEditar', 'capaEditarCrear', '')">+ Crear Nuevo Rol</button>
+                <button type="button" id="btnEditarRol" class="btn btn-warning" onclick="editarRolSeleccionado()" disabled>Editar Rol</button>
+                <button type="button" id="btnEliminarRol" class="btn btn-danger" onclick="eliminarRolSeleccionado()" disabled>Eliminar Rol</button>
             </div>
         </div>
     </form>
