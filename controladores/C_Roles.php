@@ -54,5 +54,29 @@ class C_Roles extends Controlador {
             echo json_encode(['correcto' => 'N', 'msj' => 'ID de rol no proporcionado']);
         }
     }
-}
 
+    // 🔹 AQUÍ COLOCAMOS EL MÉTODO DENTRO DE LA CLASE 🔹
+    public function asignarRolAUsuario($datos = array()) {
+        header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
+    
+        if (!isset($datos['rol_id']) || !isset($datos['usuario_id'])) {
+            echo json_encode(['correcto' => 'N', 'msj' => 'Datos incompletos']);
+            return;
+        }
+    
+        $rolId = $datos['rol_id'];
+        $usuarioId = $datos['usuario_id'];
+    
+        $mensaje = $this->modelo->asignarRolAUsuario($rolId, $usuarioId);
+    
+        if ($mensaje === "Rol asignado correctamente") {
+            echo json_encode(['correcto' => 'S', 'msj' => $mensaje]);
+        } else {
+            echo json_encode(['correcto' => 'N', 'msj' => $mensaje]);
+        }
+    }
+    
+    
+} // 🔹 Aquí cerramos correctamente la clase 🔹
+
+?>

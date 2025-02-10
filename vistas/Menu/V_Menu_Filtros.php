@@ -40,12 +40,15 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
             </div>
         </div>
         <div class="row">
+        <div class="row">
             <div class="col-lg-12">
                 <button type="button" class="btn btn-primary" onclick="buscarRol()">Buscar</button>
                 <button type="button" class="btn btn-success" onclick="obtenerVista_EditarCrear('Roles', 'getVistaNuevoEditar', 'capaEditarCrear', '')">+ Crear Nuevo Rol</button>
                 <button type="button" id="btnEditarRol" class="btn btn-warning" onclick="editarRolSeleccionado()" disabled>Editar Rol</button>
                 <button type="button" id="btnEliminarRol" class="btn btn-danger" onclick="eliminarRolSeleccionado()" disabled>Eliminar Rol</button>
+                <button type="button" class="btn btn-info" onclick="asignarRolAUsuario()">Asignar Rol a Usuario</button>
             </div>
+        </div>
         </div>
     </form>
 </div>

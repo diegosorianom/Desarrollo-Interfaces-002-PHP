@@ -212,22 +212,22 @@ function cargarUnScript(url) {
       console.log("🔹 Rol seleccionado:", event.target.value)
   
       // 🚫 Deshabilitar usuario si se selecciona un rol
-      if (event.target.value !== "") {
-        selectUsuario.disabled = true // ❌ Deshabilitar usuario
-      } else {
-        selectUsuario.disabled = false // ✅ Volver a habilitar si se quita el rol
-      }
+    //   if (event.target.value !== "") {
+    //     selectUsuario.disabled = true // ❌ Deshabilitar usuario
+    //   } else {
+    //     selectUsuario.disabled = false // ✅ Volver a habilitar si se quita el rol
+    //   }
     }
   
     if (event.target && event.target.id === "fusuario") {
       console.log("🔹 Usuario seleccionado:", event.target.value)
   
       // 🚫 Deshabilitar rol si se selecciona un usuario
-      if (event.target.value !== "") {
-        selectRol.disabled = true // ❌ Deshabilitar rol
-      } else {
-        selectRol.disabled = false // ✅ Volver a habilitar si se quita el usuario
-      }
+    //   if (event.target.value !== "") {
+    //     selectRol.disabled = true // ❌ Deshabilitar rol
+    //   } else {
+    //     selectRol.disabled = false // ✅ Volver a habilitar si se quita el usuario
+    //   }
     }
   })
   
@@ -417,4 +417,40 @@ function habilitarBotonesRol() {
             console.error("Error al guardar rol:", error);
             document.getElementById("msjError").innerText = "Error al procesar la solicitud.";
         });
+    }  
+    function asignarRolAUsuario() {
+        const selectRol = document.getElementById("frol");
+        const selectUsuario = document.getElementById("fusuario");
+    
+        const rolId = selectRol.value;
+        const usuarioId = selectUsuario.value;
+    
+        if (!rolId || !usuarioId) {
+            alert("Por favor, seleccione un rol y un usuario.");
+            return;
+        }
+    
+        const parametros = new URLSearchParams();
+        parametros.append("controlador", "Roles");
+        parametros.append("metodo", "asignarRolAUsuario");
+        parametros.append("rol_id", rolId);
+        parametros.append("usuario_id", usuarioId);
+    
+        fetch("C_Frontal.php?" + parametros.toString(), { method: "POST" })
+            .then((res) => res.json()) // Convertimos la respuesta a JSON
+            .then((respuesta) => {
+                console.log("🔍 Respuesta del servidor:", respuesta);
+                if (respuesta.correcto === "S") {
+                    alert("✅ " + respuesta.msj);
+                } else {
+                    alert("⚠️ " + respuesta.msj);
+                }
+            })
+            .catch((error) => {
+                console.error("❌ Error en la solicitud:", error);
+                alert("Error al procesar la solicitud.");
+            });
     }
+    
+    
+    
