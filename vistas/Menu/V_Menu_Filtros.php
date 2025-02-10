@@ -47,6 +47,7 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
                 <button type="button" id="btnEditarRol" class="btn btn-warning" onclick="editarRolSeleccionado()" disabled>Editar Rol</button>
                 <button type="button" id="btnEliminarRol" class="btn btn-danger" onclick="eliminarRolSeleccionado()" disabled>Eliminar Rol</button>
                 <button type="button" class="btn btn-info" onclick="asignarRolAUsuario()">Asignar Rol a Usuario</button>
+                <button type="button" class="btn btn-danger" onclick="desasignarRolAUsuario()">Quitar Rol</button>
             </div>
         </div>
         </div>

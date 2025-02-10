@@ -451,6 +451,45 @@ function habilitarBotonesRol() {
                 alert("Error al procesar la solicitud.");
             });
     }
+
+    function desasignarRolAUsuario() {
+        const selectRol = document.getElementById("frol");
+        const selectUsuario = document.getElementById("fusuario");
+    
+        const rolId = selectRol.value;
+        const usuarioId = selectUsuario.value;
+    
+        if (!rolId || !usuarioId) {
+            alert("Por favor, seleccione un rol y un usuario.");
+            return;
+        }
+    
+        if (!confirm("¿Estás seguro de que deseas quitar este rol del usuario?")) {
+            return;
+        }
+    
+        const parametros = new URLSearchParams();
+        parametros.append("controlador", "Roles");
+        parametros.append("metodo", "desasignarRolAUsuario");
+        parametros.append("rol_id", rolId);
+        parametros.append("usuario_id", usuarioId);
+    
+        fetch("C_Frontal.php?" + parametros.toString(), { method: "POST" })
+            .then((res) => res.json())
+            .then((respuesta) => {
+                console.log("🔍 Respuesta del servidor:", respuesta);
+                if (respuesta.correcto === "S") {
+                    alert("✅ " + respuesta.msj);
+                } else {
+                    alert("⚠️ " + respuesta.msj);
+                }
+            })
+            .catch((error) => {
+                console.error("❌ Error en la solicitud:", error);
+                alert("Error al procesar la solicitud.");
+            });
+    }
+    
     
     
     

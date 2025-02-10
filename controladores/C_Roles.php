@@ -75,6 +75,27 @@ class C_Roles extends Controlador {
             echo json_encode(['correcto' => 'N', 'msj' => $mensaje]);
         }
     }
+
+    public function desasignarRolAUsuario($datos = array()) {
+        header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
+    
+        if (!isset($datos['rol_id']) || !isset($datos['usuario_id'])) {
+            echo json_encode(['correcto' => 'N', 'msj' => 'Datos incompletos']);
+            return;
+        }
+    
+        $rolId = $datos['rol_id'];
+        $usuarioId = $datos['usuario_id'];
+    
+        $resultado = $this->modelo->desasignarRolAUsuario($rolId, $usuarioId);
+    
+        if ($resultado === "Rol eliminado correctamente") {
+            echo json_encode(['correcto' => 'S', 'msj' => $resultado]);
+        } else {
+            echo json_encode(['correcto' => 'N', 'msj' => $resultado]);
+        }
+    }
+    
     
     
 } // 🔹 Aquí cerramos correctamente la clase 🔹

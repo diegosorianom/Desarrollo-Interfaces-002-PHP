@@ -54,6 +54,27 @@ class M_Roles {
             return "Error al insertar en la base de datos";
         }
     }
+
+    public function desasignarRolAUsuario($rolId, $usuarioId) {
+        // Verificar si la relación existe antes de eliminarla
+        $SQL = "SELECT * FROM roles_usuarios WHERE id_rol = '$rolId' AND id_usuario = '$usuarioId'";
+        $existe = $this->DAO->consultar($SQL);
+    
+        if (empty($existe)) {
+            return "La relación no existe, no se puede eliminar.";
+        }
+    
+        // Eliminar la relación
+        $SQL = "DELETE FROM roles_usuarios WHERE id_rol = '$rolId' AND id_usuario = '$usuarioId'";
+        $resultado = $this->DAO->borrar($SQL);
+    
+        if ($resultado) {
+            return "Rol eliminado correctamente";
+        } else {
+            return "Error al eliminar la relación";
+        }
+    }
+    
     
     
     
