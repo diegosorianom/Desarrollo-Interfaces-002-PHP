@@ -130,13 +130,24 @@ function cargarUnScript(url) {
   }
   
   function toggleOptions(menuId) {
-    const options = document.getElementById(`options-${menuId}`)
-    const allOptions = document.querySelectorAll(".menu-options")
+    // Obtener los selects de rol y usuario
+    const selectRol = document.getElementById("frol");
+    const selectUsuario = document.getElementById("fusuario");
+  
+    // Si se ha seleccionado un rol o un usuario, no se despliegan las opciones
+    if ((selectRol && selectRol.value !== "") || (selectUsuario && selectUsuario.value !== "")) {
+      return; // Salir sin hacer nada
+    }
+  
+    // Si no se ha seleccionado rol/usuario, se continúa con la lógica de despliegue
+    const options = document.getElementById(`options-${menuId}`);
+    const allOptions = document.querySelectorAll(".menu-options");
     allOptions.forEach((opt) => {
-      if (opt !== options) opt.style.display = "none" // Oculta otras opciones
-    })
-    options.style.display = options.style.display === "none" ? "block" : "none"
+      if (opt !== options) opt.style.display = "none"; // Oculta las demás opciones
+    });
+    options.style.display = options.style.display === "none" ? "block" : "none";
   }
+  
   
   function buscarRol() {
     const selectRol = document.getElementById("frol")

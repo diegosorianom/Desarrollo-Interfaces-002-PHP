@@ -1,5 +1,3 @@
-2 - Desactivar botones de menus cuando se busca con un rol o un usuario
-
 3 - Marcar que permisos tiene un usuario por ser de un rol
 
 4 - Al crear un nuevo permiso en un menú, se le asigna directamente 
