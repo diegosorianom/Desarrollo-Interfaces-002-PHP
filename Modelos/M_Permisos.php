@@ -71,5 +71,12 @@ class M_Permisos {
         return $this->DAO->actualizar($SQL2);
     }
     
+    // Nuevo método para crear un permiso
+public function crearPermiso($nombre, $id_menu) {
+    // Se recomienda sanitizar o utilizar consultas preparadas
+    $SQL = "INSERT INTO permisos (nombre, id_menu) VALUES ('" . addslashes($nombre) . "', '" . addslashes($id_menu) . "')";
+    return $this->DAO->insertar($SQL);
+}
+
 }
 ?>

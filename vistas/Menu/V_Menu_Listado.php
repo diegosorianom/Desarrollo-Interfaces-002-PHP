@@ -46,7 +46,6 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
         $html .= '</div>';
         $html .= '</div>';
 
-        // Permisos con checkboxes
         // Permisos con checkboxes o botones de editar/eliminar
         $html .= '<div class="menu-permissions">';
         foreach ($permisos as $permiso) {
@@ -54,7 +53,7 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
                 // Si el permiso está asignado, se marca el checkbox (en el caso de que haya rol/usuario)
                 $checked = in_array($permiso['id'], $permisosAsignados) ? 'checked' : '';
                 $permisoNombre = isset($permiso['nombre']) ? $permiso['nombre'] : 'Sin nombre';
-                
+
                 // Asignamos un id único a cada contenedor del permiso para facilitar su manipulación
                 $html .= '<div class="permiso-item" id="permiso-item-' . $permiso['id'] . '">';
                 if ($rolSeleccionado || $usuarioSeleccionado) {
@@ -72,8 +71,14 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
                 $html .= '</div>';
             }
         }
+
+        // Sección para crear un nuevo permiso
+        $html .= '<div class="crear-permiso" style="margin-top: 5px;">';
+        $html .= '<input type="text" class="form-control permiso-new-input" id="permiso-new-' . $menu['id'] . '" placeholder="Nuevo permiso" style="display:inline-block; width:70%;">';
+        $html .= '<button type="button" class="btn btn-sm btn-success" onclick="crearPermiso(' . $menu['id'] . ')" style="display:inline-block;">Crear permiso</button>';
         $html .= '</div>';
 
+        $html .= '</div>'; // Fin del listado de permisos
 
         // Opciones del menú (edición, añadir arriba/abajo/hijo)
         $html .= '<div class="menu-options" id="options-' . $menu['id'] . '" style="display: none;">';
@@ -83,6 +88,7 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
         $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirHijo(' . $menu['id'] . ')">Añadir Hijo</button>';
         $html .= '</div>';
 
+        // Si el menú tiene hijos, los mostramos recursivamente
         if ($hasChildren) {
             $html .= '<div class="menu-children" id="children-' . $menu['id'] . '" style="display: none;">';
             $html .= renderMenu($menu['children'], $permisos, $level + 1, $rolSeleccionado, $usuarioSeleccionado, $permisosAsignados);
@@ -92,6 +98,7 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
     $html .= '</div>';
     return $html;
 }
+
 
 // Imprimir el menú pasando también el arreglo de permisos asignados
 echo '<div class="menu-container">';

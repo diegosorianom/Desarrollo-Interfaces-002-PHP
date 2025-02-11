@@ -610,3 +610,45 @@ function eliminarPermiso(permisoId) {
   }
 }
 
+/**
+ * Crea un nuevo permiso para el menú indicado.
+ * @param {number} menuId - El ID del menú al que se asignará el nuevo permiso.
+ */
+function crearPermiso(menuId) {
+  const input = document.getElementById("permiso-new-" + menuId);
+  const nuevoNombre = input.value;
+  
+  if (!nuevoNombre.trim()) {
+      alert("Por favor, ingrese un nombre para el permiso.");
+      return;
+  }
+  
+  const parametros = new URLSearchParams();
+  parametros.append("controlador", "Permisos");
+  parametros.append("metodo", "crearPermiso");
+  parametros.append("nombre", nuevoNombre);
+  parametros.append("id_menu", menuId);
+  
+  fetch("C_Frontal.php?" + parametros.toString(), { method: "POST" })
+      .then(response => response.text())
+      .then(responseText => {
+          if (responseText.trim() === "OK") {
+              alert("Permiso creado correctamente.");
+              
+              // Limpiar el input
+              input.value = "";
+
+              // Obtener la lista de permisos de este menú (solo si no la vamos a actualizar con la función)
+              const listaPermisos = document.getElementById("permiso-list-" + menuId);
+              if (listaPermisos) {
+                  // Crear un nuevo elemento de lista para el permiso
+                  const nuevoElemento = document.createElement("li");
+                  nuevoElemento.textContent = nuevoNombre; // Usamos el nombre del permiso recién creado
+                  listaPermisos.appendChild(nuevoElemento);
+              }
+          } else {
+              alert("Error al crear permiso: " + responseText);
+          }
+      })
+      .catch(error => console.log("Error al crear permiso:", error));
+}

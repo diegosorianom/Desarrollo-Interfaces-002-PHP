@@ -84,5 +84,24 @@ class C_Permisos {
         }
         exit;
     }
+
+    // Nuevo método para crear un permiso
+public function crearPermiso($datos = array()) {
+    if (!isset($datos['nombre']) || !isset($datos['id_menu'])) {
+        echo "Error CF-04: Datos insuficientes.";
+        exit;
+    }
+    $nombre = $datos['nombre'];
+    $id_menu = $datos['id_menu'];
+
+    $resultado = $this->permisoModel->crearPermiso($nombre, $id_menu);
+    if ($resultado) {
+        echo "OK";
+    } else {
+        echo "Error CF-04: No se pudo crear el permiso.";
+    }
+    exit;
+}
+
 }
 ?>
