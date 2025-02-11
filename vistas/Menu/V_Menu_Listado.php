@@ -47,22 +47,33 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
         $html .= '</div>';
 
         // Permisos con checkboxes
+        // Permisos con checkboxes o botones de editar/eliminar
         $html .= '<div class="menu-permissions">';
         foreach ($permisos as $permiso) {
             if ($permiso['id_menu'] == $menu['id']) {
-                // Si el permiso está asignado, se marca el checkbox
+                // Si el permiso está asignado, se marca el checkbox (en el caso de que haya rol/usuario)
                 $checked = in_array($permiso['id'], $permisosAsignados) ? 'checked' : '';
                 $permisoNombre = isset($permiso['nombre']) ? $permiso['nombre'] : 'Sin nombre';
                 
-                $html .= '<div class="permiso-item">';
+                // Asignamos un id único a cada contenedor del permiso para facilitar su manipulación
+                $html .= '<div class="permiso-item" id="permiso-item-' . $permiso['id'] . '">';
                 if ($rolSeleccionado || $usuarioSeleccionado) {
+                    // Si se ha seleccionado rol o usuario, se muestra el checkbox
                     $html .= '<input type="checkbox" class="permiso-checkbox" data-permiso-id="' . $permiso['id'] . '" ' . $checked . ' onchange="togglePermiso(' . $permiso['id'] . ')">';
+                    $html .= ' ' . htmlspecialchars($permisoNombre);
+                } else {
+                    // Si NO se ha seleccionado rol/usuario, se muestra el nombre con botones para editar y eliminar
+                    $html .= '<span id="permiso-nombre-' . $permiso['id'] . '">' . htmlspecialchars($permisoNombre) . '</span>';
+                    $html .= ' <button type="button" class="btn btn-sm btn-info" onclick="mostrarEditarPermiso(' . $permiso['id'] . ')">Editar</button>';
+                    $html .= ' <button type="button" class="btn btn-sm btn-danger" onclick="eliminarPermiso(' . $permiso['id'] . ')">Eliminar</button>';
+                    // Input para editar (oculto por defecto)
+                    $html .= ' <input type="text" class="form-control permiso-edit-input" id="permiso-edit-' . $permiso['id'] . '" value="' . htmlspecialchars($permisoNombre) . '" style="display:none; width:auto; display:inline-block;" onblur="actualizarNombrePermiso(' . $permiso['id'] . ')">';
                 }
-                $html .= ' ' . htmlspecialchars($permisoNombre);
                 $html .= '</div>';
             }
         }
         $html .= '</div>';
+
 
         // Opciones del menú (edición, añadir arriba/abajo/hijo)
         $html .= '<div class="menu-options" id="options-' . $menu['id'] . '" style="display: none;">';

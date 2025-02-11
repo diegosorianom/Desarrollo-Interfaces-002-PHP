@@ -47,5 +47,42 @@ class C_Permisos {
         echo "OK";
         exit;
     }
+
+    // Nuevo método para actualizar el nombre de un permiso
+    public function actualizarNombrePermiso($datos = array()) {
+        if (!isset($datos['id_permiso']) || !isset($datos['nuevo_nombre'])) {
+            echo "Error CF-03: Datos insuficientes.";
+            exit;
+        }
+        $id_permiso = $datos['id_permiso'];
+        $nuevo_nombre = $datos['nuevo_nombre'];
+
+        $resultado = $this->permisoModel->actualizarNombrePermiso($id_permiso, $nuevo_nombre);
+        // Si $resultado es false estrictamente (por error) o un número >= 0, se considera OK
+        if ($resultado !== false) {
+            echo "OK";
+        } else {
+            echo "Error CF-03: No se pudo actualizar el nombre.";
+        }
+
+        exit;
+    }
+
+    // Nuevo método para eliminar un permiso
+    public function eliminarPermiso($datos = array()) {
+        if (!isset($datos['id_permiso'])) {
+            echo "Error CF-03: Datos insuficientes.";
+            exit;
+        }
+        $id_permiso = $datos['id_permiso'];
+
+        $resultado = $this->permisoModel->eliminarPermiso($id_permiso);
+        if ($resultado) {
+            echo "OK";
+        } else {
+            echo "Error CF-03: No se pudo eliminar el permiso.";
+        }
+        exit;
+    }
 }
 ?>

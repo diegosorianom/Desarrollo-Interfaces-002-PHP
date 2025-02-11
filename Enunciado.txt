@@ -1,30 +1,40 @@
-Implementa un sistema de permisos para el mantenimiento de menús, cumpliendo los siguientes puntos:
+2 - Desactivar botones de menus cuando se busca con un rol o un usuario
 
-1 - Modelo de permisos
-    - Restringe el acceso de usuarios a opciones de menú.
+3 - Marcar que permisos tiene un usuario por ser de un rol
 
-    - Define acciones (consultar, editar, crear, imprimir, importar, etc.) que cada usuario puede realizar.
+4 - Al crear un nuevo permiso en un menú, se le asigna directamente 
+el permiso al rol "Administrador"
 
-    - Permite asignar permisos directamente a usuarios o a roles.
+5 - Crear rol "visitante" con permiso sobre las opciones públicas.
+Todos los usuarios obtienen el rol visitante
 
-2 - Vista de mantenimiento de menús
-    - Muestra, edita y elimina los permisos asociados a cada opción de menú en el mismo lugar donde se listan 
-    (sin ventanas emergentes o secciones laterales).
+6 - Cuando un usuario acceda por login, cargar en session los permisos
+que tenga. (Permisos por roles, Permisos por usuario, Permisos por visitante)
 
-    - Permite crear nuevos permisos justo debajo del último permiso existente para esa opción, 
-    actualizando solo la sección de permisos correspondiente.
+7 - Modificar el menú para que solo aparezcan las opciones para las
+que el usuario tiene permiso
 
-    - Se pueden eliminar permisos según sea necesario.
+8 - Añadir que el usuario solo pueda hacer las acciones para las que tenga
+permiso (crear / mantener usuarios, menus...)
 
-3 - Filtros de usuario y rol
-    - Incorpora en la parte superior dos desplegables: uno para seleccionar usuarios y otro para roles 
-    (asegúrate de crear algunos roles en la base de datos para pruebas).
 
-    - Al seleccionar un usuario o rol y pulsar “Buscar”, la vista se mostrará sin botones para crear, 
-    modificar o borrar opciones y permisos.
+// SQL
 
-    - En lugar de esos botones, se mostrará un checkbox al lado de cada permiso para asignarlo o quitarlo al usuario o rol seleccionado.
+CREATE TABLE permisos_roles (
+    id INT (11) NOT NULL AUTO_INCREMENT,
+    id_rol INT (11) NOT NULL,
+    id_permiso INT (11) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_permisosRoles_roles FOREIGN KEY (id_rol) REFERENCES roles(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_permisosRoles_permiso FOREIGN KEY (id_permiso) REFERENCES permisos(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-    - Los permisos previamente asignados aparecerán marcados y al interactuar con los checkboxes se actualizarán inmediatamente, 
-    sin necesidad de un botón adicional para guardar.
 
+CREATE TABLE permisos_usuarios (
+    id INT (11) NOT NULL AUTO_INCREMENT,
+    id_usuario INT (11) UNSIGNED NOT NULL,
+    id_permiso INT (11) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_permisosUsuarios_usuarios FOREIGN KEY (id_usuario) REFERENCES usuarios(id_Usuario) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_permisosUsuarios_permiso FOREIGN KEY (id_permiso) REFERENCES permisos(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;

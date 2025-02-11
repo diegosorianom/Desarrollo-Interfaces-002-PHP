@@ -20,7 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `di2024`
 --
-
+CREATE DATABASE IF NOT EXISTS `di2024` DEFAULT CHARACTER SET latin1 COLLATE latin1_spanish_ci;
+USE `di2024`;
 -- --------------------------------------------------------
 
 --

@@ -39,20 +39,46 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
                 </select>
             </div>
         </div>
-        <div class="row">
-        <div class="row">
+        <div class="row mt-3">
             <div class="col-lg-12">
+                <!-- Botón de búsqueda -->
                 <button type="button" class="btn btn-primary" onclick="buscarRol()">Buscar</button>
-                <button type="button" class="btn btn-success" onclick="obtenerVista_EditarCrear('Roles', 'getVistaNuevoEditar', 'capaEditarCrear', '')">+ Crear Nuevo Rol</button>
-                <button type="button" id="btnEditarRol" class="btn btn-warning" onclick="editarRolSeleccionado()" disabled>Editar Rol</button>
-                <button type="button" id="btnEliminarRol" class="btn btn-danger" onclick="eliminarRolSeleccionado()" disabled>Eliminar Rol</button>
-                <button type="button" class="btn btn-info" onclick="asignarRolAUsuario()">Asignar Rol a Usuario</button>
-                <button type="button" class="btn btn-danger" onclick="desasignarRolAUsuario()">Quitar Rol</button>
+                <!-- Dropdown para acciones de Roles -->
+                <div class="dropdown d-inline">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownAcciones" data-bs-toggle="dropdown" aria-expanded="false">
+                        Mantenimiento de roles
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownAcciones">
+                        <li>
+                            <button class="dropdown-item" type="button" onclick="obtenerVista_EditarCrear('Roles', 'getVistaNuevoEditar', 'capaEditarCrear', '')">
+                                + Crear Nuevo Rol
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" type="button" id="btnEditarRol" onclick="editarRolSeleccionado()" disabled>
+                                Editar Rol
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" type="button" id="btnEliminarRol" onclick="eliminarRolSeleccionado()" disabled>
+                                Eliminar Rol
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" type="button" onclick="asignarRolAUsuario()">
+                                Asignar Rol a Usuario
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" type="button" onclick="desasignarRolAUsuario()">
+                                Quitar Rol
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
         </div>
     </form>
 </div>
 <div class="container-fluid" id="capaResultadoBusqueda"></div>
 <div class="container-fluid" id="capaEditarCrear"></div>
-

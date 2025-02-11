@@ -530,4 +530,72 @@ function habilitarBotonesRol() {
       }
       
     
-    
+    /**
+ * Muestra el input para editar el nombre del permiso.
+ * @param {number} permisoId 
+ */
+function mostrarEditarPermiso(permisoId) {
+  const input = document.getElementById("permiso-edit-" + permisoId);
+  if (input) {
+    input.style.display = "inline-block";
+    input.focus();
+  }
+}
+
+/**
+ * Se ejecuta cuando el input pierde el foco y se encarga de actualizar el nombre del permiso.
+ * Realiza una petición AJAX para actualizar el nombre en la base de datos.
+ * @param {number} permisoId 
+ */
+function actualizarNombrePermiso(permisoId) {
+  const input = document.getElementById("permiso-edit-" + permisoId);
+  const nuevoNombre = input.value;
+
+  const parametros = new URLSearchParams();
+  parametros.append("controlador", "Permisos");
+  parametros.append("metodo", "actualizarNombrePermiso");
+  parametros.append("id_permiso", permisoId);
+  parametros.append("nuevo_nombre", nuevoNombre);
+
+  fetch("C_Frontal.php?" + parametros.toString(), { method: "POST" })
+    .then(response => response.text())
+    .then(responseText => {
+      console.log("Nombre actualizado:", responseText);
+      if(responseText.trim() === "OK") {
+        const span = document.getElementById("permiso-nombre-" + permisoId);
+        if (span) {
+          span.innerText = nuevoNombre;
+        }
+      }
+      input.style.display = "none";
+    })
+    .catch(error => console.log("Error al actualizar nombre de permiso:", error));
+}
+
+
+/**
+ * Elimina el permiso tras confirmar la acción. Realiza una petición AJAX para eliminar el permiso.
+ * @param {number} permisoId 
+ */
+function eliminarPermiso(permisoId) {
+  if (confirm("¿Está seguro de eliminar este permiso?")) {
+    const parametros = new URLSearchParams();
+    parametros.append("controlador", "Permisos");
+    parametros.append("metodo", "eliminarPermiso");
+    parametros.append("id_permiso", permisoId);
+
+    fetch("C_Frontal.php?" + parametros.toString(), { method: "POST" })
+      .then(response => response.text())
+      .then(responseText => {
+        console.log("Permiso eliminado:", responseText);
+        if(responseText.trim() === "OK") {
+          const permisoItem = document.getElementById("permiso-item-" + permisoId);
+          if (permisoItem) {
+            permisoItem.remove();
+          }
+        }
+      })
+      .catch(error => console.log("Error al eliminar permiso:", error));
+  }
+}
+
