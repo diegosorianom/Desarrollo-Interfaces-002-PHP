@@ -84,20 +84,6 @@ echo renderMenu(
 );
 echo '</div>';
 
-/**
- * Función para renderizar el menú.
- *
- * @param array $menuTree         Árbol de menús.
- * @param array $permisos         Lista de permisos (cada permiso es un array con 'id', 'nombre' y 'id_menu').
- * @param int   $level            Nivel de profundidad (para estilos, si es necesario).
- * @param mixed $rolSeleccionado  Rol seleccionado (si lo hay).
- * @param mixed $usuarioSeleccionado Usuario seleccionado (si lo hay).
- * @param array $permisosAsignados Lista de IDs de permisos asignados (directos y heredados).
- * @param array $heredadosMap     Mapeo de permiso => [roles de origen] (para los permisos heredados).
- * @param array $rolesMap         Mapeo de id_rol => nombre_del_rol.
- *
- * @return string HTML generado.
- */
 function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $usuarioSeleccionado = null, $permisosAsignados = [], $heredadosMap = [], $rolesMap = []) {
     $html = '<div class="menu-list">';
     foreach ($menuTree as $menu) {
@@ -172,17 +158,5 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
     return $html;
 }
 
-// Imprimir el menú pasando también el mapa de roles
-echo '<div class="menu-container">';
-echo renderMenu(
-    $menuTree,
-    isset($permisos) ? $permisos : [],
-    0,
-    $rolSeleccionado,
-    $usuarioSeleccionado,
-    isset($permisosAsignados) ? $permisosAsignados : [],
-    $heredadosMap,
-    $rolesMap
-);
 echo '</div>';
 ?>

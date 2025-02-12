@@ -26,9 +26,6 @@ class C_Permisos {
         echo json_encode(["correcto" => "S", "permisos_heredados" => $permisosHeredados]);
         exit;
     }
-    
-    
-    
 
     public function actualizarPermiso($datos = array()) {
         if (!isset($datos['id_permiso']) || !isset($datos['asignado'])) {

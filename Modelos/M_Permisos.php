@@ -40,8 +40,6 @@ class M_Permisos {
         return $result;
     }
     
-    
-    
     // Asignar un permiso a un rol
     public function asignarPermisoRol($idRol, $idPermiso) {
         $SQL = "INSERT INTO permisos_roles (id_rol, id_permiso) VALUES ('$idRol', '$idPermiso')";
@@ -84,12 +82,19 @@ class M_Permisos {
         return $this->DAO->actualizar($SQL2);
     }
     
-    // Nuevo método para crear un permiso
-public function crearPermiso($nombre, $id_menu) {
-    // Se recomienda sanitizar o utilizar consultas preparadas
-    $SQL = "INSERT INTO permisos (nombre, id_menu) VALUES ('" . addslashes($nombre) . "', '" . addslashes($id_menu) . "')";
-    return $this->DAO->insertar($SQL);
-}
+    // Nuevo método para crear un permiso y asignarlo al rol Administrador
+    public function crearPermiso($nombre, $id_menu) {
+        // Insertar el permiso en la tabla permisos
+        $SQL = "INSERT INTO permisos (nombre, id_menu) VALUES ('" . addslashes($nombre) . "', '" . addslashes($id_menu) . "')";
+        $idPermiso = $this->DAO->insertar($SQL); // Se obtiene el ID del nuevo permiso
 
+        // Si se insertó correctamente, asignarlo al rol Administrador (id_rol = 1)
+        if ($idPermiso) {
+            $SQL2 = "INSERT INTO permisos_roles (id_rol, id_permiso) VALUES ('1', '$idPermiso')";
+            $this->DAO->insertar($SQL2);
+        }
+
+        return $idPermiso;
+    }
 }
 ?>
