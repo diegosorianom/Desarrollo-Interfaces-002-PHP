@@ -1,18 +1,16 @@
-1 - Completar check permisos usuario
-
-2 - Indicar que no puedes eliminar un rol vinculado a un usuario
-
-3 - Marcar que permisos tiene un usuario por ser de un rol
-
-4 - Al crear un nuevo permiso en un menú, se le asigna directamente el permiso al rol "Administrador"
-
-5 - Crear rol "visitante" con permiso sobre las opciones públicas. Todos los usuarios obtienen el rol visitante
-
-6 - Cuando un usuario acceda por login, cargar en session los permisos que tenga. (Permisos por roles, Permisos por usuario, Permisos por visitante)
-
-7 - Modificar el menú para que solo aparezcan las opciones para las que el usuario tiene permiso
-
-8 - Añadir que el usuario solo pueda hacer las acciones para las que tenga permiso (crear / mantener usuarios, menus...)
+ - Indicar que no puedes eliminar un rol vinculado a un usuario
+ 
+ - Marcar que permisos tiene un usuario por ser de un rol
+ 
+ - Al crear un nuevo permiso en un menú, se le asigna directamente el permiso al rol "Administrador"
+ 
+ - Crear rol "visitante" con permiso sobre las opciones públicas. Todos los usuarios obtienen el rol visitante
+ 
+ - Cuando un usuario acceda por login, cargar en session los permisos que tenga. (Permisos por roles, Permisos por usuario, Permisos por visitante)
+ 
+ - Modificar el menú para que solo aparezcan las opciones para las que el usuario tiene permiso
+ 
+ - Añadir que el usuario solo pueda hacer las acciones para las que tenga permiso (crear / mantener usuarios, menus...)
 
 
 // SQL

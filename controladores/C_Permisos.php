@@ -14,6 +14,20 @@ class C_Permisos {
         return $this->permisoModel->getPermisos();
     }
 
+    public function getPermisosHeredadosUsuario($datos = array()) {
+        if (!isset($datos['id_usuario'])) {
+            echo json_encode(["error" => "Error CF-05: Datos insuficientes."]);
+            exit;
+        }
+    
+        $idUsuario = $datos['id_usuario'];
+        $permisosHeredados = $this->permisoModel->getPermisosHeredadosPorRol($idUsuario);
+    
+        echo json_encode(["correcto" => "S", "permisos_heredados" => $permisosHeredados]);
+        exit;
+    }
+    
+
     public function actualizarPermiso($datos = array()) {
         if (!isset($datos['id_permiso']) || !isset($datos['asignado'])) {
             echo "Error CF-01: Datos insuficientes.";

@@ -150,30 +150,55 @@ function cargarUnScript(url) {
   
   
   function buscarRol() {
-    const selectRol = document.getElementById("frol")
-    const selectedRoleId = selectRol ? selectRol.value : ""
-  
-    const selectUsuario = document.getElementById("fusuario")
-    const selectedUserId = selectUsuario ? selectUsuario.value : ""
-  
-    console.log("🔍 ID del Rol seleccionado:", selectedRoleId)
-    console.log("🔍 ID del Usuario seleccionado:", selectedUserId)
-  
-    const parametros = new URLSearchParams()
-    parametros.append("controlador", "Menu")
-    parametros.append("metodo", "getVistaListadoMenu")
-    parametros.append("frol", selectedRoleId)
-    parametros.append("fusuario", selectedUserId)
-  
-    const opciones = { method: "GET" }
-  
-    fetch("C_Frontal.php?" + parametros.toString(), opciones)
-      .then((res) => res.text())
-      .then((vista) => {
-        document.getElementById("capaResultadoBusqueda").innerHTML = vista
-      })
-      .catch((error) => console.log("❌ Error al buscar menús y permisos:", error.message))
-  }
+    const selectRol = document.getElementById("frol");
+    const selectUsuario = document.getElementById("fusuario");
+    const selectedRoleId = selectRol ? selectRol.value : "";
+    const selectedUserId = selectUsuario ? selectUsuario.value : "";
+
+    console.log("🔍 ID del Rol seleccionado:", selectedRoleId);
+    console.log("🔍 ID del Usuario seleccionado:", selectedUserId);
+
+    const parametros = new URLSearchParams();
+    parametros.append("controlador", "Menu");
+    parametros.append("metodo", "getVistaListadoMenu");
+    parametros.append("frol", selectedRoleId);
+    parametros.append("fusuario", selectedUserId);
+
+    fetch("C_Frontal.php?" + parametros.toString(), { method: "GET" })
+        .then((res) => res.text())
+        .then((vista) => {
+            document.getElementById("capaResultadoBusqueda").innerHTML = vista;
+
+            // 🚀 Si se seleccionó un usuario, obtener los permisos heredados por su rol
+            if (selectedUserId) {
+                obtenerPermisosHeredados(selectedUserId);
+            }
+        })
+        .catch((error) => console.log("❌ Error al buscar menús y permisos:", error.message));
+}
+
+/**
+ * Obtiene y muestra en consola los permisos heredados de un usuario a través de sus roles.
+ * @param {number} usuarioId - ID del usuario seleccionado.
+ */
+function obtenerPermisosHeredados(usuarioId) {
+    const parametros = new URLSearchParams();
+    parametros.append("controlador", "Permisos");
+    parametros.append("metodo", "getPermisosHeredadosUsuario");
+    parametros.append("id_usuario", usuarioId);
+
+    fetch("C_Frontal.php?" + parametros.toString(), { method: "GET" })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.correcto === "S") {
+                console.log("🔹 Permisos heredados del usuario por sus roles:", data.permisos_heredados);
+            } else {
+                console.log("⚠️ Error obteniendo permisos heredados:", data.error);
+            }
+        })
+        .catch((error) => console.log("❌ Error en la solicitud de permisos heredados:", error.message));
+}
+
   
   function togglePermiso(permisoId) {
     const checkbox = document.querySelector(`input[data-permiso-id="${permisoId}"]`)

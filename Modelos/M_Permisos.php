@@ -29,6 +29,14 @@ class M_Permisos {
         return array_column($result, 'id_permiso');
     }
 
+    public function getPermisosHeredadosPorRol($idUsuario) {
+        $SQL = "SELECT pr.id_permiso FROM permisos_roles pr
+                INNER JOIN roles_usuarios ur ON pr.id_rol = ur.id_rol
+                WHERE ur.id_usuario = '" . addslashes($idUsuario) . "'";
+        $result = $this->DAO->consultar($SQL);
+        return array_column($result, 'id_permiso'); // Devuelve solo los IDs de permisos heredados
+    }
+    
     // Asignar un permiso a un rol
     public function asignarPermisoRol($idRol, $idPermiso) {
         $SQL = "INSERT INTO permisos_roles (id_rol, id_permiso) VALUES ('$idRol', '$idPermiso')";
