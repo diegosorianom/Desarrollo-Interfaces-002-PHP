@@ -182,21 +182,25 @@ function cargarUnScript(url) {
  * @param {number} usuarioId - ID del usuario seleccionado.
  */
 function obtenerPermisosHeredados(usuarioId) {
-    const parametros = new URLSearchParams();
-    parametros.append("controlador", "Permisos");
-    parametros.append("metodo", "getPermisosHeredadosUsuario");
-    parametros.append("id_usuario", usuarioId);
+  const parametros = new URLSearchParams();
+  parametros.append("controlador", "Permisos");
+  parametros.append("metodo", "getPermisosHeredadosUsuario");
+  parametros.append("id_usuario", usuarioId);
 
-    fetch("C_Frontal.php?" + parametros.toString(), { method: "GET" })
-        .then((res) => res.json())
-        .then((data) => {
-            if (data.correcto === "S") {
-                console.log("🔹 Permisos heredados del usuario por sus roles:", data.permisos_heredados);
-            } else {
-                console.log("⚠️ Error obteniendo permisos heredados:", data.error);
-            }
-        })
-        .catch((error) => console.log("❌ Error en la solicitud de permisos heredados:", error.message));
+  fetch("C_Frontal.php?" + parametros.toString(), { method: "GET" })
+      .then((res) => res.json())
+      .then((data) => {
+          if (data.correcto === "S") {
+              console.log("🔹 Permisos heredados del usuario por sus roles:", data.permisos_heredados);
+              // Ejemplo de recorrido: cada elemento contiene 'id_permiso' y 'id_rol'
+              data.permisos_heredados.forEach(item => {
+                  console.log(`Permiso: ${item.id_permiso} - Rol de origen: ${item.id_rol}`);
+              });
+          } else {
+              console.log("⚠️ Error obteniendo permisos heredados:", data.error);
+          }
+      })
+      .catch((error) => console.log("❌ Error en la solicitud de permisos heredados:", error.message));
 }
 
   
