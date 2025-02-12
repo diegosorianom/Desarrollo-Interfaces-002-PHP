@@ -32,6 +32,27 @@ function buildMenuTree($menus, $parentId = 0) {
 
 $menuTree = buildMenuTree($menus);
 
+// Si se ha seleccionado un usuario, obtenemos también los permisos heredados y los fusionamos
+$permisosAsignadosUser = isset($permisosAsignados) ? $permisosAsignados : [];
+if ($usuarioSeleccionado) {
+    // Crear una instancia del modelo de permisos para obtener los permisos heredados
+    $m_permisos = new M_Permisos();
+    $heredados = $m_permisos->getPermisosHeredadosPorRol($usuarioSeleccionado);
+    // Fusionamos ambas listas y eliminamos duplicados, en caso de que algún permiso aparezca en ambas
+    $permisosAsignadosUser = array_unique(array_merge($permisosAsignadosUser, $heredados));
+}
+
+echo '<div class="menu-container">';
+echo renderMenu(
+    $menuTree,
+    isset($permisos) ? $permisos : [],
+    0,
+    $rolSeleccionado,
+    $usuarioSeleccionado,
+    $permisosAsignadosUser
+);
+echo '</div>';
+
 // Función para renderizar el menú
 function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $usuarioSeleccionado = null, $permisosAsignados = []) {
     $html = '<div class="menu-list">';
