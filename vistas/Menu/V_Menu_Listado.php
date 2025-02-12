@@ -1,9 +1,18 @@
 <?php 
-// Se asume que $datos contiene 'menus', 'permisos', 'permisosAsignados', etc.
+// Se asume que $datos contiene 'menus', 'permisos', 'permisosAsignados', y 'roles'
 extract($datos);
 
 $rolSeleccionado   = isset($_GET['frol']) ? $_GET['frol'] : null;
 $usuarioSeleccionado = isset($_GET['fusuario']) ? $_GET['fusuario'] : null;
+
+// Si tenemos los roles, construimos un mapa: id_rol => nombre_del_rol
+$rolesMap = [];
+if (isset($roles) && is_array($roles)) {
+    foreach ($roles as $rol) {
+        // Asegúrate de que los índices coincidan con los nombres de las columnas en tu BD
+        $rolesMap[$rol['id']] = $rol['nombre'];
+    }
+}
 
 // Ordenar los menús y construir el árbol jerárquico
 usort($menus, function($a, $b) {
@@ -36,24 +45,25 @@ $menuTree = buildMenuTree($menus);
 $permisosAsignadosDirectos = isset($permisosAsignados) ? $permisosAsignados : [];
 
 // Si se ha seleccionado un usuario, obtenemos también los permisos heredados
-$heredadosMap = []; // Aquí se almacenará la relación: id_permiso => array de id_rol
+$heredadosMap = []; // Relación: id_permiso => array de nombres de roles
 if ($usuarioSeleccionado) {
-    // Crear una instancia del modelo de permisos para obtener los heredados
     $m_permisos = new M_Permisos();
     $heredados = $m_permisos->getPermisosHeredadosPorRol($usuarioSeleccionado);
     
-    // Construir un mapa de permiso → rol(s) de origen
+    // Construir el mapa de permiso → rol(s) de origen (almacenando el nombre del rol)
     foreach ($heredados as $heredado) {
         $idPermiso = $heredado['id_permiso'];
-        $idRol     = $heredado['id_rol'];
+        $rolNombre = $heredado['nombre']; // Contiene el nombre del rol (ej.: "Administrador")
         if (!isset($heredadosMap[$idPermiso])) {
             $heredadosMap[$idPermiso] = [];
         }
-        if (!in_array($idRol, $heredadosMap[$idPermiso])) {
-            $heredadosMap[$idPermiso][] = $idRol;
+        // Agregamos el nombre del rol si aún no está en el arreglo
+        if (!in_array($rolNombre, $heredadosMap[$idPermiso])) {
+            $heredadosMap[$idPermiso][] = $rolNombre;
         }
     }
 }
+
 
 // Extraer los IDs de los permisos heredados para combinarlos con los asignados directamente
 $heredadosIds = array_keys($heredadosMap);
@@ -69,7 +79,8 @@ echo renderMenu(
     $rolSeleccionado,
     $usuarioSeleccionado,
     $permisosAsignadosUser,
-    $heredadosMap  // Se pasa el mapeo de permisos heredados para mostrar el rol de origen
+    $heredadosMap,
+    $rolesMap  // Se pasa el mapa de roles para mostrar el nombre
 );
 echo '</div>';
 
@@ -83,10 +94,11 @@ echo '</div>';
  * @param mixed $usuarioSeleccionado Usuario seleccionado (si lo hay).
  * @param array $permisosAsignados Lista de IDs de permisos asignados (directos y heredados).
  * @param array $heredadosMap     Mapeo de permiso => [roles de origen] (para los permisos heredados).
+ * @param array $rolesMap         Mapeo de id_rol => nombre_del_rol.
  *
  * @return string HTML generado.
  */
-function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $usuarioSeleccionado = null, $permisosAsignados = [], $heredadosMap = []) {
+function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $usuarioSeleccionado = null, $permisosAsignados = [], $heredadosMap = [], $rolesMap = []) {
     $html = '<div class="menu-list">';
     foreach ($menuTree as $menu) {
         $hasChildren = !empty($menu['children']);
@@ -103,22 +115,27 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
         $html .= '<div class="menu-permissions">';
         foreach ($permisos as $permiso) {
             if ($permiso['id_menu'] == $menu['id']) {
-                // Se chequea si el permiso está asignado (ya sea directamente o por herencia)
+                // Verifica si el permiso está asignado (directa o heredado)
                 $isAssigned = in_array($permiso['id'], $permisosAsignados);
                 $checked    = $isAssigned ? 'checked' : '';
                 $permisoNombre = isset($permiso['nombre']) ? $permiso['nombre'] : 'Sin nombre';
 
                 $html .= '<div class="permiso-item" id="permiso-item-' . $permiso['id'] . '">';
                 if ($rolSeleccionado || $usuarioSeleccionado) {
-                    // Si se ha seleccionado un rol o usuario, se muestra el checkbox
+                    // Mostrar checkbox si se ha seleccionado rol o usuario
                     $html .= '<input type="checkbox" class="permiso-checkbox" data-permiso-id="' . $permiso['id'] . '" ' . $checked . ' onchange="togglePermiso(' . $permiso['id'] . ')">';
                     $html .= ' ' . htmlspecialchars($permisoNombre);
-                    // Si el permiso es heredado, se muestra el rol de origen
+                    // Si el permiso es heredado, mostramos el nombre del rol en lugar del ID
                     if (isset($heredadosMap[$permiso['id']])) {
-                        $html .= ' <em>(Heredado de: ' . implode(', ', $heredadosMap[$permiso['id']]) . ')</em>';
+                        $rolesNombres = [];
+                        foreach ($heredadosMap[$permiso['id']] as $idRol) {
+                            // Si existe el nombre en el mapa, lo usamos; si no, mostramos el ID
+                            $rolesNombres[] = isset($rolesMap[$idRol]) ? $rolesMap[$idRol] : $idRol;
+                        }
+                        $html .= ' <em>(Heredado de: ' . implode(', ', $rolesNombres) . ')</em>';
                     }
                 } else {
-                    // Si NO se ha seleccionado rol/usuario, se muestran botones para editar/eliminar
+                    // Mostrar botones para editar/eliminar cuando no se haya seleccionado rol/usuario
                     $html .= '<span id="permiso-nombre-' . $permiso['id'] . '">' . htmlspecialchars($permisoNombre) . '</span>';
                     $html .= ' <button type="button" class="btn btn-sm btn-info" onclick="mostrarEditarPermiso(' . $permiso['id'] . ')">Editar</button>';
                     $html .= ' <button type="button" class="btn btn-sm btn-danger" onclick="eliminarPermiso(' . $permiso['id'] . ')">Eliminar</button>';
@@ -147,7 +164,7 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
         // Si el menú tiene hijos, se renderizan recursivamente
         if ($hasChildren) {
             $html .= '<div class="menu-children" id="children-' . $menu['id'] . '" style="display: none;">';
-            $html .= renderMenu($menu['children'], $permisos, $level + 1, $rolSeleccionado, $usuarioSeleccionado, $permisosAsignados, $heredadosMap);
+            $html .= renderMenu($menu['children'], $permisos, $level + 1, $rolSeleccionado, $usuarioSeleccionado, $permisosAsignados, $heredadosMap, $rolesMap);
             $html .= '</div>';
         }
     }
@@ -155,7 +172,7 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
     return $html;
 }
 
-// Imprimir el menú pasando también el mapeo de heredados
+// Imprimir el menú pasando también el mapa de roles
 echo '<div class="menu-container">';
 echo renderMenu(
     $menuTree,
@@ -164,7 +181,8 @@ echo renderMenu(
     $rolSeleccionado,
     $usuarioSeleccionado,
     isset($permisosAsignados) ? $permisosAsignados : [],
-    $heredadosMap
+    $heredadosMap,
+    $rolesMap
 );
 echo '</div>';
 ?>

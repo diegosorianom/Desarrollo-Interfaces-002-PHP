@@ -28,6 +28,7 @@ class C_Permisos {
     }
     
     
+    
 
     public function actualizarPermiso($datos = array()) {
         if (!isset($datos['id_permiso']) || !isset($datos['asignado'])) {
