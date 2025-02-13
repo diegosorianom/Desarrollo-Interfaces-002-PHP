@@ -1,3 +1,9 @@
+<?php
+session_start();
+$idRol = $_SESSION['id_rol'] ?? 19; // Si no hay sesión, asignamos rol "Visitante"
+?>
+
+
 <div class="container-fluid" id="capaFiltrosBusqueda">
     <h2 class="text-start mb-4">Mantenimiento de usuarios</h2>
     <form id="formularioBuscar" name="formularioBuscar">
@@ -18,7 +24,10 @@
         <div class="row mb-2">
             <div class="col-lg-12 d-flex">
                 <button type="button" class="btn btn-primary me-2" onclick="buscar('Usuarios', 'getVistaListadoUsuarios', 'formularioBuscar', 'capaResultadoBusqueda')">Buscar</button>
-                <button type="button" class="btn btn-secondary" onclick="obtenerVista_EditarCrear ('Usuarios', 'getVistaNuevoEditar', 'capaEditarCrear', '')">Nuevo</button>
+                
+                <?php if ($idRol != 19): ?> 
+                    <button type="button" class="btn btn-secondary" onclick="obtenerVista_EditarCrear ('Usuarios', 'getVistaNuevoEditar', 'capaEditarCrear', '')">Nuevo</button>
+                <?php endif; ?>
             </div>
         </div>
     </form>
