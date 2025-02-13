@@ -191,32 +191,28 @@ class M_Menu extends Modelo {
     }
 
     public function getMenuPorRol($idRol) {
-        $SQL = "SELECT DISTINCT m.* 
-                FROM menu m
-                INNER JOIN permisos p ON m.id = p.id_menu
-                INNER JOIN permisos_roles pr ON p.id = pr.id_permiso
-                WHERE pr.id_rol = $idRol
-                ORDER BY m.level, m.position";
-    
-        $menus = $this->DAO->consultar($SQL);
-    
-        // Organizar el menú en jerarquía
-        $menuEstructurado = [];
-        foreach ($menus as $menu) {
-            if ($menu['parent_id'] == 0) {
-                $menu['submenus'] = []; // Agregamos un array para submenús
-                $menuEstructurado[$menu['id']] = $menu;
-            } else {
-                // Si tiene un parent_id, lo añadimos como submenú
-                if (isset($menuEstructurado[$menu['parent_id']])) {
-                    $menuEstructurado[$menu['parent_id']]['submenus'][] = $menu;
-                }
-            }
+        if ($idRol == 1) {
+            // Consultar todos los menús SIN restricciones para el Administrador
+            $SQL = "SELECT * FROM menu ORDER BY level, position";
+        } else {
+            // Para otros roles, aplicar filtro de permisos
+            $SQL = "SELECT DISTINCT m.* 
+                    FROM menu m
+                    INNER JOIN permisos p ON m.id = p.id_menu
+                    INNER JOIN permisos_roles pr ON p.id = pr.id_permiso
+                    WHERE pr.id_rol = $idRol
+                    ORDER BY m.level, m.position";
         }
     
-        return $menuEstructurado;
-    }
+        // 🔥 IMPRIMIR CONSULTA SQL PARA DEPURACIÓN 🔥
+        echo "<pre>🔍 SQL Ejecutada: $SQL</pre>";
     
+        // Obtener menús desde la base de datos
+        $menus = $this->DAO->consultar($SQL);
+    
+        // Formatear el menú en estructura jerárquica
+        return $this->formatMenu($menus);
+    }
     
     
 }

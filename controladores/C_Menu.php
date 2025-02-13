@@ -150,17 +150,27 @@ class C_Menu {
     }    
 
     public function getMenuFiltradoPorRol() {
-        // Verificar si la sesión ya está iniciada
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
     
-        // Si no hay sesión activa, asignamos el rol visitante (ID 19)
-        $idRol = $_SESSION['id_rol'] ?? 19;
+        // Intentamos obtener el ID de rol desde sesión
+        $idRol = $_SESSION['roles'][0]['id_rol'] ?? null;
     
-        // Obtener menús accesibles por el rol actual
-        return $this->menuModel->getMenuPorRol($idRol);
-    }
+        // 🔥 SI NO HAY SESIÓN O EL ROL NO EXISTE, FORZAMOS `id_rol = 19` 🔥
+        if ($idRol === null || empty($idRol)) {
+            $idRol = 19;
+        }
+    
+        // 🔥 IMPRIMIR EL ROL DETECTADO PARA DEPURACIÓN 🔥
+        echo "<pre>🔍 ID Rol detectado: $idRol</pre>";
+    
+        if ($idRol == 1) {
+            return $this->menuModel->getMenuOptions(); // Administrador ve TODO
+        }
+    
+        return $this->menuModel->getMenuPorRol($idRol); // Filtra menús por rol (incluye visitante)
+    }    
     
 }   
 ?>
