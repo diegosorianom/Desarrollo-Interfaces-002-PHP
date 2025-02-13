@@ -2,13 +2,13 @@
 
 // Si no hay sesión activa, asignar el rol de "visitante"
 if (!isset($_SESSION['login'])) {
-    $_SESSION['rol'] = "visitante"; 
+    $_SESSION['roles'] = [["id_rol" => 0, "nombre" => "visitante"]]; // Lista de roles con "visitante"
 } else {
-    // Si el usuario está autenticado, el rol debe venir de la base de datos
-    // (Este código es solo un ejemplo, asegúrate de extraer el rol correctamente)
-    $_SESSION['rol'] = $_SESSION['rol'] ?? "usuario";
+    // Si el usuario está autenticado, los roles deben venir de la base de datos
+    $_SESSION['roles'] = $_SESSION['roles'] ?? [["id_rol" => 0, "nombre" => "usuario"]]; // Si no tiene roles, asigna "usuario"
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -34,12 +34,12 @@ if (!isset($_SESSION['login'])) {
                         Bienvenido: 
                         <?php 
                             if (isset($_SESSION['login']) && !empty($_SESSION['login'])) {
-                                echo $_SESSION['login'] . " (Rol: " . $_SESSION['rol'] . ")";
+                                echo $_SESSION['login']; // Muestra solo el usuario sin el rol
                                 echo '<div class="mt-2">';
                                 echo '<a href="logout.php" class="btn btn-danger btn-sm">Cerrar sesión</a>';
                                 echo '</div>';
                             } else {
-                                echo "Invitado (Rol: " . $_SESSION['rol'] . ")"; 
+                                echo "Invitado"; // Sin texto de rol
                                 echo '<div class="mt-2">';
                                 echo '<a href="Login.php" class="btn btn-primary btn-sm">Iniciar sesión</a>';
                                 echo '</div>';
@@ -59,3 +59,19 @@ if (!isset($_SESSION['login'])) {
         <script src="app.js" async></script>
     </body>
 </html>
+
+<script>
+    var usuario = <?php echo json_encode($_SESSION['usuario'] ?? ''); ?>;
+    var idUsuario = <?php echo json_encode($_SESSION['id_Usuario'] ?? ''); ?>;
+    var roles = <?php echo json_encode($_SESSION['roles'] ?? []); ?>;
+    var permisos = <?php echo json_encode($_SESSION['permisos'] ?? []); ?>;
+
+    console.log("🔹 Usuario:", usuario);
+    console.log("🔹 ID Usuario:", idUsuario);
+    console.log("🔹 Roles del Usuario:", roles);
+    roles.forEach(role => console.log(`- Rol ID: ${role.id_rol}, Nombre: ${role.nombre}`));
+    console.log("🔹 Permisos del Usuario:", permisos);
+</script>
+
+
+

@@ -9,28 +9,99 @@ class M_Usuarios extends Modelo {
         $this->DAO = new DAO();
     }
 
-    public function login($datos=array()){
-        $usuario='fsfdfhddhh';
-        $pass='dasdfasñlj';
+    public function login($datos = array()){
+        $usuario = '';
+        $pass = '';
         extract($datos);
-        $usuario=addslashes($usuario);
-
-        $SQL="SELECT * FROM usuarios
-                WHERE login='$usuario' && pass=MD5('$pass') ";
-                $usuarios=$this->DAO->consultar($SQL);
-                $id_Usuario='';
-
-                if(empty($usuarios)){ 
-                   // no encontrado
-                }else{ //encontrado
-                    $_SESSION['login']=$usuario;
-                    $_SESSION['usuario']=$usuarios[0]['nombre'];
-                    $_SESSION['id_Usuario']=$usuarios[0]['id_Usuario'];
-                    $id_Usuario=$usuarios[0]['id_Usuario']; 
-
-                }
-            return $id_Usuario;
+        $usuario = addslashes($usuario);
+    
+        $SQL = "SELECT * FROM usuarios
+                WHERE login='$usuario' AND pass=MD5('$pass')";
+        $usuarios = $this->DAO->consultar($SQL);
+        $id_Usuario = '';
+    
+        if (!empty($usuarios)) { 
+            // Usuario encontrado
+            $_SESSION['login'] = $usuario;
+            $_SESSION['usuario'] = $usuarios[0]['nombre'];
+            $_SESSION['id_Usuario'] = $usuarios[0]['id_Usuario'];
+            $id_Usuario = $usuarios[0]['id_Usuario']; 
+    
+            // 🔹 Obtener los roles del usuario con nombre
+            $_SESSION['roles'] = $this->obtenerRolesUsuario($id_Usuario);
+    
+            // 🔹 Obtener los permisos del usuario
+            $_SESSION['permisos'] = $this->obtenerPermisosUsuario($id_Usuario);
+    
+            // 🔹 Registrar en logs para depuración
+            error_log("Usuario ID: $id_Usuario, Roles: " . json_encode($_SESSION['roles']) . ", Permisos: " . json_encode($_SESSION['permisos']));
+        }
+        return $id_Usuario;
     }
+    
+    
+    
+    public function obtenerPermisosUsuario($id_Usuario) {
+        $permisos = [];
+    
+        // 🔹 Obtener permisos directos del usuario desde permisos_usuarios
+        $SQL = "SELECT id_permiso FROM permisos_usuarios WHERE id_usuario = '$id_Usuario'";
+        $resultado = $this->DAO->consultar($SQL);
+        foreach ($resultado as $permiso) {
+            $permisos[] = $permiso['id_permiso'];
+        }
+    
+        // 🔹 Obtener los roles del usuario
+        $roles = $this->obtenerRolesUsuario($id_Usuario); 
+    
+        // 🔹 Convertir el array de roles en una lista de valores separados por comas para SQL
+        $rolesIds = array_column($roles, 'id_rol'); // Extraer solo los IDs de los roles
+        if (!empty($rolesIds)) {
+            $rolesString = implode(',', $rolesIds); // Convertir array a string separado por comas
+    
+            // 🔹 Obtener permisos heredados a través de roles desde permisos_roles
+            $SQL = "SELECT DISTINCT id_permiso FROM permisos_roles WHERE id_rol IN ($rolesString)";
+            $resultado = $this->DAO->consultar($SQL);
+            foreach ($resultado as $permiso) {
+                $permisos[] = $permiso['id_permiso'];
+            }
+        }
+    
+        // 🔹 Agregar permiso de visitante si no está ya incluido
+        $permisoVisitante = 1; // Cambia esto si el ID del permiso de visitante es diferente
+        if (!in_array($permisoVisitante, $permisos)) {
+            $permisos[] = $permisoVisitante; 
+        }
+    
+        // 🔹 Devolver los permisos sin duplicados
+        return array_unique($permisos);
+    }
+    
+    
+
+    public function obtenerRolesUsuario($id_Usuario) {
+        $roles = [];
+    
+        // Corrección: Usamos 'id' en lugar de 'id_rol' en la tabla 'roles'
+        $SQL = "SELECT ru.id_rol, r.nombre 
+                FROM roles_usuarios ru
+                JOIN roles r ON ru.id_rol = r.id
+                WHERE ru.id_usuario = '$id_Usuario'";
+    
+        $resultado = $this->DAO->consultar($SQL);
+    
+        foreach ($resultado as $rol) {
+            $roles[] = [
+                'id_rol' => $rol['id_rol'], // Este viene de roles_usuarios
+                'nombre' => $rol['nombre']   // Este viene de roles
+            ];
+        }
+    
+        return $roles;
+    }
+    
+    
+    
 
     public function buscarUsuarios($filtros=array()){
         $ftexto = '';
