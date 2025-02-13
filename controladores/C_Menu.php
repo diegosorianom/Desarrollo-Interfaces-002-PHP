@@ -148,6 +148,20 @@ class C_Menu {
     
         exit;
     }    
-}
+
+    public function getMenuFiltradoPorRol() {
+        // Verificar si la sesión ya está iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        // Si no hay sesión activa, asignamos el rol visitante (ID 19)
+        $idRol = $_SESSION['id_rol'] ?? 19;
+    
+        // Obtener menús accesibles por el rol actual
+        return $this->menuModel->getMenuPorRol($idRol);
+    }
+    
+}   
 ?>
 

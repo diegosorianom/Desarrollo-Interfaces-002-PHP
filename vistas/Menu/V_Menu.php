@@ -1,9 +1,10 @@
 <?php
 require_once 'controladores/C_Menu.php';
 
-// Instanciar el controlador del menú
+// Obtener el menú filtrado por permisos del usuario actual
 $menuController = new C_Menu();
-$menu = $menuController->getFormattedMenu();
+$menu = $menuController->getMenuFiltradoPorRol();
+
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">

@@ -1,4 +1,14 @@
-<?php session_start(); ?>
+<?php session_start(); 
+
+// Si no hay sesión activa, asignar el rol de "visitante"
+if (!isset($_SESSION['login'])) {
+    $_SESSION['rol'] = "visitante"; 
+} else {
+    // Si el usuario está autenticado, el rol debe venir de la base de datos
+    // (Este código es solo un ejemplo, asegúrate de extraer el rol correctamente)
+    $_SESSION['rol'] = $_SESSION['rol'] ?? "usuario";
+}
+?>
 
 
 <!DOCTYPE html>
@@ -24,12 +34,12 @@
                         Bienvenido: 
                         <?php 
                             if (isset($_SESSION['login']) && !empty($_SESSION['login'])) {
-                                echo $_SESSION['login'];
+                                echo $_SESSION['login'] . " (Rol: " . $_SESSION['rol'] . ")";
                                 echo '<div class="mt-2">';
                                 echo '<a href="logout.php" class="btn btn-danger btn-sm">Cerrar sesión</a>';
                                 echo '</div>';
                             } else {
-                                echo "Invitado"; 
+                                echo "Invitado (Rol: " . $_SESSION['rol'] . ")"; 
                                 echo '<div class="mt-2">';
                                 echo '<a href="Login.php" class="btn btn-primary btn-sm">Iniciar sesión</a>';
                                 echo '</div>';

@@ -174,5 +174,50 @@ class M_Menu extends Modelo {
         return $this -> DAO -> consultar($SQL);
     }
 
+    public function getMenuPorPermisos($idsPermisos) {
+        if (empty($idsPermisos)) {
+            return [];
+        }
+    
+        $idsPermisosStr = implode(',', $idsPermisos);
+        $SQL = "SELECT DISTINCT m.* 
+                FROM menu m
+                INNER JOIN permisos p ON m.id = p.id_menu
+                WHERE p.id IN ($idsPermisosStr) 
+                AND m.is_active = 1
+                ORDER BY m.level, m.position";
+    
+        return $this->DAO->consultar($SQL);
+    }
+
+    public function getMenuPorRol($idRol) {
+        $SQL = "SELECT DISTINCT m.* 
+                FROM menu m
+                INNER JOIN permisos p ON m.id = p.id_menu
+                INNER JOIN permisos_roles pr ON p.id = pr.id_permiso
+                WHERE pr.id_rol = $idRol
+                ORDER BY m.level, m.position";
+    
+        $menus = $this->DAO->consultar($SQL);
+    
+        // Organizar el menú en jerarquía
+        $menuEstructurado = [];
+        foreach ($menus as $menu) {
+            if ($menu['parent_id'] == 0) {
+                $menu['submenus'] = []; // Agregamos un array para submenús
+                $menuEstructurado[$menu['id']] = $menu;
+            } else {
+                // Si tiene un parent_id, lo añadimos como submenú
+                if (isset($menuEstructurado[$menu['parent_id']])) {
+                    $menuEstructurado[$menu['parent_id']]['submenus'][] = $menu;
+                }
+            }
+        }
+    
+        return $menuEstructurado;
+    }
+    
+    
+    
 }
 ?>
