@@ -83,6 +83,23 @@
             echo json_encode($respuesta);
         }
         
+        public function cambiarEstado($datos) {
+            $id_Usuario = $datos['id_Usuario'];
+            $nuevoEstado = $this->modelo->cambiarEstado($id_Usuario);
+            
+            if ($nuevoEstado !== false) {
+                echo json_encode([
+                    "success" => true,
+                    "nuevoEstado" => $nuevoEstado
+                ]);
+            } else {
+                echo json_encode([
+                    "success" => false,
+                    "error" => "Error CF-03"
+                ]);
+            }
+        }
+        
         
     }
 ?>
