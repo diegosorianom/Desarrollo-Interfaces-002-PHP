@@ -1,8 +1,9 @@
 <?php
 session_start();
-$idRol = $_SESSION['id_rol'] ?? 19; // Si no hay sesión, asignamos rol "Visitante"
+// Obtener los permisos del usuario de la sesión y verificar el permiso 15
+$permisos = $_SESSION['permisos'] ?? [];
+$tienePermiso15 = in_array(15, $permisos);
 ?>
-
 
 <div class="container-fluid" id="capaFiltrosBusqueda">
     <h2 class="text-start mb-4">Mantenimiento de usuarios</h2>
@@ -25,8 +26,8 @@ $idRol = $_SESSION['id_rol'] ?? 19; // Si no hay sesión, asignamos rol "Visitan
             <div class="col-lg-12 d-flex">
                 <button type="button" class="btn btn-primary me-2" onclick="buscar('Usuarios', 'getVistaListadoUsuarios', 'formularioBuscar', 'capaResultadoBusqueda')">Buscar</button>
                 
-                <?php if ($idRol != 19): ?> 
-                    <button type="button" class="btn btn-secondary" onclick="obtenerVista_EditarCrear ('Usuarios', 'getVistaNuevoEditar', 'capaEditarCrear', '')">Nuevo</button>
+                <?php if ($tienePermiso15): ?> 
+                    <button type="button" class="btn btn-secondary" onclick="obtenerVista_EditarCrear('Usuarios', 'getVistaNuevoEditar', 'capaEditarCrear', '')">Nuevo</button>
                 <?php endif; ?>
             </div>
         </div>
@@ -35,4 +36,3 @@ $idRol = $_SESSION['id_rol'] ?? 19; // Si no hay sesión, asignamos rol "Visitan
 
 <div class="container-fluid mt-4" id="capaEditarCrear"></div>
 <div class="container-fluid mt-4" id="capaResultadoBusqueda"></div>
-

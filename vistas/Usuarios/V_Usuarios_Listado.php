@@ -1,6 +1,8 @@
 <?php
 session_start(); // Inicia sesión si no está iniciada
-$idRol = $_SESSION['id_rol'] ?? 19; // Asigna el rol Visitante si no hay uno definido
+// Obtener los permisos del usuario de la sesión y verificar el permiso 15
+$permisos = $_SESSION['permisos'] ?? [];
+$tienePermiso15 = in_array(15, $permisos);
 
 $usuarios = array();
 extract($datos);
@@ -12,17 +14,18 @@ $html .= '<div class="table-responsive">
 $html .= '<thead>
             <tr>';
             
-// Si el usuario no es visitante, mostramos las columnas de edición
-if ($idRol != 19) {
+// Mostrar columna "Editar" solo si tiene el permiso 15
+if ($tienePermiso15) {
     $html .= '<th>Editar</th>';
 }
 
 $html .= '<th>Apellidos, Nombre</th>
-            <th>Correo electrónico</th>
-            <th>Login</th>
-            <th>Estado</th>';
-            
-if ($idRol != 19) {
+          <th>Correo electrónico</th>
+          <th>Login</th>
+          <th>Estado</th>';
+          
+// Mostrar columna "Cambiar estado" solo si tiene el permiso 15
+if ($tienePermiso15) {
     $html .= '<th>Cambiar estado</th>';
 }
 
@@ -34,16 +37,16 @@ foreach ($usuarios as $posicion => $fila) {
     $estilo = '';
     if ($fila['activo'] == 'N') { 
         $activo = 'Inactivo';
-        $rowClass = 'table-danger';  // Cambia el texto a rojo
+        $rowClass = 'table-danger';  // Resalta la fila en rojo
     } else {
         $activo = 'Activo';
-        $rowClass = '';  // Sin clase especial para filas activas
+        $rowClass = '';  // Sin clase especial para usuarios activos
     }
 
     $html .= '<tr class="' . $rowClass . '">';
     
-    // Solo si el rol NO es visitante, mostramos la columna de edición
-    if ($idRol != 19) {
+    // Mostrar botón "Editar" solo si tiene el permiso 15
+    if ($tienePermiso15) {
         $html .= '<td><button class="btn btn-primary" onclick="obtenerVista_EditarCrear(\'Usuarios\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $fila['id_Usuario'] . '\')">Editar</button></td>';
     }
     
@@ -52,8 +55,8 @@ foreach ($usuarios as $posicion => $fila) {
               <td>' . $fila['login'] . '</td>
               <td id="estado-' . $fila['id_Usuario'] . '">' . $activo . '</td>';
 
-    // Solo si el rol NO es visitante, mostramos el botón de cambiar estado
-    if ($idRol != 19) {
+    // Mostrar botón "Editar estado" solo si tiene el permiso 15
+    if ($tienePermiso15) {
         $html .= '<td><button class="btn btn-primary" onclick="toggleEstado(\'' . $fila['id_Usuario'] . '\')">Editar estado</button></td>';
     }
 
