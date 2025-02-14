@@ -29,6 +29,7 @@ class M_Permisos {
         return array_column($result, 'id_permiso');
     }
 
+    // Obtener los permisos que un usuario hereda por pertenecer a un rol
     public function getPermisosHeredadosPorRol($idUsuario) {
         $SQL = "SELECT pr.id_permiso, pr.id_rol, r.nombre AS nombre
                 FROM permisos_roles pr
@@ -46,7 +47,7 @@ class M_Permisos {
         return $this->DAO->insertar($SQL);
     }
 
-    // Remover un permiso de un rol
+    // Eliminar un permiso de un rol
     public function removerPermisoRol($idRol, $idPermiso) {
         $SQL = "DELETE FROM permisos_roles WHERE id_rol = '$idRol' AND id_permiso = '$idPermiso'";
         return $this->DAO->actualizar($SQL);
@@ -58,20 +59,20 @@ class M_Permisos {
         return $this->DAO->insertar($SQL);
     }
 
-    // Remover un permiso de un usuario
+    // Eliminar un permiso de un usuario
     public function removerPermisoUsuario($idUsuario, $idPermiso) {
         $SQL = "DELETE FROM permisos_usuarios WHERE id_usuario = '$idUsuario' AND id_permiso = '$idPermiso'";
         return $this->DAO->actualizar($SQL);
     }
 
-    // Nuevo método para actualizar el nombre de un permiso
+    // Actualizar el nombre del permiso
     public function actualizarNombrePermiso($id_permiso, $nuevo_nombre) {
         // Es recomendable sanitizar los datos o usar consultas preparadas
         $SQL = "UPDATE permisos SET nombre = '" . addslashes($nuevo_nombre) . "' WHERE id = '" . addslashes($id_permiso) . "'";
         return $this->DAO->actualizar($SQL);
     }
 
-    // Nuevo método para eliminar un permiso
+    // Eliminar permiso
     public function eliminarPermiso($id_permiso) {
         // Primero, eliminar registros en permisos_roles que referencian el permiso
         $SQL1 = "DELETE FROM permisos_roles WHERE id_permiso = '" . addslashes($id_permiso) . "'";
@@ -82,7 +83,7 @@ class M_Permisos {
         return $this->DAO->actualizar($SQL2);
     }
     
-    // Nuevo método para crear un permiso y asignarlo al rol Administrador
+    // Crear un permiso y a su vez añadirlo al rol administrador
     public function crearPermiso($nombre, $id_menu) {
         // Insertar el permiso en la tabla permisos
         $SQL = "INSERT INTO permisos (nombre, id_menu) VALUES ('" . addslashes($nombre) . "', '" . addslashes($id_menu) . "')";
@@ -96,5 +97,7 @@ class M_Permisos {
 
         return $idPermiso;
     }
+
+    // Final del modelo Permisos
 }
 ?>

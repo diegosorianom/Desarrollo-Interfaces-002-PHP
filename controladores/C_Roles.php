@@ -12,11 +12,13 @@ class C_Roles extends Controlador {
         $this->modelo = new M_Roles();
     }
 
+    // Funcion para obtener la vista de roles (no se utiliza)
     public function getVistaListadoRoles($datos = array()) {
         $roles = $this->modelo->buscarRoles();
         Vista::render('Roles/V_Roles_Listado.php', array('roles' => $roles));
     }
 
+    // Función para obtener el formulario con el cual crear o editar roles
     public function getVistaNuevoEditar($datos = array()) {
         if (!isset($datos['id']) || $datos['id'] == '') {
             // Nuevo
@@ -33,6 +35,7 @@ class C_Roles extends Controlador {
         }
     }
 
+    // Función para guardar o actualizar un rol
     public function guardarRol($datos = array()) {
         $resultado = $this->modelo->insertarActualizarRol($datos);
         if ($resultado) {
@@ -42,6 +45,7 @@ class C_Roles extends Controlador {
         }
     }
 
+    // Función para eliminar un rol
     public function eliminarRol($datos = array()) {
         if (isset($datos['id'])) {
             $resultado = $this->modelo->eliminarRol($datos['id']);
@@ -55,7 +59,8 @@ class C_Roles extends Controlador {
         }
     }
 
-    // 🔹 AQUÍ COLOCAMOS EL MÉTODO DENTRO DE LA CLASE 🔹
+    
+    // Función para asignar un rol a un usuario 
     public function asignarRolAUsuario($datos = array()) {
         header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
     
@@ -76,6 +81,7 @@ class C_Roles extends Controlador {
         }
     }
 
+    // Función para desasignar un rol a un usuario
     public function desasignarRolAUsuario($datos = array()) {
         header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
     
@@ -96,6 +102,7 @@ class C_Roles extends Controlador {
         }
     }
     
+    // Función para obtener todos los roles a los que pertenece un usuario
     public function obtenerRolesDeUsuario($datos = array()) {
         header('Content-Type: application/json'); // Aseguramos respuesta JSON
     
@@ -117,7 +124,7 @@ class C_Roles extends Controlador {
         echo json_encode(['correcto' => 'S', 'roles' => $ids]);
     }
         
-    
-} // 🔹 Aquí cerramos correctamente la clase 🔹
+    // Fin del controlador de roles
+} 
 
 ?>

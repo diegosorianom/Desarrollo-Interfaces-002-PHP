@@ -10,16 +10,19 @@
             parent::__construct(); // Ejecutar constructor del padre
             $this -> modelo = new M_Usuarios();
         }
-
+        
+        // Función para loguear a un usuario
         public function validarUsuario($datos=array()){
             $id_Usuario=$this->modelo->login($datos);
             return $id_Usuario;
         }
 
+        // Funcion para pintar la vista de filtros de usuarios
         public function getVistaFiltros($datos=array()){
             Vista::render('./vistas/Usuarios/V_Usuarios_Filtros.php');
         }
         
+        // Funcion para pintar el formulario de crear / editar usuarios
         public function getVistaNuevoEditar($datos=array()){
             if (!isset($datos['id']) || $datos['id']=='') {
                 // Nuevo
@@ -32,11 +35,13 @@
             }
         }
         
+        // Funcion para pintar la vista de listado
         public function getVistaListadoUsuarios($filtros=array()) {
             $usuarios = $this->modelo->buscarUsuarios($filtros);
         Vista::render('vistas/Usuarios/V_Usuarios_Listado.php', array('usuarios' => $usuarios));
         }
 
+        // Funcion para guardar un usuario (crear o editar)
         public function guardarUsuario($datos = array()) {
             $respuesta['correcto'] = 'S';
             $respuesta['msj'] = 'Creado correctamente';
@@ -83,6 +88,7 @@
             echo json_encode($respuesta);
         }
         
+        // Funcion para cambiar el estado de un usuario (activo / no activo)
         public function cambiarEstado($datos) {
             $id_Usuario = $datos['id_Usuario'];
             $nuevoEstado = $this->modelo->cambiarEstado($id_Usuario);
@@ -100,6 +106,6 @@
             }
         }
         
-        
+        // Fin del controlador de usuarios
     }
 ?>

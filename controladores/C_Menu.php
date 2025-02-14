@@ -11,10 +11,12 @@ class C_Menu {
         $this->menuModel = new M_Menu();
     }
 
+    // Devuelve el menú formateado según el nivel y el padre (establecido en la base de datos)
     public function getFormattedMenu() {
         return $this -> menuModel -> getMenuOptions();
     }
 
+    // Pinta la vista de filtros del menú
     public function getVistaFiltros($datos = array()) {
         $roles = $this->menuModel->getRoles();
         $usuarios = $this->menuModel->getUsuarios();
@@ -34,6 +36,7 @@ class C_Menu {
         ]);
     }
 
+    // Pinta la vista del listado del menú
     public function getVistaListadoMenu($filtros = array()) {
         $menus = $this->menuModel->buscarOpcionesMenu($filtros);
         $permisos = $this->menuModel->getPermisosPorMenu();
@@ -60,8 +63,7 @@ class C_Menu {
         ]);
     }
     
-    
-
+    // Pinta la vista de formulario para editar o crear un menú
     public function getVistaNuevoEditar($datos = array()) {
         if (!isset($datos['id']) || $datos['id'] == '') {
             if (isset($datos['menu_id']) && isset($datos['position_type'])) {
@@ -131,6 +133,7 @@ class C_Menu {
         }
     }
 
+    // Guarda o actualiza el menú
     public function guardarMenu($datos = array()) {
         if (!is_array($datos) || empty($datos)) {
             echo "Error: Datos inválidos.";
@@ -149,6 +152,8 @@ class C_Menu {
         exit;
     }    
 
+    // Obtiene los menús que pintaremos en la barra de navegación buscando el rol dependiendo del rol en base de datos
+    // ⚠ Hay que cambiar esta función para que filtre por permiso en vez de por rol
     public function getMenuFiltradoPorRol() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -172,6 +177,7 @@ class C_Menu {
         return $this->menuModel->getMenuPorRol($idRol); // Filtra menús por rol (incluye visitante)
     }    
     
+    // Fin del controlador de menús
 }   
 ?>
 

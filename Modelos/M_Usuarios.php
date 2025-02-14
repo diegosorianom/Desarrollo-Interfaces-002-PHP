@@ -39,8 +39,6 @@ class M_Usuarios extends Modelo {
         return $id_Usuario;
     }
     
-    
-    
     public function obtenerPermisosUsuario($id_Usuario) {
         $permisos = [];
     

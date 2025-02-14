@@ -80,7 +80,12 @@ class M_Roles {
         return $this->DAO->consultar($SQL);
     }
     
-    
+    public function obtenerPermisosDeRol($idRol) {
+        $SQL = "SELECT p.* FROM permisos p 
+                INNER JOIN permisos_roles rp ON p.id = rp.id_permiso 
+                WHERE rp.id_rol = '$idRol'";
+        return $this->DAO->consultar($SQL);
+    }
 }
 ?>
 

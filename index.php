@@ -1,12 +1,51 @@
-<?php session_start(); 
+<?php
+session_start();
 
-// Si no hay sesión activa, asignar el rol de "visitante"
-if (!isset($_SESSION['login'])) {
-    $_SESSION['roles'] = [["id_rol" => 0, "nombre" => "visitante"]]; // Lista de roles con "visitante"
-} else {
-    // Si el usuario está autenticado, los roles deben venir de la base de datos
-    $_SESSION['roles'] = $_SESSION['roles'] ?? [["id_rol" => 0, "nombre" => "usuario"]]; // Si no tiene roles, asigna "usuario"
+// Forzar el rol 19 para todos los usuarios
+if (!isset($_SESSION['roles']) || !is_array($_SESSION['roles'])) {
+    $_SESSION['roles'] = [];
 }
+
+// Verificar si el rol 19 ya está en la sesión
+$hasRole19 = false;
+foreach ($_SESSION['roles'] as $role) {
+    if ($role['id_rol'] == 19) {
+        $hasRole19 = true;
+        break;
+    }
+}
+
+// Si el rol 19 no está en la sesión, añadirlo
+if (!$hasRole19) {
+    $_SESSION['roles'][] = ['id_rol' => 19, 'nombre' => 'Rol Desconocido'];
+}
+
+// Obtener el nombre del rol 19 y sus permisos asociados
+require_once 'modelos/M_Roles.php';
+$modeloRoles = new M_Roles();
+$todosLosRoles = $modeloRoles->buscarRoles();
+$nombreRol19 = 'Rol Desconocido';
+$permisosRol19 = [];
+
+foreach ($todosLosRoles as $rol) {
+    if ($rol['id'] == 19) {
+        $nombreRol19 = $rol['nombre'];
+        // Obtener los permisos asociados al rol 19
+        $permisosRol19 = $modeloRoles->obtenerPermisosDeRol(19);
+        break;
+    }
+}
+
+// Actualizar el nombre del rol 19 en la sesión y añadir sus permisos
+foreach ($_SESSION['roles'] as &$rol) {
+    if ($rol['id_rol'] == 19) {
+        $rol['nombre'] = $nombreRol19;
+    }
+}
+
+// Añadir los permisos del rol 19 a la sesión
+$_SESSION['permisos'] = $permisosRol19;
+
 ?>
 
 

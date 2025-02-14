@@ -10,10 +10,12 @@ class C_Permisos {
         $this->permisoModel = new M_Permisos();
     }
 
+    // Obtiene los permisos de la base de datos para mostrarlos en una lista (no se usa)
     public function getListaPermisos() {
         return $this->permisoModel->getPermisos();
     }
 
+    // Función para obtener los permisos heredados de un usuario por su rol.
     public function getPermisosHeredadosUsuario($datos = array()) {
         if (!isset($datos['id_usuario'])) {
             echo json_encode(["error" => "Error CF-05: Datos insuficientes."]);
@@ -27,6 +29,7 @@ class C_Permisos {
         exit;
     }
 
+    // Funcioin para asignar o desasignar un rol a un usuario a través de un check
     public function actualizarPermiso($datos = array()) {
         if (!isset($datos['id_permiso']) || !isset($datos['asignado'])) {
             echo "Error CF-01: Datos insuficientes.";
@@ -61,7 +64,7 @@ class C_Permisos {
         exit;
     }
 
-    // Nuevo método para actualizar el nombre de un permiso
+    // Función para actualizar el nombre de un permiso
     public function actualizarNombrePermiso($datos = array()) {
         if (!isset($datos['id_permiso']) || !isset($datos['nuevo_nombre'])) {
             echo "Error CF-03: Datos insuficientes.";
@@ -81,7 +84,7 @@ class C_Permisos {
         exit;
     }
 
-    // Nuevo método para eliminar un permiso
+    // Función para eliminar un permiso
     public function eliminarPermiso($datos = array()) {
         if (!isset($datos['id_permiso'])) {
             echo "Error CF-03: Datos insuficientes.";
@@ -98,23 +101,24 @@ class C_Permisos {
         exit;
     }
 
-    // Nuevo método para crear un permiso
-public function crearPermiso($datos = array()) {
-    if (!isset($datos['nombre']) || !isset($datos['id_menu'])) {
-        echo "Error CF-04: Datos insuficientes.";
+    // Función para crear un permiso
+    public function crearPermiso($datos = array()) {
+        if (!isset($datos['nombre']) || !isset($datos['id_menu'])) {
+            echo "Error CF-04: Datos insuficientes.";
+            exit;
+        }
+        $nombre = $datos['nombre'];
+        $id_menu = $datos['id_menu'];
+
+        $resultado = $this->permisoModel->crearPermiso($nombre, $id_menu);
+        if ($resultado) {
+            echo "OK";
+        } else {
+            echo "Error CF-04: No se pudo crear el permiso.";
+        }
         exit;
     }
-    $nombre = $datos['nombre'];
-    $id_menu = $datos['id_menu'];
 
-    $resultado = $this->permisoModel->crearPermiso($nombre, $id_menu);
-    if ($resultado) {
-        echo "OK";
-    } else {
-        echo "Error CF-04: No se pudo crear el permiso.";
-    }
-    exit;
-}
-
+    // Fin del controlador de permisos
 }
 ?>

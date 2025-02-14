@@ -9,6 +9,7 @@ class M_Menu extends Modelo {
         $this->DAO = new DAO();
     }
 
+    // Función para obtener los menús desde la base de datos
     public function getMenuOptions() {
         // SQL para obtener todas las opciones del menu, ordenads por nivel y posición
         $sql = "SELECT * FROM menu WHERE is_active = 1 ORDER BY level, position";
@@ -25,16 +26,21 @@ class M_Menu extends Modelo {
         return $this -> formatMenu($menuOptions);
     }
 
+    // Función para obtener todos los roles de la base de datos
+    // ⚠ Función duplicada en M_Roles, revisar usos
     public function getRoles() {
         $SQL = "SELECT * FROM roles ORDER BY nombre";
         return $this->DAO->consultar($SQL);
     }
 
+    // Función para obtener todos los usuarios de la base de datos
+    // ⚠ Función no encontrada igual en M_Usuarios. Investigar
     public function getUsuarios() {
         $SQL = "SELECT id_Usuario, nombre FROM usuarios ORDER BY nombre";
         return $this->DAO->consultar($SQL);
     }
     
+    // Función para buscar opciones de menú
     public function buscarOpcionesMenu($filtros=array()){
         $ftexto="";
         // $factivo="";
@@ -64,6 +70,7 @@ class M_Menu extends Modelo {
         return $opcionesMenu;
     }
 
+    // Funcón para formatear el menu (pintar por niveles y padres)
     private function formatMenu($menuOptions) {
         // Organiza las opciones en un arreglo jerarquico por niveles
         $menu = [];
@@ -82,6 +89,7 @@ class M_Menu extends Modelo {
         return $menu;
     }
 
+    // Función para insertar un nuevo menu en base de datos
     public function insertarMenu($datos = array()) {
         // Valores por defecto para los campos
         $id = '';
@@ -155,6 +163,7 @@ class M_Menu extends Modelo {
         }
     }
 
+    // Función para conseguir siempre el menú con la mayor posición para cambiar su puesto dependiendo de donde se añaden los menus
     public function getMaxPosition($parentId, $level) {
         $SQL = "SELECT MAX(position) AS max_position 
                 FROM menu 
@@ -164,7 +173,8 @@ class M_Menu extends Modelo {
         return (!empty($resultado) && isset($resultado[0]['max_position'])) ? $resultado[0]['max_position'] : 0;
     }
 
-
+    // Funcion para obtener todos los permisos asociados a un menu
+    // ⚠ ¿Deberia esta función estar en M_Permisos?
     public function getPermisosPorMenu() {
         $SQL = "SELECT p.id, p.nombre, p.id_menu, m.label as menu_label 
                 FROM permisos p 
@@ -174,6 +184,8 @@ class M_Menu extends Modelo {
         return $this -> DAO -> consultar($SQL);
     }
 
+    // Función para clasificar los menús por permisos
+    // ⚠ Junto a la anterior función investigar sus usos. Cual se puede eliminar y cual se puede quedar
     public function getMenuPorPermisos($idsPermisos) {
         if (empty($idsPermisos)) {
             return [];
@@ -190,6 +202,7 @@ class M_Menu extends Modelo {
         return $this->DAO->consultar($SQL);
     }
 
+    // Función para clasificar los menús a imprimir en la barra de navegación en base al rol que ha iniciado sesión (deshacerse de esta función)
     public function getMenuPorRol($idRol) {
         if ($idRol == 1) {
             // Consultar todos los menús SIN restricciones para el Administrador
@@ -214,6 +227,6 @@ class M_Menu extends Modelo {
         return $this->formatMenu($menus);
     }
     
-    
+    // Fin del modelo de menú
 }
 ?>
