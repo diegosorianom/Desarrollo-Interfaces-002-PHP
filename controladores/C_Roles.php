@@ -140,50 +140,68 @@ class C_Roles extends Controlador {
     }
 
     private function forzarRol19EnSesion() {
-        if (!isset($_SESSION['roles']) || !is_array($_SESSION['roles'])) {
-            $_SESSION['roles'] = [];
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
-
-        $existeRol19 = array_filter($_SESSION['roles'], fn($role) => $role['id_rol'] == 19);
-
-        if (empty($existeRol19)) {
-            $_SESSION['roles'][] = ['id_rol' => 19, 'nombre' => 'Rol Desconocido'];
+    
+        // Si no hay roles en la sesión, asignar el rol 19 (Invitado)
+        if (!isset($_SESSION['roles']) || !is_array($_SESSION['roles']) || empty($_SESSION['roles'])) {
+            $_SESSION['roles'] = [['id_rol' => 19, 'nombre' => 'Invitado']];
+        }
+    
+        // Verificar si el rol 19 ya está en la sesión para evitar duplicados
+        $existeRol19 = false;
+        foreach ($_SESSION['roles'] as $role) {
+            if ($role['id_rol'] == 19) {
+                $existeRol19 = true;
+                break;
+            }
+        }
+    
+        if (!$existeRol19) {
+            $_SESSION['roles'][] = ['id_rol' => 19, 'nombre' => 'Invitado'];
         }
     }
+    
 
     private function cargarRolesYPermisosUsuario() {
         if (!isset($_SESSION['id_Usuario'])) {
-            return; // Si no hay usuario logueado, no se cargan roles ni permisos
+            $_SESSION['id_Usuario'] = null; // Asegurar que existe la variable
         }
-
+    
+        // Si no hay roles en la sesión, forzar rol 19
+        if (!isset($_SESSION['roles']) || empty($_SESSION['roles'])) {
+            $this->forzarRol19EnSesion();
+        }
+    
         $id_Usuario = $_SESSION['id_Usuario'];
         $todosLosRoles = $this->modeloRoles->buscarRoles();
         $permisosUsuario = [];
-
-        // Obtener roles y actualizar los nombres de la sesión
+    
         foreach ($_SESSION['roles'] as &$rol) {
             foreach ($todosLosRoles as $rolBD) {
                 if ($rol['id_rol'] == $rolBD['id']) {
                     $rol['nombre'] = $rolBD['nombre'];
                 }
             }
-
+    
             // Obtener permisos por cada rol
             $permisosRol = $this->modeloRoles->obtenerPermisosDeRol($rol['id_rol']);
             foreach ($permisosRol as $permiso) {
                 $permisosUsuario[$permiso['id']] = $permiso;
             }
         }
-
-        // 🔹 Obtener permisos directos del usuario
+    
+        // Obtener permisos directos del usuario
         $permisosDirectos = $this->modeloUsuarios->obtenerPermisosDirectosUsuario($id_Usuario);
         foreach ($permisosDirectos as $permiso) {
-            $permisosUsuario[$permiso['id']] = $permiso; // Evitar duplicados
+            $permisosUsuario[$permiso['id']] = $permiso;
         }
-
+    
         // Guardar permisos en sesión
         $_SESSION['permisos'] = array_values($permisosUsuario);
     }
+    
         
     // Fin del controlador de roles
 } 

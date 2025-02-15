@@ -1,9 +1,26 @@
 <?php
-require_once 'controladores/C_Roles.php';
+session_start();
 
-// Instanciar el controlador de roles (ejecutará la lógica automáticamente)
+// Si no hay roles en la sesión, asignamos el rol 19 (Invitado)
+if (!isset($_SESSION['roles']) || empty($_SESSION['roles'])) {
+    $_SESSION['roles'] = [['id_rol' => 19, 'nombre' => 'Invitado']];
+}
+
+// Si no hay permisos en la sesión, inicializar un array vacío
+if (!isset($_SESSION['permisos'])) {
+    $_SESSION['permisos'] = [];
+}
+
+// Si no hay usuario en la sesión, ponerlo como "Invitado"
+if (!isset($_SESSION['usuario'])) {
+    $_SESSION['usuario'] = "Invitado";
+}
+
+// Cargar el controlador de roles para aplicar la lógica
+require_once 'controladores/C_Roles.php';
 $controladorRoles = new C_Roles();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
