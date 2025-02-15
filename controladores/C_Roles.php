@@ -2,10 +2,14 @@
 require_once 'controladores/Controlador.php';
 require_once 'vistas/Vista.php';
 require_once 'modelos/M_Roles.php';
+require_once 'modelos/M_Usuarios.php';
+
 
 class C_Roles extends Controlador {
 
     private $modelo;
+    private $modeloRoles;
+    private $modeloUsuarios;
 
     public function __construct() {
         parent::__construct();
@@ -16,6 +20,9 @@ class C_Roles extends Controlador {
         }
 
         $this->modelo = new M_Roles();
+        $this->modeloRoles = new M_Roles();
+        $this->modeloUsuarios = new M_Usuarios();
+
         $this->forzarRol19EnSesion(); // Asegurar que el rol 19 esté en sesión
         $this->cargarRolesYPermisosUsuario(); // Cargar roles y permisos en sesión
     }
@@ -137,7 +144,6 @@ class C_Roles extends Controlador {
             $_SESSION['roles'] = [];
         }
 
-        // Verificar si el rol 19 ya está presente
         $existeRol19 = array_filter($_SESSION['roles'], fn($role) => $role['id_rol'] == 19);
 
         if (empty($existeRol19)) {
@@ -146,21 +152,33 @@ class C_Roles extends Controlador {
     }
 
     private function cargarRolesYPermisosUsuario() {
-        $todosLosRoles = $this->modelo->buscarRoles();
+        if (!isset($_SESSION['id_Usuario'])) {
+            return; // Si no hay usuario logueado, no se cargan roles ni permisos
+        }
+
+        $id_Usuario = $_SESSION['id_Usuario'];
+        $todosLosRoles = $this->modeloRoles->buscarRoles();
         $permisosUsuario = [];
 
+        // Obtener roles y actualizar los nombres de la sesión
         foreach ($_SESSION['roles'] as &$rol) {
             foreach ($todosLosRoles as $rolBD) {
                 if ($rol['id_rol'] == $rolBD['id']) {
-                    $rol['nombre'] = $rolBD['nombre']; // Asignar nombre correcto
+                    $rol['nombre'] = $rolBD['nombre'];
                 }
             }
 
-            // Obtener permisos y evitar duplicados
-            $permisosRol = $this->modelo->obtenerPermisosDeRol($rol['id_rol']);
+            // Obtener permisos por cada rol
+            $permisosRol = $this->modeloRoles->obtenerPermisosDeRol($rol['id_rol']);
             foreach ($permisosRol as $permiso) {
-                $permisosUsuario[$permiso['id']] = $permiso; // Clave única para evitar repetidos
+                $permisosUsuario[$permiso['id']] = $permiso;
             }
+        }
+
+        // 🔹 Obtener permisos directos del usuario
+        $permisosDirectos = $this->modeloUsuarios->obtenerPermisosDirectosUsuario($id_Usuario);
+        foreach ($permisosDirectos as $permiso) {
+            $permisosUsuario[$permiso['id']] = $permiso; // Evitar duplicados
         }
 
         // Guardar permisos en sesión

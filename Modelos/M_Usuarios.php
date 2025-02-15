@@ -231,5 +231,23 @@ class M_Usuarios extends Modelo {
         return !empty($result); // Returns true if email is in use, false otherwise
     }
     
+    public function obtenerPermisosDirectosUsuario($id_Usuario) {
+        $permisos = [];
+    
+        // Obtener permisos directos del usuario desde permisos_usuarios
+        $SQL = "SELECT p.id, p.nombre 
+                FROM permisos_usuarios pu
+                JOIN permisos p ON pu.id_permiso = p.id
+                WHERE pu.id_usuario = '$id_Usuario'";
+        
+        $resultado = $this->DAO->consultar($SQL);
+        
+        foreach ($resultado as $permiso) {
+            $permisos[$permiso['id']] = $permiso; // Guardar en un array con clave única
+        }
+    
+        return $permisos;
+    }
+    
 }
 ?>
