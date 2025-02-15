@@ -1,59 +1,9 @@
 <?php
-session_start();
+require_once 'controladores/C_Roles.php';
 
-// Forzar el rol 19 para todos los usuarios
-if (!isset($_SESSION['roles']) || !is_array($_SESSION['roles'])) {
-    $_SESSION['roles'] = [];
-}
-
-// Verificar si el rol 19 ya está en la sesión
-$hasRole19 = false;
-foreach ($_SESSION['roles'] as $role) {
-    if ($role['id_rol'] == 19) {
-        $hasRole19 = true;
-        break;
-    }
-}
-
-// Si el rol 19 no está en la sesión, añadirlo
-if (!$hasRole19) {
-    $_SESSION['roles'][] = ['id_rol' => 19, 'nombre' => 'Rol Desconocido'];
-}
-
-// Obtener los roles y permisos
-require_once 'modelos/M_Roles.php';
-$modeloRoles = new M_Roles();
-$todosLosRoles = $modeloRoles->buscarRoles();
-
-// Variables para almacenar el nombre del rol 19 y permisos del usuario
-$nombreRol19 = 'Rol Desconocido';
-$permisosUsuario = [];
-
-// Obtener los nombres correctos de los roles asignados y sus permisos
-foreach ($_SESSION['roles'] as &$rol) {
-    foreach ($todosLosRoles as $rolBD) {
-        if ($rol['id_rol'] == $rolBD['id']) {
-            $rol['nombre'] = $rolBD['nombre']; // Actualiza el nombre del rol si existe en la BD
-            if ($rol['id_rol'] == 19) {
-                $nombreRol19 = $rolBD['nombre']; // Guarda el nombre del rol 19
-            }
-        }
-    }
-
-    // Obtener los permisos de cada rol y evitar duplicados
-    $permisosRol = $modeloRoles->obtenerPermisosDeRol($rol['id_rol']);
-    foreach ($permisosRol as $permiso) {
-        $permisosUsuario[$permiso['id']] = $permiso; // Usa el ID del permiso como clave para evitar duplicados
-    }
-}
-
-// Guardar todos los permisos en la sesión
-$_SESSION['permisos'] = array_values($permisosUsuario);
-
+// Instanciar el controlador de roles (ejecutará la lógica automáticamente)
+$controladorRoles = new C_Roles();
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="es">

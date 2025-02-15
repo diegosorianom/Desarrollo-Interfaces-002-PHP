@@ -9,7 +9,15 @@ class C_Roles extends Controlador {
 
     public function __construct() {
         parent::__construct();
+
+        // Verificar si la sesión ya está iniciada antes de llamarla
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $this->modelo = new M_Roles();
+        $this->forzarRol19EnSesion(); // Asegurar que el rol 19 esté en sesión
+        $this->cargarRolesYPermisosUsuario(); // Cargar roles y permisos en sesión
     }
 
     // Funcion para obtener la vista de roles (no se utiliza)
@@ -122,6 +130,41 @@ class C_Roles extends Controlador {
             }
         }
         echo json_encode(['correcto' => 'S', 'roles' => $ids]);
+    }
+
+    private function forzarRol19EnSesion() {
+        if (!isset($_SESSION['roles']) || !is_array($_SESSION['roles'])) {
+            $_SESSION['roles'] = [];
+        }
+
+        // Verificar si el rol 19 ya está presente
+        $existeRol19 = array_filter($_SESSION['roles'], fn($role) => $role['id_rol'] == 19);
+
+        if (empty($existeRol19)) {
+            $_SESSION['roles'][] = ['id_rol' => 19, 'nombre' => 'Rol Desconocido'];
+        }
+    }
+
+    private function cargarRolesYPermisosUsuario() {
+        $todosLosRoles = $this->modelo->buscarRoles();
+        $permisosUsuario = [];
+
+        foreach ($_SESSION['roles'] as &$rol) {
+            foreach ($todosLosRoles as $rolBD) {
+                if ($rol['id_rol'] == $rolBD['id']) {
+                    $rol['nombre'] = $rolBD['nombre']; // Asignar nombre correcto
+                }
+            }
+
+            // Obtener permisos y evitar duplicados
+            $permisosRol = $this->modelo->obtenerPermisosDeRol($rol['id_rol']);
+            foreach ($permisosRol as $permiso) {
+                $permisosUsuario[$permiso['id']] = $permiso; // Clave única para evitar repetidos
+            }
+        }
+
+        // Guardar permisos en sesión
+        $_SESSION['permisos'] = array_values($permisosUsuario);
     }
         
     // Fin del controlador de roles
