@@ -1,4 +1,15 @@
 <?php
+session_start();
+
+// Obtener los permisos del usuario desde la sesión
+$permisosUsuario = $_SESSION['permisos'] ?? [];
+
+// Verificar si el usuario tiene el permiso 21 (Modificar Dashboard)
+$tienePermisoModificar = in_array(21, array_column($permisosUsuario, 'id'));
+
+// Verificar si el usuario tiene el permiso 17 (Acceder Dashboard)
+$tienePermisoAcceder = in_array(17, array_column($permisosUsuario, 'id'));
+
 // Asegurar que $roles siempre está definido
 $roles = isset($datos['roles']) ? $datos['roles'] : [];
 $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
@@ -45,32 +56,42 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
                 <button type="button" class="btn btn-primary" onclick="buscarRol()">Buscar</button>
                 <!-- Dropdown para acciones de Roles -->
                 <div class="dropdown d-inline">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownAcciones" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownAcciones"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        <?php echo (!$tienePermisoModificar) ? 'disabled' : ''; ?>>
                         Mantenimiento de roles
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownAcciones">
                         <li>
-                            <button class="dropdown-item" type="button" onclick="obtenerVista_EditarCrear('Roles', 'getVistaNuevoEditar', 'capaEditarCrear', '')">
+                            <button class="dropdown-item" type="button"
+                                onclick="obtenerVista_EditarCrear('Roles', 'getVistaNuevoEditar', 'capaEditarCrear', '')"
+                                <?php echo (!$tienePermisoModificar) ? 'disabled' : ''; ?>>
                                 + Crear Nuevo Rol
                             </button>
                         </li>
                         <li>
-                            <button class="dropdown-item" type="button" id="btnEditarRol" onclick="editarRolSeleccionado()" disabled>
+                            <button class="dropdown-item" type="button" id="btnEditarRol"
+                                onclick="editarRolSeleccionado()" disabled>
                                 Editar Rol
                             </button>
                         </li>
                         <li>
-                            <button class="dropdown-item" type="button" id="btnEliminarRol" onclick="eliminarRolSeleccionado()" disabled>
+                            <button class="dropdown-item" type="button" id="btnEliminarRol"
+                                onclick="eliminarRolSeleccionado()" disabled>
                                 Eliminar Rol
                             </button>
                         </li>
                         <li>
-                            <button class="dropdown-item" type="button" onclick="asignarRolAUsuario()">
+                            <button class="dropdown-item" type="button"
+                                onclick="asignarRolAUsuario()"
+                                <?php echo (!$tienePermisoModificar) ? 'disabled' : ''; ?>>
                                 Asignar Rol a Usuario
                             </button>
                         </li>
                         <li>
-                            <button class="dropdown-item" type="button" onclick="desasignarRolAUsuario()">
+                            <button class="dropdown-item" type="button"
+                                onclick="desasignarRolAUsuario()"
+                                <?php echo (!$tienePermisoModificar) ? 'disabled' : ''; ?>>
                                 Quitar Rol
                             </button>
                         </li>
