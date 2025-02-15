@@ -71,7 +71,7 @@ class M_Menu extends Modelo {
     }
 
     // Funcón para formatear el menu (pintar por niveles y padres)
-    private function formatMenu($menuOptions) {
+    public function formatMenu($menuOptions) {
         // Organiza las opciones en un arreglo jerarquico por niveles
         $menu = [];
 
@@ -186,21 +186,25 @@ class M_Menu extends Modelo {
 
     // Función para clasificar los menús por permisos
     // ⚠ Junto a la anterior función investigar sus usos. Cual se puede eliminar y cual se puede quedar
+    // Filtra los menús que el usuario puede ver según sus permisos
     public function getMenuPorPermisos($idsPermisos) {
         if (empty($idsPermisos)) {
             return [];
         }
-    
+
         $idsPermisosStr = implode(',', $idsPermisos);
+
+        // Obtener los menús asociados a los permisos
         $SQL = "SELECT DISTINCT m.* 
                 FROM menu m
                 INNER JOIN permisos p ON m.id = p.id_menu
                 WHERE p.id IN ($idsPermisosStr) 
                 AND m.is_active = 1
                 ORDER BY m.level, m.position";
-    
+
         return $this->DAO->consultar($SQL);
     }
+
 
     // Función para clasificar los menús a imprimir en la barra de navegación en base al rol que ha iniciado sesión (deshacerse de esta función)
     public function getMenuPorRol($idRol) {

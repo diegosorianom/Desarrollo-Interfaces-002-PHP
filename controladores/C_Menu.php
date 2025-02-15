@@ -154,28 +154,30 @@ class C_Menu {
 
     // Obtiene los menús que pintaremos en la barra de navegación buscando el rol dependiendo del rol en base de datos
     // ⚠ Hay que cambiar esta función para que filtre por permiso en vez de por rol
-    public function getMenuFiltradoPorRol() {
+    // Obtiene los menús filtrados por permisos en lugar de por roles
+    public function getMenuFiltradoPorPermiso() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-    
-        // Intentamos obtener el ID de rol desde sesión
-        $idRol = $_SESSION['roles'][0]['id_rol'] ?? null;
-    
-        // 🔥 SI NO HAY SESIÓN O EL ROL NO EXISTE, FORZAMOS `id_rol = 19` 🔥
-        if ($idRol === null || empty($idRol)) {
-            $idRol = 19;
+
+        // Obtener los permisos del usuario desde la sesión
+        $permisosUsuario = $_SESSION['permisos'] ?? [];
+
+        // Si el usuario no tiene permisos asignados, devolver un menú vacío
+        if (empty($permisosUsuario)) {
+            return [];
         }
-    
-        // 🔥 IMPRIMIR EL ROL DETECTADO PARA DEPURACIÓN 🔥
-        echo "<pre>🔍 ID Rol detectado: $idRol</pre>";
-    
-        if ($idRol == 1) {
-            return $this->menuModel->getMenuOptions(); // Administrador ve TODO
-        }
-    
-        return $this->menuModel->getMenuPorRol($idRol); // Filtra menús por rol (incluye visitante)
-    }    
+
+        // Extraer los IDs de los permisos
+        $idsPermisos = array_column($permisosUsuario, 'id');
+
+        // Obtener los menús que correspondan a esos permisos
+        $menus = $this->menuModel->getMenuPorPermisos($idsPermisos);
+
+        // Devolver el menú formateado
+        return $this->menuModel->formatMenu($menus);
+    }
+
     
     // Fin del controlador de menús
 }   

@@ -3,7 +3,7 @@ require_once 'controladores/C_Menu.php';
 
 // Obtener el menú filtrado por permisos del usuario actual
 $menuController = new C_Menu();
-$menu = $menuController->getMenuFiltradoPorRol();
+$menu = $menuController->getMenuFiltradoPorPermiso();
 
 ?>
 
