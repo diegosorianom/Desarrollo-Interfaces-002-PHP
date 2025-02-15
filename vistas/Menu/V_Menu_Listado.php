@@ -99,14 +99,12 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
     // Obtener los permisos del usuario desde la sesión
     $permisosUsuario = $_SESSION['permisos'] ?? [];
 
-    // Verificar si el usuario tiene el permiso 21 (Modificar Dashboard)
+    // Verificar permisos
     $tienePermisoModificar = in_array(21, array_column($permisosUsuario, 'id'));
+    $tienePermisoVerPermisos = in_array(23, array_column($permisosUsuario, 'id'));
 
-    // Verificar si el usuario tiene el permiso 17 (Acceder Dashboard)
-    $tienePermisoAcceder = in_array(17, array_column($permisosUsuario, 'id'));
-
-    // Si el usuario no tiene ninguno de estos permisos, devolver vacío
-    if (!$tienePermisoAcceder && !$tienePermisoModificar) {
+    // Si el usuario no tiene permisos de acceso ni de ver permisos, salir
+    if (!$tienePermisoModificar && !$tienePermisoVerPermisos) {
         return '';
     }
 
@@ -114,14 +112,11 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
     
     foreach ($menuTree as $menu) {
         $hasChildren = !empty($menu['children']);
-
-        // Solo permitir hacer clic en el menú si el usuario tiene permiso de modificación
         $menuOnClick = $tienePermisoModificar ? "toggleOptions({$menu['id']})" : "";
 
         $html .= '<div class="menu-row" data-menu-id="' . $menu['id'] . '" onclick="' . $menuOnClick . '">';
         $html .= '<div class="menu-content">';
 
-        // Permitir que los usuarios con permiso 17 desplieguen submenús
         $toggleChildren = $hasChildren ? "toggleChildren({$menu['id']}, event)" : "";
         $html .= $hasChildren 
             ? '<span class="arrow" onclick="' . $toggleChildren . '"><i class="fas fa-chevron-right"></i></span>' 
@@ -131,9 +126,36 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
         $html .= '</div>'; // Fin de .menu-content
         $html .= '</div>'; // Fin de .menu-row
 
-        // **Mostrar permisos solo si el usuario tiene permiso de modificación**
+        // ✅ Si el usuario tiene SOLO el permiso 23 (pero no el 21), mostrar solo los nombres de los permisos
+        if ($tienePermisoVerPermisos && !$tienePermisoModificar) {
+            $html .= '<div class="menu-permissions">';
+
+            foreach ($permisos as $permiso) {
+                if ($permiso['id_menu'] == $menu['id']) {
+                    $permisoNombre = isset($permiso['nombre']) ? $permiso['nombre'] : 'Sin nombre';
+                    $html .= '<div class="permiso-item">';
+                    $html .= '<span>' . htmlspecialchars($permisoNombre) . '</span>';
+                    
+                    // Mostrar roles de los que proviene el permiso si es heredado
+                    if (isset($heredadosMap[$permiso['id']])) {
+                        $rolesNombres = [];
+                        foreach ($heredadosMap[$permiso['id']] as $idRol) {
+                            $rolesNombres[] = isset($rolesMap[$idRol]) ? $rolesMap[$idRol] : $idRol;
+                        }
+                        $html .= ' <em>(Heredado de: ' . implode(', ', $rolesNombres) . ')</em>';
+                    }
+
+                    $html .= '</div>'; // Fin .permiso-item
+                }
+            }
+
+            $html .= '</div>'; // Fin de .menu-permissions
+        }
+
+        // ✅ Si el usuario tiene permiso 21 (con o sin 23), mostrar la funcionalidad normal
         if ($tienePermisoModificar) {
             $html .= '<div class="menu-permissions">';
+
             foreach ($permisos as $permiso) {
                 if ($permiso['id_menu'] == $menu['id']) {
                     $isAssigned = in_array($permiso['id'], $permisosAsignados);
@@ -141,13 +163,10 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
                     $permisoNombre = isset($permiso['nombre']) ? $permiso['nombre'] : 'Sin nombre';
 
                     $html .= '<div class="permiso-item" id="permiso-item-' . $permiso['id'] . '">';
-                    
                     if ($rolSeleccionado || $usuarioSeleccionado) {
-                        // Mostrar checkbox si se ha seleccionado un rol o usuario
                         $html .= '<input type="checkbox" class="permiso-checkbox" data-permiso-id="' . $permiso['id'] . '" ' . $checked . ' onchange="togglePermiso(' . $permiso['id'] . ')">';
                         $html .= ' ' . htmlspecialchars($permisoNombre);
 
-                        // Mostrar si el permiso es heredado
                         if (isset($heredadosMap[$permiso['id']])) {
                             $rolesNombres = [];
                             foreach ($heredadosMap[$permiso['id']] as $idRol) {
@@ -156,18 +175,16 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
                             $html .= ' <em>(Heredado de: ' . implode(', ', $rolesNombres) . ')</em>';
                         }
                     } else {
-                        // Opciones de modificar/eliminar permisos solo si el usuario tiene permiso 21
                         $html .= '<span id="permiso-nombre-' . $permiso['id'] . '">' . htmlspecialchars($permisoNombre) . '</span>';
                         $html .= ' <button type="button" class="btn btn-sm btn-info" onclick="mostrarEditarPermiso(' . $permiso['id'] . ')">Editar</button>';
                         $html .= ' <button type="button" class="btn btn-sm btn-danger" onclick="eliminarPermiso(' . $permiso['id'] . ')">Eliminar</button>';
                         $html .= ' <input type="text" class="form-control permiso-edit-input" id="permiso-edit-' . $permiso['id'] . '" value="' . htmlspecialchars($permisoNombre) . '" style="display:none; width:auto; display:inline-block;" onblur="actualizarNombrePermiso(' . $permiso['id'] . ')">';
                     }
-
                     $html .= '</div>'; // Fin .permiso-item
                 }
             }
 
-            // Sección para crear un nuevo permiso en este menú (Solo para usuarios con permiso 21)
+            // Opción para crear nuevo permiso solo si tiene permiso 21
             $html .= '<div class="crear-permiso" style="margin-top: 5px;">';
             $html .= '<input type="text" class="form-control permiso-new-input" id="permiso-new-' . $menu['id'] . '" placeholder="Nuevo permiso" style="display:inline-block; width:70%;">';
             $html .= '<button type="button" class="btn btn-sm btn-success" onclick="crearPermiso(' . $menu['id'] . ')" style="display:inline-block;">Crear permiso</button>';
@@ -176,17 +193,6 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
             $html .= '</div>'; // Fin de .menu-permissions
         }
 
-        // **Opciones del menú (editar/agregar) - Solo para usuarios con permiso 21**
-        if ($tienePermisoModificar) {
-            $html .= '<div class="menu-options" id="options-' . $menu['id'] . '" style="display: none;">';
-            $html .= '<button class="btn btn-sm btn-primary me-2" onclick="obtenerVista_EditarCrear(\'Menu\', \'getVistaNuevoEditar\', \'capaEditarCrear\', \'' . $menu['id'] . '\')">Editar</button>';
-            $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirMenu(' . $menu['id'] . ', \'above\')">Añadir Arriba</button>';
-            $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirMenu(' . $menu['id'] . ', \'below\')">Añadir Abajo</button>';
-            $html .= '<button class="btn btn-sm btn-secondary me-2" onclick="añadirHijo(' . $menu['id'] . ')">Añadir Hijo</button>';
-            $html .= '</div>'; // Fin de .menu-options
-        }
-
-        // **Si el menú tiene hijos, renderizar recursivamente**
         if ($hasChildren) {
             $html .= '<div class="menu-children" id="children-' . $menu['id'] . '" style="display: none;">';
             $html .= renderMenu($menu['children'], $permisos, $level + 1, $rolSeleccionado, $usuarioSeleccionado, $permisosAsignados, $heredadosMap, $rolesMap);
@@ -197,6 +203,8 @@ function renderMenu($menuTree, $permisos, $level = 0, $rolSeleccionado = null, $
 
     return $html;
 }
+
+
 
 
 echo '</div>';
