@@ -53,12 +53,14 @@ class C_Roles extends Controlador {
     // Función para guardar o actualizar un rol
     public function guardarRol($datos = array()) {
         $resultado = $this->modelo->insertarActualizarRol($datos);
-        if ($resultado) {
-            echo json_encode(['correcto' => 'S', 'msj' => 'Rol guardado correctamente']);
+        
+        if ($resultado === "Rol guardado correctamente" || $resultado === "Rol actualizado correctamente") {
+            echo json_encode(['correcto' => 'S', 'msj' => $resultado]);
         } else {
-            echo json_encode(['correcto' => 'N', 'msj' => 'Error al guardar el rol']);
+            echo json_encode(['correcto' => 'N', 'msj' => $resultado]);
         }
     }
+    
 
     // Función para eliminar un rol
     public function eliminarRol($datos = array()) {

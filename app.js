@@ -1,3 +1,31 @@
+document.addEventListener("change", (event) => {
+  const selectRol = document.getElementById("frol")
+  const selectUsuario = document.getElementById("fusuario")
+
+  if (event.target && event.target.id === "frol") {
+    console.log("🔹 Rol seleccionado:", event.target.value)
+
+    // 🚫 Deshabilitar usuario si se selecciona un rol
+  //   if (event.target.value !== "") {
+  //     selectUsuario.disabled = true // ❌ Deshabilitar usuario
+  //   } else {
+  //     selectUsuario.disabled = false // ✅ Volver a habilitar si se quita el rol
+  //   }
+  }
+
+  if (event.target && event.target.id === "fusuario") {
+    console.log("🔹 Usuario seleccionado:", event.target.value)
+    destacarRolesPorUsuario();
+
+    // 🚫 Deshabilitar rol si se selecciona un usuario
+  //   if (event.target.value !== "") {
+  //     selectRol.disabled = true // ❌ Deshabilitar rol
+  //   } else {
+  //     selectRol.disabled = false // ✅ Volver a habilitar si se quita el usuario
+  //   }
+  }
+})
+
 function cargarUnScript(url) {
     const script = document.createElement("script")
     script.src = url
@@ -244,36 +272,9 @@ function obtenerPermisosHeredados(usuarioId) {
     console.log("🔹 Permiso seleccionado:", permisoId)
   }
   
-  document.addEventListener("change", (event) => {
-    const selectRol = document.getElementById("frol")
-    const selectUsuario = document.getElementById("fusuario")
-  
-    if (event.target && event.target.id === "frol") {
-      console.log("🔹 Rol seleccionado:", event.target.value)
-  
-      // 🚫 Deshabilitar usuario si se selecciona un rol
-    //   if (event.target.value !== "") {
-    //     selectUsuario.disabled = true // ❌ Deshabilitar usuario
-    //   } else {
-    //     selectUsuario.disabled = false // ✅ Volver a habilitar si se quita el rol
-    //   }
-    }
-  
-    if (event.target && event.target.id === "fusuario") {
-      console.log("🔹 Usuario seleccionado:", event.target.value)
-      destacarRolesPorUsuario();
-  
-      // 🚫 Deshabilitar rol si se selecciona un usuario
-    //   if (event.target.value !== "") {
-    //     selectRol.disabled = true // ❌ Deshabilitar rol
-    //   } else {
-    //     selectRol.disabled = false // ✅ Volver a habilitar si se quita el usuario
-    //   }
-    }
-  })
-  
   function guardarRol() {
     const formData = new FormData(document.getElementById("formularioNuevoEditar"))
+    const mensajeError = document.getElementById("msjError"); // Obtener el elemento de error
   
     const opciones = {
       method: "POST",
@@ -284,18 +285,25 @@ function obtenerPermisosHeredados(usuarioId) {
       .then((res) => res.json())
       .then((respuesta) => {
         if (respuesta.correcto === "S") {
-          alert(respuesta.msj)
+          // Ocultar mensaje de error si la operación es exitosa
+          mensajeError.classList.add("d-none");
+          mensajeError.innerText = "";
+
           obtenerVista("Menu", "getVistaListadoMenu", "capaResultadoBusqueda")
           document.getElementById("capaEditarCrear").innerHTML = ""
         } else {
-          document.getElementById("msjError").innerText = respuesta.msj
+          // Mostrar mensaje de error
+          mensajeError.innerText = "⚠️ " + respuesta.msj;
+          mensajeError.classList.remove("d-none");
         }
       })
       .catch((error) => {
-        console.error("Error al guardar rol:", error)
-        document.getElementById("msjError").innerText = "Error al procesar la solicitud."
+        console.error("Error al guardar rol:", error);
+        mensajeError.innerText = "Error al procesar la solicitud.";
+        mensajeError.classList.remove("d-none");
       })
-  }
+}
+
   
 //   function eliminarRol(id) {
 //     if (confirm("¿Está seguro de que desea eliminar este rol?")) {
@@ -303,15 +311,15 @@ function obtenerPermisosHeredados(usuarioId) {
 //         .then((res) => res.json())
 //         .then((respuesta) => {
 //           if (respuesta.correcto === "S") {
-//             alert(respuesta.msj)
+//             //alert(respuesta.msj)
 //             obtenerVista("Menu", "getVistaFiltros", "capaContenido");
 //           } else {
-//             alert(respuesta.msj)
+//             //alert(respuesta.msj)
 //           }
 //         })
 //         .catch((error) => {
 //           console.error("Error al eliminar rol:", error)
-//           alert("Error al procesar la solicitud.")
+//           //alert("Error al procesar la solicitud.")
 //         })
 //     }
 //   }
@@ -331,12 +339,11 @@ function eliminarRolSeleccionado() {
     const rolId = selectRol.value;
   
     if (rolId) {
-      if (confirm("¿Está seguro de que desea eliminar este rol?")) {
-        fetch(`C_Frontal.php?controlador=Roles&metodo=eliminarRol&id=${rolId}`, { method: "POST" })
+      fetch(`C_Frontal.php?controlador=Roles&metodo=eliminarRol&id=${rolId}`, { method: "POST" })
           .then((res) => res.json())
           .then((respuesta) => {
             if (respuesta.correcto === "S") {
-              alert(respuesta.msj);
+              //alert(respuesta.msj);
   
               // Actualizar la vista de filtros después de eliminar el rol
               obtenerVista("Menu", "getVistaFiltros", "capaContenido");
@@ -347,16 +354,15 @@ function eliminarRolSeleccionado() {
               // Opcional: Resetear el select de roles después de eliminar
               selectRol.value = "";
             } else {
-              alert(respuesta.msj);
+              //alert(respuesta.msj);
             }
           })
           .catch((error) => {
             console.error("❌ Error al eliminar rol:", error);
-            alert("Error al procesar la solicitud.");
+            //alert("Error al procesar la solicitud.");
           });
-      }
     } else {
-      alert("Por favor, seleccione un rol para eliminar.");
+      //alert("Por favor, seleccione un rol para eliminar.");
     }
   }
   
@@ -427,7 +433,7 @@ function habilitarBotonesRol() {
     if (rolId) {
       obtenerVista_EditarCrear("Roles", "getVistaNuevoEditar", "capaEditarCrear", rolId)
     } else {
-      alert("Por favor, seleccione un rol para editar.")
+      //alert("Por favor, seleccione un rol para editar.")
     }
   }
   
@@ -443,7 +449,7 @@ function habilitarBotonesRol() {
         .then((res) => res.json())
         .then((respuesta) => {
             if (respuesta.correcto === "S") {
-                alert(respuesta.msj);
+                //alert(respuesta.msj);
                 
                 // Actualizar la lista de roles después de guardar
                 obtenerVista("Menu", "getVistaFiltros", "capaContenido");
@@ -462,12 +468,15 @@ function habilitarBotonesRol() {
     function asignarRolAUsuario() {
         const selectRol = document.getElementById("frol");
         const selectUsuario = document.getElementById("fusuario");
+        const mensajeError = document.getElementById("mensajeError"); // Obtener el elemento de error
     
         const rolId = selectRol.value;
         const usuarioId = selectUsuario.value;
     
         if (!rolId || !usuarioId) {
-            alert("Por favor, seleccione un rol y un usuario.");
+            // alert("Por favor, seleccione un rol y un usuario.");
+            mensajeError.innerText = "Por favor seleccione un rol y un usuario";
+            mensajeError.classList.remove("d-none"); // Mostrar el mensaje
             return;
         }
     
@@ -482,14 +491,19 @@ function habilitarBotonesRol() {
             .then((respuesta) => {
                 console.log("🔍 Respuesta del servidor:", respuesta);
                 if (respuesta.correcto === "S") {
-                    alert("✅ " + respuesta.msj);
-                } else {
-                    alert("⚠️ " + respuesta.msj);
-                }
+                  // Ocultar el mensaje de error si la operación es exitosa
+                  mensajeError.classList.add("d-none");
+                  mensajeError.innerText = "";
+              } else {
+                  // Mostrar el mensaje de error si hay un problema
+                  mensajeError.innerText = "⚠️ " + respuesta.msj;
+                  mensajeError.classList.remove("d-none");
+              }
+              
             })
             .catch((error) => {
                 console.error("❌ Error en la solicitud:", error);
-                alert("Error al procesar la solicitud.");
+                //alert("Error al procesar la solicitud.");
             });
     }
 
@@ -501,13 +515,13 @@ function habilitarBotonesRol() {
         const usuarioId = selectUsuario.value;
     
         if (!rolId || !usuarioId) {
-            alert("Por favor, seleccione un rol y un usuario.");
+            //alert("Por favor, seleccione un rol y un usuario.");
             return;
         }
     
-        if (!confirm("¿Estás seguro de que deseas quitar este rol del usuario?")) {
-            return;
-        }
+        // if (!confirm("¿Estás seguro de que deseas quitar este rol del usuario?")) {
+        //     return;
+        // }
     
         const parametros = new URLSearchParams();
         parametros.append("controlador", "Roles");
@@ -520,14 +534,18 @@ function habilitarBotonesRol() {
             .then((respuesta) => {
                 console.log("🔍 Respuesta del servidor:", respuesta);
                 if (respuesta.correcto === "S") {
-                    alert("✅ " + respuesta.msj);
+                    //alert("✅ " + respuesta.msj);
+                    mensajeError.classList.add("d-none");
+                    mensajeError.innerText = "";
                 } else {
-                    alert("⚠️ " + respuesta.msj);
+                    //alert("⚠️ " + respuesta.msj);
+                    mensajeError.innerText = "⚠️ " + respuesta.msj;
+                    mensajeError.classList.remove("d-none");
                 }
             })
             .catch((error) => {
                 console.error("❌ Error en la solicitud:", error);
-                alert("Error al procesar la solicitud.");
+                //alert("Error al procesar la solicitud.");
             });
     }
     
@@ -618,8 +636,7 @@ function actualizarNombrePermiso(permisoId) {
  * @param {number} permisoId 
  */
 function eliminarPermiso(permisoId) {
-  if (confirm("¿Está seguro de eliminar este permiso?")) {
-    const parametros = new URLSearchParams();
+  const parametros = new URLSearchParams();
     parametros.append("controlador", "Permisos");
     parametros.append("metodo", "eliminarPermiso");
     parametros.append("id_permiso", permisoId);
@@ -636,7 +653,6 @@ function eliminarPermiso(permisoId) {
         }
       })
       .catch(error => console.log("Error al eliminar permiso:", error));
-  }
 }
 
 /**
@@ -648,7 +664,7 @@ function crearPermiso(menuId) {
   const nuevoNombre = input.value;
   
   if (!nuevoNombre.trim()) {
-      alert("Por favor, ingrese un nombre para el permiso.");
+      //alert("Por favor, ingrese un nombre para el permiso.");
       return;
   }
   
@@ -662,7 +678,7 @@ function crearPermiso(menuId) {
       .then(response => response.text())
       .then(responseText => {
           if (responseText.trim() === "OK") {
-              alert("Permiso creado correctamente.");
+              //alert("Permiso creado correctamente.");
               
               // Limpiar el input
               input.value = "";
@@ -676,7 +692,7 @@ function crearPermiso(menuId) {
                   listaPermisos.appendChild(nuevoElemento);
               }
           } else {
-              alert("Error al crear permiso: " + responseText);
+              //alert("Error al crear permiso: " + responseText);
           }
       })
       .catch(error => console.log("Error al crear permiso:", error));

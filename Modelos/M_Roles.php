@@ -17,17 +17,32 @@ class M_Roles {
         $id = '';
         $nombre = '';
         extract($datos);
-
+    
+        // Verificar si el nombre del rol ya existe en la base de datos
+        $SQLVerificar = "SELECT id FROM roles WHERE nombre = '$nombre'";
+        $existe = $this->DAO->consultar($SQLVerificar);
+    
+        // Si se está insertando un nuevo rol y ya existe un rol con el mismo nombre
+        if (empty($id) && !empty($existe)) {
+            return "Ya existe un rol con este nombre";
+        }
+    
+        // Si se está actualizando un rol y el nombre ya existe en otro rol diferente
+        if (!empty($id) && !empty($existe) && $existe[0]['id'] != $id) {
+            return "Ya existe un rol con este nombre";
+        }
+    
         if (!empty($id)) {
             // Actualizar rol existente
             $SQL = "UPDATE roles SET nombre = '$nombre' WHERE id = '$id'";
-            return $this->DAO->actualizar($SQL);
+            return $this->DAO->actualizar($SQL) ? "Rol actualizado correctamente" : "Error al actualizar el rol";
         } else {
             // Insertar nuevo rol
             $SQL = "INSERT INTO roles (nombre) VALUES ('$nombre')";
-            return $this->DAO->insertar($SQL);
+            return $this->DAO->insertar($SQL) ? "Rol guardado correctamente" : "Error al guardar el rol";
         }
     }
+    
 
     public function eliminarRol($id) {
         $SQL = "DELETE FROM roles WHERE id = '$id'";

@@ -97,6 +97,9 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
                         </li>
                     </ul>
                 </div>
+                <div class="container-fluid">
+                    <div id="mensajeError" class="alert alert-danger d-none"></div>
+                </div>
             </div>
         </div>
     </form>
