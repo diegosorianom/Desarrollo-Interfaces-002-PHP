@@ -104,5 +104,5 @@ $usuarios = isset($datos['usuarios']) ? $datos['usuarios'] : [];
         </div>
     </form>
 </div>
-<div class="container-fluid" id="capaResultadoBusqueda"></div>
 <div class="container-fluid" id="capaEditarCrear"></div>
+<div class="container-fluid" id="capaResultadoBusqueda"></div>
